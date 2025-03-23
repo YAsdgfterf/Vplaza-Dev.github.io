@@ -23,7 +23,7 @@
 **Thanks to everyone who made Vplaza possible!**
 
 <div align="center">
-  <a href="https://github.com/PlayerVPN/playervpn-game/graphs/contributors">
+  <a href="https://github.com/Vplaza-Dev/Vplaza-Dev.github.io/graphs/contributors">
     <img src="https://contrib.rocks/image?repo=PlayerVPN/playervpn-game"/>
   </a>
 </div>
