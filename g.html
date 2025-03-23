@@ -10,7 +10,7 @@
 .game-card {
   margin: 20px;
   width: 200px;
-  height: 240px; /* Fixed height for uniformity */
+  height: 240px; /* Fixed size for uniformity */
   display: flex;
   overflow: hidden;
   background-color: #1a1a1a; /* Background color for the card */
@@ -19,11 +19,12 @@
 
 .game-card img {
   width: 100%;
-  height: 100%; /* Fill the entire card */
-  object-fit: cover; /* Ensures the image fits the container without stretching */
+  height: 100%;
+  object-fit: fill; /* Forces the image to stretch and fill the card */
   border-radius: 10px; /* Keeps rounded corners */
   cursor: pointer;
 }
+
 
   </style>
 </head>
