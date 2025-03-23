@@ -39,7 +39,7 @@ nav a:hover, nav a.active {
 
 /* Feature Cards */
 .feature-card, .game-card, .link-card {
-  text-shadow: 0 0 10px rgba(128, 0, 128, 0.6); /* Purple glow */
+  text-shadow: 0 0 10px rgba(128, 0, 128, 0.6);
 }
 
 .button {
