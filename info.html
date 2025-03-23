@@ -479,7 +479,7 @@
     <div class="content-area" id="content-area">
         <!-- Tab contents will be dynamically added here -->
         <div class="tab-content active" id="tab-content-0">
-            <iframe src="/index.html" id="frame-0" onload="frameLoaded(0)" data-is-loading="false"></iframe>
+            <iframe src="/landing" id="frame-0" onload="frameLoaded(0)" data-is-loading="false"></iframe>
         </div>
     </div>
 
@@ -629,7 +629,7 @@
                     // Get domain for favicon
                     const domain = extractDomain(frameUrl);
                     favicon = `https://www.google.com/s2/favicons?domain=${domain}`;
-                } else if (frameUrl.includes('/index.html')) {
+                } else if (frameUrl.includes('/landing')) {
                     // For local index.html, use our custom favicon
                     favicon = '/favicons/favicon.ico';
                 }
@@ -658,7 +658,7 @@
         function extractDomain(url) {
             try {
                 // Handle special cases for our local paths
-                if (url === '/index.html') return 'same.new';
+                if (url === '/landing') return 'same.new';
 
                 // Extract domain from URL
                 const urlObj = new URL(url);
@@ -676,7 +676,7 @@
             const tab = document.createElement('div');
             tab.className = 'tab';
             tab.dataset.tabId = tabId;
-            tab.dataset.url = '/index.html';
+            tab.dataset.url = '/landing';
             tab.innerHTML = `
                 <img class="tab-favicon" src="/favicons/favicon.ico" alt="favicon">
                 <span class="tab-title">Vplaza</span>
@@ -692,7 +692,7 @@
             const tabContent = document.createElement('div');
             tabContent.className = 'tab-content';
             tabContent.id = `tab-content-${tabId}`;
-            tabContent.innerHTML = `<iframe src="/index.html" id="frame-${tabId}" onload="frameLoaded(${tabId})" data-is-loading="false"></iframe>`;
+            tabContent.innerHTML = `<iframe src="/landing" id="frame-${tabId}" onload="frameLoaded(${tabId})" data-is-loading="false"></iframe>`;
             contentArea.appendChild(tabContent);
 
             // Attach event listeners
@@ -907,7 +907,7 @@
         // Toolbar Shortcut Functions
         function initToolbarShortcuts() {
             const shortcuts = {
-                'home': '/index.html',
+                'home': '/landing',
                 'email': '/active/embed.html?url=https://mail.google.com',
                 'music': '/active/embed.html?url=https://music.youtube.com',
                 'settings': '/active/embed.html?url=chrome://settings'
