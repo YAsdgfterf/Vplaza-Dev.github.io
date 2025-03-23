@@ -297,15 +297,15 @@
 
                 // If the input is a search query (no protocol, no dot)
                 if (!url.includes('://') && !url.includes('.')) {
-                    url = `/active/embed.html?url=https://www.bing.com/search?q=${encodeURIComponent(url)}`;
+                    url = `/info/embed.html?url=https://www.bing.com/search?q=${encodeURIComponent(url)}`;
                 }
                 // If it's a domain without protocol, add it
                 else if (!url.includes('://')) {
-                    url = `/active/embed.html?url=http://${url}`;
+                    url = `/info/embed.html?url=http://${url}`;
                 }
                 // If it's a full URL
                 else {
-                    url = `/active/embed.html?url=${encodeURIComponent(url)}`;
+                    url = `/info/embed.html?url=${encodeURIComponent(url)}`;
                 }
 
                 // Update the iframe source
@@ -358,8 +358,8 @@
                 }
 
                 // Extract the actual URL from embedded URL
-                if (frameUrl.includes('/active/embed.html?url=')) {
-                    const encodedUrl = frameUrl.split('/active/embed.html?url=')[1];
+                if (frameUrl.includes('/info/embed.html?url=')) {
+                    const encodedUrl = frameUrl.split('/info/embed.html?url=')[1];
                     frameUrl = decodeURIComponent(encodedUrl);
 
                     // Get domain for favicon
