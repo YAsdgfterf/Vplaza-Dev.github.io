@@ -22,6 +22,7 @@
             overflow: hidden;
             display: flex;
             flex-direction: column;
+            position: relative;
         }
 
         .browser-header {
@@ -176,6 +177,7 @@
         .content-area {
             flex-grow: 1;
             overflow: hidden;
+            position: relative;
         }
 
         .tab-content {
@@ -218,6 +220,224 @@
             50% { width: 50%; transform: translateX(50%); }
             100% { width: 0; transform: translateX(100%); }
         }
+
+        /* Toolbar Styles */
+        .toolbar-container {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+        }
+
+        .toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: rgba(60, 64, 67, 0.85);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 24px;
+            padding: 8px 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            width: fit-content;
+            min-width: 420px;
+            transition: all 0.3s ease-in-out;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .toolbar.search-active {
+            min-width: 550px;
+        }
+
+        .shortcuts {
+            display: flex;
+            gap: 14px;
+        }
+
+        .shortcut {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background-color: #4d5156;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #e8eaed;
+            font-size: 18px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .shortcut:after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 70%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .shortcut:hover {
+            background-color: #5f6368;
+            transform: translateY(-2px);
+        }
+
+        .shortcut:active:after {
+            opacity: 1;
+        }
+
+        .shortcut img {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+        }
+
+        .time-battery {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: opacity 0.3s ease;
+        }
+
+        .search-active .time-battery {
+            opacity: 0;
+            visibility: hidden;
+            position: absolute;
+            right: 16px;
+        }
+
+        .datetime {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .time {
+            font-size: 16px;
+            font-weight: 500;
+            color: #e8eaed;
+        }
+
+        .date {
+            font-size: 12px;
+            color: #9aa0a6;
+        }
+
+        .battery {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .battery-level {
+            font-size: 14px;
+            color: #e8eaed;
+        }
+
+        .battery-icon {
+            width: 28px;
+            height: 14px;
+            border: 2px solid #e8eaed;
+            border-radius: 3px;
+            position: relative;
+            padding: 1px;
+        }
+
+        .battery-icon:after {
+            content: '';
+            position: absolute;
+            right: -4px;
+            top: 3px;
+            height: 6px;
+            width: 2px;
+            background-color: #e8eaed;
+            border-radius: 0 2px 2px 0;
+        }
+
+        .battery-fill {
+            height: 100%;
+            background-color: #8ab4f8;
+            border-radius: 1px;
+            width: 0%; /* Will be set by JS */
+        }
+
+        .battery-charging .battery-fill {
+            background-color: #81c995;
+        }
+
+        /* Toolbar Search */
+        .toolbar-search {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease;
+            z-index: 10;
+        }
+
+        .search-active .toolbar-search {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .search-active .shortcuts {
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .search-active .shortcuts [data-shortcut="search"] {
+            visibility: visible;
+            opacity: 1;
+            z-index: 11;
+        }
+
+        .toolbar-search-input {
+            flex-grow: 1;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 12px;
+            color: #e8eaed;
+            font-size: 14px;
+            padding: 0 16px;
+            margin-left: 14px;
+            outline: none;
+        }
+
+        .toolbar-search-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .toolbar-search-close {
+            margin-left: 10px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #e8eaed;
+            cursor: pointer;
+            border-radius: 50%;
+            transition: background-color 0.2s;
+        }
+
+        .toolbar-search-close:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
     </style>
 </head>
 <body>
@@ -260,6 +480,50 @@
         <!-- Tab contents will be dynamically added here -->
         <div class="tab-content active" id="tab-content-0">
             <iframe src="/index.html" id="frame-0" onload="frameLoaded(0)" data-is-loading="false"></iframe>
+        </div>
+    </div>
+
+    <!-- Toolbar Container -->
+    <div class="toolbar-container">
+        <div class="toolbar" id="toolbar">
+            <div class="shortcuts">
+                <div class="shortcut" data-shortcut="home">
+                    <i class="fa-solid fa-house"></i>
+                </div>
+                <div class="shortcut" data-shortcut="search" id="search-btn">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </div>
+                <div class="shortcut" data-shortcut="email">
+                    <i class="fa-solid fa-envelope"></i>
+                </div>
+                <div class="shortcut" data-shortcut="music">
+                    <i class="fa-solid fa-music"></i>
+                </div>
+                <div class="shortcut" data-shortcut="settings">
+                    <i class="fa-solid fa-gear"></i>
+                </div>
+            </div>
+            <div class="time-battery">
+                <div class="datetime">
+                    <div class="time" id="toolbar-time">12:00</div>
+                    <div class="date" id="toolbar-date">Mar 23, 2025</div>
+                </div>
+                <div class="battery">
+                    <div class="battery-level" id="battery-percentage">100%</div>
+                    <div class="battery-icon" id="battery-icon">
+                        <div class="battery-fill" id="battery-fill"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="toolbar-search">
+                <div class="shortcut" data-shortcut="search">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </div>
+                <input type="text" class="toolbar-search-input" id="toolbar-search-input" placeholder="Search the web or enter address">
+                <div class="toolbar-search-close" id="toolbar-search-close">
+                    <i class="fa-solid fa-xmark"></i>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -577,8 +841,245 @@
             resizeTabs();
         }
 
+        // Toolbar Functions
+        function updateDateTime() {
+            const now = new Date();
+
+            // Update time with hours and minutes
+            const hours = now.getHours();
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            const displayHours = hours % 12 || 12; // Convert to 12 hour format
+
+            document.getElementById('toolbar-time').textContent = `${displayHours}:${minutes} ${ampm}`;
+
+            // Update date
+            const options = { weekday: 'short', month: 'short', day: 'numeric' };
+            const dateStr = now.toLocaleDateString('en-US', options);
+            document.getElementById('toolbar-date').textContent = dateStr;
+        }
+
+        function updateBattery() {
+            if (navigator.getBattery) {
+                navigator.getBattery().then(battery => {
+                    updateBatteryUI(battery);
+
+                    // Listen for battery changes
+                    battery.addEventListener('levelchange', () => updateBatteryUI(battery));
+                    battery.addEventListener('chargingchange', () => updateBatteryUI(battery));
+                });
+            } else {
+                // Fallback if Battery API is not available
+                document.getElementById('battery-percentage').textContent = "100%";
+                document.getElementById('battery-fill').style.width = "100%";
+            }
+        }
+
+        function updateBatteryUI(battery) {
+            const level = Math.floor(battery.level * 100);
+            const batteryIcon = document.getElementById('battery-icon');
+            const batteryFill = document.getElementById('battery-fill');
+
+            // Update percentage text
+            document.getElementById('battery-percentage').textContent = `${level}%`;
+
+            // Update fill width
+            batteryFill.style.width = `${level}%`;
+
+            // Update battery color based on level
+            if (battery.charging) {
+                batteryIcon.classList.add('battery-charging');
+                batteryFill.style.backgroundColor = '#81c995'; // Green when charging
+            } else {
+                batteryIcon.classList.remove('battery-charging');
+
+                // Color based on battery level
+                if (level <= 20) {
+                    batteryFill.style.backgroundColor = '#f28b82'; // Red when low
+                } else if (level <= 50) {
+                    batteryFill.style.backgroundColor = '#fdd663'; // Yellow when medium
+                } else {
+                    batteryFill.style.backgroundColor = '#8ab4f8'; // Blue when high
+                }
+            }
+        }
+
+        // Toolbar Shortcut Functions
+        function initToolbarShortcuts() {
+            const shortcuts = {
+                'home': '/index.html',
+                'email': '/active/embed.html?url=https://mail.google.com',
+                'music': '/active/embed.html?url=https://music.youtube.com',
+                'settings': '/active/embed.html?url=chrome://settings'
+            };
+
+            // Add click event listeners to shortcuts
+            document.querySelectorAll('.shortcut').forEach(shortcut => {
+                shortcut.addEventListener('click', function() {
+                    // Add animation effect
+                    this.style.transform = 'scale(0.9)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
+
+                    const shortcutType = this.dataset.shortcut;
+
+                    // Handle search shortcut specially
+                    if (shortcutType === 'search' && this.id === 'search-btn') {
+                        toggleToolbarSearch(true);
+                        return;
+                    }
+
+                    // Open the corresponding URL in a new tab for other shortcuts
+                    if (shortcuts[shortcutType]) {
+                        createNewTabWithUrl(shortcuts[shortcutType], shortcutType);
+                    }
+                });
+            });
+
+            // Initialize toolbar search
+            initToolbarSearch();
+        }
+
+        function createNewTabWithUrl(url, title) {
+            const tabId = tabCounter++;
+
+            // Create new tab element
+            const tab = document.createElement('div');
+            tab.className = 'tab';
+            tab.dataset.tabId = tabId;
+            tab.dataset.url = url;
+            tab.innerHTML = `
+                <img class="tab-favicon" src="/favicons/favicon.ico" alt="favicon">
+                <span class="tab-title">${title ? title.charAt(0).toUpperCase() + title.slice(1) : 'New Tab'}</span>
+                <div class="tab-close">
+                    <i class="fa-solid fa-xmark fa-xs"></i>
+                </div>
+            `;
+
+            // Insert before the new tab button
+            tabsBar.insertBefore(tab, newTabBtn);
+
+            // Create tab content
+            const tabContent = document.createElement('div');
+            tabContent.className = 'tab-content';
+            tabContent.id = `tab-content-${tabId}`;
+            tabContent.innerHTML = `<iframe src="${url}" id="frame-${tabId}" onload="frameLoaded(${tabId})" data-is-loading="false"></iframe>`;
+            contentArea.appendChild(tabContent);
+
+            // Attach event listeners
+            tab.addEventListener('click', () => switchTab(tabId));
+            tab.querySelector('.tab-close').addEventListener('click', (e) => {
+                e.stopPropagation();
+                closeTab(tabId);
+            });
+
+            // Show loading indicator
+            loadingBarContainer.style.display = 'block';
+            document.getElementById(`frame-${tabId}`).dataset.isLoading = 'true';
+
+            // Switch to the new tab
+            switchTab(tabId);
+            resizeTabs();
+        }
+
+        // Toolbar Search Functions
+        function initToolbarSearch() {
+            const toolbar = document.getElementById('toolbar');
+            const searchBtn = document.getElementById('search-btn');
+            const searchClose = document.getElementById('toolbar-search-close');
+            const searchInput = document.getElementById('toolbar-search-input');
+
+            // Toggle search when search button is clicked
+            searchBtn.addEventListener('click', () => {
+                toggleToolbarSearch(true);
+            });
+
+            // Close search when close button is clicked
+            searchClose.addEventListener('click', () => {
+                toggleToolbarSearch(false);
+            });
+
+            // Handle search submission
+            searchInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    processToolbarSearch(searchInput.value);
+                    toggleToolbarSearch(false);
+                }
+            });
+
+            // Close search when clicking outside
+            document.addEventListener('click', (e) => {
+                if (toolbar.classList.contains('search-active') &&
+                    !toolbar.contains(e.target)) {
+                    toggleToolbarSearch(false);
+                }
+            });
+        }
+
+        function toggleToolbarSearch(show) {
+            const toolbar = document.getElementById('toolbar');
+            const searchInput = document.getElementById('toolbar-search-input');
+
+            if (show) {
+                toolbar.classList.add('search-active');
+                // Focus the search input after the animation completes
+                setTimeout(() => {
+                    searchInput.focus();
+                }, 300);
+            } else {
+                toolbar.classList.remove('search-active');
+                searchInput.value = '';
+            }
+        }
+
+        function processToolbarSearch(query) {
+            if (!query.trim()) return;
+
+            let url;
+
+            // If the input is a search query (no protocol, no dot)
+            if (!query.includes('://') && !query.includes('.')) {
+                url = `/active/embed.html?url=https://www.google.com/search?q=${encodeURIComponent(query)}`;
+            }
+            // If it's a domain without protocol, add it
+            else if (!query.includes('://')) {
+                url = `/active/embed.html?url=http://${query}`;
+            }
+            // If it's a full URL
+            else {
+                url = `/active/embed.html?url=${encodeURIComponent(query)}`;
+            }
+
+            // Open the search result in a new tab
+            createNewTabWithUrl(url, query.substring(0, 15) + (query.length > 15 ? '...' : ''));
+        }
+
         // Initialize everything
-        initTabs();
+        function init() {
+            initTabs();
+            updateDateTime();
+            updateBattery();
+            initToolbarShortcuts();
+
+            // Update time and date every minute
+            setInterval(updateDateTime, 60000);
+        }
+
+        // Run initialization
+        init();
+
+        // Add click event listeners to shortcuts
+        document.querySelectorAll('.shortcut').forEach(shortcut => {
+            shortcut.addEventListener('click', function() {
+                // Add animation effect
+                this.style.transform = 'scale(0.9)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 150);
+            });
+        });
     </script>
 </body>
 </html>
