@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="images/image1.png" alt="vplaza-logo" style="width: 300px; height: auto; object-fit: contain;">
+  <img src="image1.png" alt="vplaza-logo" style="width: 300px; height: auto; object-fit: contain;">
 </div>
 
 
