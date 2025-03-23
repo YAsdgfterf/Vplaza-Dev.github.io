@@ -423,11 +423,14 @@ footer p {
 
 .pagination-controls {
     text-align: center;
-    font-size: 1.5rem;
+    font-size: 2rem; /* Increased text size */
     margin-top: 1rem;
     margin-bottom: 2rem;
     text-shadow: 0 0 5px #ffffff, 0 0 15px var(--accent-color);
+    position: relative; /* Ensure it stays on top */
+    top: 0; /* Move to the top */
 }
+
 
 .pagination-controls a {
     cursor: pointer;
