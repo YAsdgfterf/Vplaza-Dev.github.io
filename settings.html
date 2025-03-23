@@ -16,8 +16,25 @@
                 <span class="slider"></span>
             </label>
         </div>
+        
+        <div class="toggle-container">
+            <span class="toggle-label">Custom Cursor Toggle</span>
+            <label class="toggle-switch">
+                <input type="checkbox" id="cursor-toggle" />
+                <span class="slider"></span>
+            </label>
+        </div>
     </div>
 
     <script src="aboutblankontoggle.js"></script>
+    <script>
+        document.getElementById('cursor-toggle').addEventListener('change', function() {
+            if (this.checked) {
+                document.body.style.cursor = "url('images/logo1.png'), auto";
+            } else {
+                document.body.style.cursor = "default";
+            }
+        });
+    </script>
 </body>
 </html>
