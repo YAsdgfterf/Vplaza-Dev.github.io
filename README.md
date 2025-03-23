@@ -7,7 +7,7 @@
 <div align="center">  
   <h1>It's time!</h1>  
   <p>We are proud to release our new project <strong>VPLAZA-DEV</strong>. Completely built with <strong>HTML, CSS, and JavaScript</strong>, we've created a <strong>fully functional</strong> game website.</p>
-  <p>From the creators of Orbit, Hush, Bliss-Cloud, etc... we are...</p>
+  <p>From the creators of Orbit, Hush, Bliss-Cloud, Beenshub, etc... we are...</p>
   <strong>PLAYERVPN</strong>
 
 
