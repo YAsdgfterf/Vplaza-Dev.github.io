@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="landing/orbit.png" alt="vplaza-logo" style="width: 300px; height: auto; object-fit: contain;">
+  <img src="images/logo.png" alt="vplaza-logo" style="width: 300px; height: auto; object-fit: contain;">
 </div>
 
 
