@@ -24,6 +24,6 @@
 
 <div align="center">
   <a href="https://github.com/Vplaza-Dev/Vplaza-Dev.github.io/graphs/contributors">
-    <img src="https://contrib.rocks/image?repo=PlayerVPN/playervpn-game"/>
+    <img src="https://contrib.rocks/image?repo=Vplaza-Dev/Vplaza-Dev.github.io"/>
   </a>
 </div>
