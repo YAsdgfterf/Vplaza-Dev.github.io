@@ -346,7 +346,7 @@ nav a {
 
 nav a:hover, nav a.active {
   background-color: var(--hover-color);
-  box-shadow: 0 0 15px var(--shadow-color);
+  box-shadow: 0 0 30px var(--shadow-color);
 }
 
 /* Feature Cards */
