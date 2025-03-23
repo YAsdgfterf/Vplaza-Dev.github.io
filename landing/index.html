@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orbit V2</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOMI4Fcp0+nW5o5NhfKGTAXzCTd2x4A2Y5c1c1z" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            color: white;
+        }
+        .corner-box {
+            position: fixed;
+            border-radius: 15px;
+            padding: 10px 15px;
+            background: rgba(0, 0, 0, 0.5);
+            font-family: Arial, sans-serif;
+        }
+        .bottom-left {
+            bottom: 20px;
+            left: 20px;
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+        }
+        .bottom-right {
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+        }
+        .separator {
+            margin: 0 10px;
+            height: 20px;
+            width: 1px;
+            background-color: gray;
+        }
+        .center-links {
+            position: fixed;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 30px;
+            font-size: 18px;
+            text-decoration: none;
+        }
+        .center-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .profile-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.95);
+            border: 2px solid #ffffff;
+            border-radius: 20px;
+            padding: 30px;
+            z-index: 1000; 
+            font-family: poppins;
+        }
+        .profile-box {
+            text-align: center;
+            font-family: poppins;
+        }
+        .rounded-pfp {
+            border-radius: 50%;
+            width: 100px;
+        }
+        #googleSignIn {
+            background-color: #4285F4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        #googleSignIn:hover {
+            background-color: #357AE8;
+        }
+
+        #googleSignOut {
+            background-color: #4285F4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #googleSignOut:hover {
+            background-color: #357AE8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <nav>
+                <div class="header-links">
+                    <button id="googleSignIn" class="nav-link">Sign in</button>
+                    <a href="/active/embed.html?url=https://images.bing.com" class="nav-link">Bing Images</a>
+                    <div class="apps-wrapper">
+                        <a href="#" class="apps">
+                            <svg class="gb_i" focusable="false" viewBox="0 0 24 24">
+                                <path d="M6,8c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM12,20c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM6,20c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM6,14c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM12,14c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM16,6c0,1.1 0.9,2 2,2s2,-0.9 2,-2 -0.9,-2 -2,-2 -2,0.9 -2,2zM12,8c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM18,14c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM18,20c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2z"></path>
+                            </svg>
+                        </a>
+                    </div>
+                    <a href="#" class="profile">
+                        <img src="favicon.ico" alt="Profile" id="pfp-container" style="width: 30px; height: 30px; border-radius: 50%;">
+                    </a>
+                    <button id="googleSignOut" style="display: none;" class="nav-link">Sign out</button>
+                </div>
+            </nav>
+        </header>
+
+        <main>
+            <div class="logo-container">
+                <img class="logo" src="orbit.png" alt="Google">
+            </div>
+
+            <div class="search-container">
+                <div class="search-bar">
+                    <div class="search-icon">
+                        <svg focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+                        </svg>
+                    </div>
+                    <input type="text" class="search-input">
+                    <div class="voice-search">
+                        <svg class="voice-icon" focusable="false" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 15c1.66 0 3-1.37 3-3V6c0-1.65-1.34-3-3-3S9 4.35 9 6v6c0 1.63 1.34 3 3 3zm5-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-2.08c3.39-.49 6-3.39 6-6.92h-2z"></path>
+                        </svg>
+                    </div>
+                    <div class="image-search">
+                        <svg class="image-icon" focusable="false" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M6,8c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM12,20c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM6,20c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM6,14c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM12,14c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM16,6c0,1.1 0.9,2 2,2s2,-0.9 2,-2 -0.9,-2 -2,-2 -2,0.9 -2,2zM12,8c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM18,14c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM18,20c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2z"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="search-buttons">
+                <button class="google-search-btn">Search Orbit...</button>
+                <button class="lucky-btn">I'm feeling a game...</button>
+            </div>
+
+            <div class="shortcuts">
+                <div class="shortcut-item">
+                    <div class="shortcut-icon docs">
+                        <img src="docs-icon.png" alt="Docs">
+                    </div>
+                    <span>Docs</span>
+                </div>
+                <div class="shortcut-item">
+                    <div class="shortcut-icon calendar">
+                        <img src="calendar-icon.png" alt="Calendar">
+                    </div>
+                    <span>Calendar</span>
+                </div>
+                <div class="shortcut-item">
+                    <div class="shortcut-icon drive">
+                        <img src="drive-icon.png" alt="Drive">
+                    </div>
+                    <span>Drive</span>
+                </div>
+            </div>
+        </main>
+        
+        <div class="corner-box bottom-left" id="time-date">
+            <span id="time"></span>
+            <div class="separator"></div>
+            <span id="date"></span>
+        </div>
+
+        <div class="corner-box bottom-right">
+            <i class="fa fa-battery-half" aria-hidden="true"></i>
+            <span id="battery-percentage">0%</span>
+        </div>
+        
+        <div class="center-links">
+            <a href="movies.html">Movies</a>
+            <a href="games.html">Games</a>
+            <a href="apps.html">Apps</a>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyC7wfMI_f-nvZSZi-_PY6w22mxJD0jZkzk",
+            authDomain: "orbit-games-auth.firebaseapp.com",
+            projectId: "orbit-games-auth",
+            storageBucket: "orbit-games-auth.firebasestorage.app",
+            messagingSenderId: "779763234363",
+            appId: "1:779763234363:web:28d2bfd50bb1e6cc010e1e",
+            measurementId: "G-HF7MPN5HKP"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+
+        document.getElementById('googleSignIn').addEventListener('click', () => {
+            signInWithPopup(auth, provider)
+                .then((result) => {
+                    const user = result.user;
+                    updateUserInfo(user);
+                })
+                .catch((error) => {
+                    console.error("Error signing in: ", error);
+                    alert("Error: " + error.message);
+                });
+        });
+
+        document.getElementById('googleSignOut').addEventListener('click', () => {
+            signOut(auth).then(() => {
+                clearUserInfo();
+            }).catch((error) => {
+                console.error("Error signing out: ", error);
+            });
+        });
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                updateUserInfo(user);
+            } else {
+                clearUserInfo();
+            }
+        });
+
+        function updateUserInfo(user) {
+            document.getElementById('pfp-container').src = user.photoURL;
+
+            document.getElementById('googleSignIn').style.display = 'none';
+            document.getElementById('googleSignOut').style.display = 'inline';
+            document.getElementById('pfp-container').addEventListener('click', openProfileContainer);
+        }
+
+        function clearUserInfo() {
+            document.getElementById('pfp-container').src = 'favicon.ico';
+
+            document.getElementById('googleSignIn').style.display = 'inline';
+            document.getElementById('googleSignOut').style.display = 'none';
+        }
+
+        function openProfileContainer() {
+            const user = auth.currentUser;
+            const profileContainer = document.createElement('div');
+            profileContainer.className = 'profile-container';
+            profileContainer.innerHTML = `
+                <div class="profile-box">
+                    <img src="${user.photoURL}" alt="Profile Picture" class="rounded-pfp">
+                    <h2 style="font-family: 'Poppins', sans-serif; font-weight: bold;">${user.displayName}</h2>
+                    <p>Email: ${user.email}</p>
+                </div>
+            `;
+            document.body.appendChild(profileContainer);
+
+            profileContainer.addEventListener('click', () => {
+                document.body.removeChild(profileContainer);
+            });
+        }
+
+        function updateBatteryStatus() {
+            navigator.getBattery().then(function(battery) {
+                const batteryPercentage = Math.round(battery.level * 100);
+                document.getElementById('battery-percentage').textContent = batteryPercentage + '%';
+            });
+        }
+        
+        function updateDateTime() {
+            const now = new Date();
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            const dateStr = now.toLocaleDateString(undefined, options);
+            const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+            document.getElementById('date').textContent = dateStr;
+            document.getElementById('time').textContent = timeStr;
+        }
+        
+        updateBatteryStatus();
+        updateDateTime();
+        setInterval(updateDateTime, 60000);
+    </script>
+</body>
+</html>

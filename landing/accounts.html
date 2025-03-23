@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login with Google</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        #loginContainer {
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #4285F4;
+            color: white;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #357ae8;
+        }
+        img {
+            border-radius: 50%;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="loginContainer">
+        <h1>Login with Google</h1>
+        <button id="googleSignIn">Sign in with Google</button>
+        <button id="googleSignOut" style="display:none;">Sign out</button>
+        <div id="user-info"></div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDHzW9zVRMkhZakRs5reLimI0NPtLejc4Q",
+            authDomain: "login-7afe1.firebaseapp.com",
+            projectId: "login-7afe1",
+            storageBucket: "login-7afe1.appspot.com",
+            messagingSenderId: "1001689689419",
+            appId: "1:1001689689419:web:8fae6de5d31f027a4e8cce",
+            measurementId: "G-BF1H1JQLX8"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+
+        document.getElementById('googleSignIn').addEventListener('click', () => {
+            signInWithPopup(auth, provider)
+                .then((result) => {
+                    const user = result.user;
+                    document.getElementById('user-info').innerHTML = `
+                        <p>Welcome, ${user.displayName}!</p>
+                        <img src="${user.photoURL}" alt="Profile Picture" width="50">
+                        <p>Email: ${user.email}</p>
+                    `;
+                    document.getElementById('googleSignIn').style.display = 'none';
+                    document.getElementById('googleSignOut').style.display = 'inline';
+                })
+                .catch((error) => {
+                    console.error("Error signing in: ", error);
+                    alert("Error: " + error.message);
+                });
+        });
+
+        document.getElementById('googleSignOut').addEventListener('click', () => {
+            signOut(auth).then(() => {
+                document.getElementById('user-info').innerHTML = '';
+                document.getElementById('googleSignIn').style.display = 'inline';
+                document.getElementById('googleSignOut').style.display = 'none';
+            }).catch((error) => {
+                console.error("Error signing out: ", error);
+            });
+        });
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                document.getElementById('user-info').innerHTML = `
+                    <p>Welcome, ${user.displayName}!</p>
+                    <img src="${user.photoURL}" alt="Profile Picture" width="50">
+                    <p>Email: ${user.email}</p>
+                `;
+                document.getElementById('googleSignIn').style.display = 'none';
+                document.getElementById('googleSignOut').style.display = 'inline';
+            } else {
+                document.getElementById('user-info').innerHTML = '';
+                document.getElementById('googleSignIn').style.display = 'inline';
+                document.getElementById('googleSignOut').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
