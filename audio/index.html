@@ -1,36 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YouTube Music Explorer</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Custom Music Video Player</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>YouTube Music Explorer</h1>
+  <div class="search-container">
+    <input type="text" id="searchInput" placeholder="Search for a music video/artist/album...">
+    <button onclick="searchVideo()">Search</button>
+  </div>
 
-    <div class="search-container">
-        <input type="text" id="searchInput" placeholder="Search music...">
-        <button onclick="searchYouTube()">Search</button>
+  <div class="results-container" id="resultsContainer"></div>
+
+  <div class="video-container" id="videoContainer" style="display: none;">
+    <iframe id="videoFrame" width="560" height="315" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    <div class="controls">
+      <button onclick="playPause()">Play</button>
+      <button onclick="skipVideo()">Skip</button>
+      <button onclick="backVideo()">Back</button>
+      <button onclick="toggleLoop()">Loop</button>
+      <button onclick="toggleLoopOne()">Loop 1</button>
     </div>
+  </div>
 
-    <h2>Trending Music</h2>
-    <div id="trending"></div>
-
-    <h2>Search Results</h2>
-    <div id="results"></div>
-
-    <div class="player-container">
-        <iframe id="youtubePlayer" frameborder="0" allowfullscreen></iframe>
-        <div class="controls">
-            <button onclick="prevTrack()">⏮️</button>
-            <button onclick="togglePlayPause()">▶️/⏸️</button>
-            <button onclick="nextTrack()">⏭️</button>
-            <button onclick="toggleLoop()">🔁</button>
-        </div>
-    </div>
-
-    <script src="https://www.youtube.com/iframe_api"></script>
-    <script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
