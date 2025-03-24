@@ -1,95 +1,101 @@
-const API_KEY = 'AIzaSyBQAZ7-zXoAFYBBDp9Amddor0WAooSjUaM';
-const BASE_URL = 'https://www.googleapis.com/youtube/v3/';
-let player;
-let currentPlaylist = [];
-let currentIndex = 0;
-let isLooping = false;
+let videoPlaying = false;
+let currentVideoIndex = 0;
+let videoData = [];
+let loop = false;
+let loopOne = false;
+const invidiousUrl = 'https://invidious.example.com'; // Replace this with a valid Invidious instance URL.
 
-document.addEventListener('DOMContentLoaded', fetchTrendingMusic);
+function searchVideo() {
+  const query = document.getElementById("searchInput").value;
+  if (!query) return;
 
-function onYouTubeIframeAPIReady() {
-    player = new YT.Player('youtubePlayer', {
-        height: '180',
-        width: '320',
-        events: {
-            'onStateChange': onPlayerStateChange
-        }
-    });
+  // Fetch results from the Invidious API
+  fetch(`${invidiousUrl}/api/v1/search?q=${encodeURIComponent(query)}`)
+    .then(response => response.json())
+    .then(data => {
+      videoData = data || [];
+      displayResults(videoData);
+    })
+    .catch(error => console.error("Error fetching data:", error));
 }
 
-async function fetchTrendingMusic() {
-    const url = `${BASE_URL}videos?part=snippet&chart=mostPopular&regionCode=US&videoCategoryId=10&key=${API_KEY}&maxResults=8`;
-    const response = await fetch(url);
-    const data = await response.json();
-    displayResults(data.items, 'trending');
-}
+function displayResults(videos) {
+  const resultsContainer = document.getElementById("resultsContainer");
+  resultsContainer.innerHTML = '';
 
-async function searchYouTube() {
-    const query = document.getElementById('searchInput').value;
-    const url = `${BASE_URL}search?part=snippet&q=${query}&type=video&videoCategoryId=10&key=${API_KEY}&maxResults=10`;
-    
-    const response = await fetch(url);
-    const data = await response.json();
-    displayResults(data.items, 'results');
-}
+  if (videos.length === 0) {
+    resultsContainer.innerHTML = "<p>No results found.</p>";
+    return;
+  }
 
-function displayResults(videos, containerId) {
-    const resultsDiv = document.getElementById(containerId);
-    resultsDiv.innerHTML = '';
-    if (containerId === 'results') currentPlaylist = videos;
-    
-    videos.forEach((video, index) => {
-        const videoElement = document.createElement('div');
-        videoElement.classList.add('video-result');
-        videoElement.innerHTML = `
-            <img src="${video.snippet.thumbnails.medium.url}" alt="${video.snippet.title}">
-            <p>${video.snippet.title}</p>
-        `;
-        videoElement.onclick = () => playVideo(index);
-        resultsDiv.appendChild(videoElement);
-    });
+  videos.forEach((video, index) => {
+    const videoElement = document.createElement("div");
+    videoElement.classList.add("result-item");
+    videoElement.innerHTML = `
+      <img src="${video.thumbnails[0].url}" alt="${video.title}">
+      <p>${video.title}</p>
+    `;
+    videoElement.onclick = () => playVideo(index);
+    resultsContainer.appendChild(videoElement);
+  });
 }
 
 function playVideo(index) {
-    currentIndex = index;
-    const videoId = currentPlaylist[index].id.videoId || currentPlaylist[index].id;
-    
-    if (player && player.loadVideoById) {
-        player.loadVideoById(videoId);
-    } else {
-        document.getElementById('youtubePlayer').src = `https://www.youtube.com/embed/${videoId}?enablejsapi=1`;
-    }
+  const video = videoData[index];
+  const videoFrame = document.getElementById("videoFrame");
+  const videoContainer = document.getElementById("videoContainer");
 
-    document.querySelector('.player-container').style.display = 'block';
+  // Embed the video using the Invidious embed URL
+  videoFrame.src = `${invidiousUrl}/embed/${video.videoId}?autoplay=1`;
+  videoContainer.style.display = 'block';
+
+  currentVideoIndex = index;
+  videoPlaying = true;
 }
 
-function togglePlayPause() {
-    if (player && player.getPlayerState) {
-        if (player.getPlayerState() === YT.PlayerState.PLAYING) {
-            player.pauseVideo();
-        } else {
-            player.playVideo();
-        }
-    }
+function playPause() {
+  const videoFrame = document.getElementById("videoFrame");
+  const player = videoFrame.contentWindow;
+
+  if (videoPlaying) {
+    player.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+    videoPlaying = false;
+  } else {
+    player.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+    videoPlaying = true;
+  }
 }
 
-function nextTrack() {
-    currentIndex = (currentIndex + 1) % currentPlaylist.length;
-    playVideo(currentIndex);
+function skipVideo() {
+  currentVideoIndex = (currentVideoIndex + 1) % videoData.length;
+  playVideo(currentVideoIndex);
 }
 
-function prevTrack() {
-    currentIndex = (currentIndex - 1 + currentPlaylist.length) % currentPlaylist.length;
-    playVideo(currentIndex);
+function backVideo() {
+  currentVideoIndex = (currentVideoIndex - 1 + videoData.length) % videoData.length;
+  playVideo(currentVideoIndex);
 }
 
 function toggleLoop() {
-    isLooping = !isLooping;
-    alert(isLooping ? "Looping ON" : "Looping OFF");
+  loop = !loop;
+  const videoFrame = document.getElementById("videoFrame");
+  const player = videoFrame.contentWindow;
+
+  if (loop) {
+    player.postMessage('{"event":"command","func":"setLoop","args":["true"]}', '*');
+  } else {
+    player.postMessage('{"event":"command","func":"setLoop","args":["false"]}', '*');
+  }
 }
 
-function onPlayerStateChange(event) {
-    if (event.data === YT.PlayerState.ENDED && isLooping) {
-        playVideo(currentIndex);
-    }
+function toggleLoopOne() {
+  loopOne = !loopOne;
+  const videoFrame = document.getElementById("videoFrame");
+  const player = videoFrame.contentWindow;
+
+  if (loopOne) {
+    player.postMessage('{"event":"command","func":"setLoop","args":["true"]}', '*');
+  } else {
+    player.postMessage('{"event":"command","func":"setLoop","args":["false"]}', '*');
+  }
 }
