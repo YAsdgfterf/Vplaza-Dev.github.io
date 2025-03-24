@@ -1,0 +1,56 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #181818;
+    color: white;
+    text-align: center;
+    padding-bottom: 80px;
+}
+h1, h2 {
+    color: #ffcc00;
+}
+.search-container {
+    margin: 20px;
+}
+input {
+    padding: 10px;
+    width: 300px;
+}
+button {
+    padding: 10px;
+    cursor: pointer;
+}
+#results, #trending {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.video-result {
+    margin: 10px;
+    padding: 10px;
+    background: #282828;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 200px;
+}
+.video-result img {
+    width: 100%;
+    border-radius: 5px;
+}
+.player-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+iframe {
+    width: 320px;
+    height: 180px;
+}
+.controls button {
+    margin: 5px;
+}
