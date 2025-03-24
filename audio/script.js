@@ -3,7 +3,7 @@ let currentVideoIndex = 0;
 let videoData = [];
 let loop = false;
 let loopOne = false;
-const invidiousUrl = 'https://invidious.example.com'; // Replace this with a valid Invidious instance URL.
+const invidiousUrl = 'https://inv.nakedo.net'; // Replace this with a valid Invidious instance URL.
 
 function searchVideo() {
   const query = document.getElementById("searchInput").value;
