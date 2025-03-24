@@ -239,6 +239,7 @@
             transition: all 0.3s ease-in-out;
             border: 1px solid rgba(255, 255, 255, 0.1);
             overflow: hidden;
+            cursor: grab; /* Indicates draggable */
         }
 
         .toolbar.search-active {
@@ -492,7 +493,7 @@
         </div>
     </div>
 
-    <div class="toolbar-container">
+    <div class="toolbar-container" id="toolbar-container">
         <div class="toolbar" id="toolbar">
             <div class="shortcuts" id="shortcuts">
                 <div class="shortcut" data-shortcut="home">
@@ -536,6 +537,32 @@
     </div>
 
     <script>
+        let isDragging = false;
+        let offsetX, offsetY;
+
+        const toolbar = document.getElementById('toolbar');
+        const toolbarContainer = document.getElementById('toolbar-container');
+
+        toolbar.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            offsetX = e.clientX - toolbarContainer.getBoundingClientRect().left;
+            offsetY = e.clientY - toolbarContainer.getBoundingClientRect().top;
+            toolbar.style.cursor = 'grabbing';
+        });
+
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+            toolbar.style.cursor = 'grab';
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (isDragging) {
+                toolbarContainer.style.left = `${e.clientX - offsetX}px`;
+                toolbarContainer.style.top = `${e.clientY - offsetY}px`;
+                toolbarContainer.style.transform = 'none'; // Reset transform
+            }
+        });
+
         let activeTabId = 0;
         let tabCounter = 1;
         const maxTabWidth = 240;
