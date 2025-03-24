@@ -1,4 +1,15 @@
 // Game functionality
+document.addEventListener("DOMContentLoaded", function () {
+  let count = localStorage.getItem("visitCount") || 0;
+  count++;
+  localStorage.setItem("visitCount", count);
+
+  let counterElement = document.getElementById("visitor-counter");
+  if (counterElement) {
+    counterElement.textContent = `Visitors: ${count}`;
+  }
+});
+
 function openGame(name, url) {
   const newWindow = window.open("about:blank", "_blank");
   if (newWindow) {
