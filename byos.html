@@ -3,74 +3,90 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Porkbun DNS Management</title>
- <style>body {
-  font-family: Arial, sans-serif;
-  background-color: #f4f4f9;
-  margin: 0;
-  padding: 0;
-}
+  <title>Porkbun Subdomain Registration</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
 
-.container {
-  width: 100%;
-  max-width: 500px;
-  margin: 50px auto;
-  background-color: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
+    .container {
+      background-color: #ffffff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      border-radius: 8px;
+      width: 100%;
+      max-width: 400px;
+    }
 
-h1 {
-  text-align: center;
-  font-size: 24px;
-  margin-bottom: 20px;
-}
+    h1 {
+      text-align: center;
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
 
-.form-container {
-  display: flex;
-  flex-direction: column;
-}
+    .form-container label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
 
-label {
-  margin: 10px 0 5px;
-}
+    .form-container input,
+    .form-container select {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
 
-input, select, button {
-  padding: 10px;
-  margin: 5px 0;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
+    .form-container button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 4px;
+      width: 100%;
+      cursor: pointer;
+      font-size: 16px;
+    }
 
-button {
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
+    .form-container button:hover {
+      background-color: #45a049;
+    }
 
-button:hover {
-  background-color: #45a049;
-}
+    #status-message {
+      margin-top: 10px;
+      text-align: center;
+      font-size: 16px;
+    }
 
-#status-message {
-  margin-top: 15px;
-  text-align: center;
-  font-weight: bold;
-  color: red;
-}
-</style>
+    #domain-preview {
+      margin-top: 20px;
+      font-size: 16px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    #full-domain {
+      color: #333;
+    }
+  </style>
 </head>
 <body>
+
   <div class="container">
-    <h1>Porkbun DNS Management</h1>
+    <h1>Porkbun Subdomain Registration</h1>
     <div class="form-container">
-      <label for="domain-dropdown">Select Domain</label>
-      <select id="domain-dropdown">
-        <option value="">Loading...</option>
-      </select>
+      <label for="subdomain">Subdomain (Required)</label>
+      <input type="text" id="subdomain" placeholder="Enter subdomain" required>
 
       <label for="record-type">Select Record Type</label>
       <select id="record-type">
@@ -78,136 +94,112 @@ button:hover {
         <option value="CNAME">CNAME</option>
         <option value="MX">MX</option>
         <option value="TXT">TXT</option>
-        <!-- Add other record types as needed -->
       </select>
 
       <label for="record-value">Enter Record Value</label>
-      <input type="text" id="record-value" placeholder="Enter value for record">
-
-      <label for="subdomain">Subdomain (Required)</label>
-      <input type="text" id="subdomain" placeholder="Enter subdomain" required>
+      <input type="text" id="record-value" placeholder="Enter value for record" required>
 
       <button id="submit-btn">Submit</button>
 
       <p id="status-message"></p>
+
+      <div id="domain-preview">
+        <p>Your domain will be: <span id="full-domain">N/A</span></p>
+      </div>
     </div>
   </div>
 
-  <script>document.addEventListener('DOMContentLoaded', function() {
-  const domainDropdown = document.getElementById('domain-dropdown');
-  const recordTypeDropdown = document.getElementById('record-type');
-  const recordValueInput = document.getElementById('record-value');
-  const subdomainInput = document.getElementById('subdomain');
-  const submitBtn = document.getElementById('submit-btn');
-  const statusMessage = document.getElementById('status-message');
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const subdomainInput = document.getElementById('subdomain');
+      const recordTypeDropdown = document.getElementById('record-type');
+      const recordValueInput = document.getElementById('record-value');
+      const submitBtn = document.getElementById('submit-btn');
+      const statusMessage = document.getElementById('status-message');
+      const fullDomainElement = document.getElementById('full-domain');
 
-  const apiUrl = 'https://porkbun.com/api/json/v3/domains';
+      // Hardcoded apex domain
+      const apexDomain = 'supersimple.lol';
+      const apiKey = 'pk1_754b51b596e0782b0b92a2bddcdbc84f0fa82b6ea8093ce7567908e6a8e2b000';
+      const apiSecret = 'sk1_323b94243d6195663ada69c3ecb426933c0f4c16c34f718bdac0807a05d2b7fc';
 
-  // Use your Porkbun API Key and Secret
-  const apiKey = 'pk1_754b51b596e0782b0b92a2bddcdbc84f0fa82b6ea8093ce7567908e6a8e2b000';
-  const apiSecret = 'sk1_323b94243d6195663ada69c3ecb426933c0f4c16c34f718bdac0807a05d2b7fc';
+      // Update the preview of the full domain as the user types the subdomain
+      subdomainInput.addEventListener('input', function() {
+        const subdomain = subdomainInput.value.trim();
 
-  // Function to fetch domains from Porkbun API
-  async function fetchDomains() {
-    try {
-      const response = await fetch(apiUrl, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Basic ${btoa(`${apiKey}:${apiSecret}`)}`
+        // Only show the full domain if a valid subdomain is entered
+        if (subdomain) {
+          fullDomainElement.textContent = `${subdomain}.${apexDomain}`;
+        } else {
+          fullDomainElement.textContent = 'N/A';
         }
       });
-      const data = await response.json();
 
-      if (data && data.result) {
-        const domains = data.result;
-        domainDropdown.innerHTML = '';
-        domains.forEach(domain => {
-          const option = document.createElement('option');
-          option.value = domain.domain;
-          option.textContent = domain.domain;
-          domainDropdown.appendChild(option);
-        });
-      } else {
-        statusMessage.textContent = 'Error loading domains';
+      // Function to add a DNS record
+      async function addDnsRecord() {
+        const subdomain = subdomainInput.value.trim();
+        const recordType = recordTypeDropdown.value;
+        const recordValue = recordValueInput.value;
+
+        // Ensure the subdomain is provided
+        if (!subdomain) {
+          statusMessage.textContent = 'Subdomain is required';
+          return;
+        }
+
+        // Prevent wildcard for apex domain
+        if (subdomain === '*' || subdomain === apexDomain) {
+          statusMessage.textContent = 'Cannot create a wildcard or apex domain record.';
+          return;
+        }
+
+        const fullDomain = `${subdomain}.${apexDomain}`;
+
+        // Ensure valid record value
+        if (!recordValue) {
+          statusMessage.textContent = 'Record value is required';
+          return;
+        }
+
+        const requestBody = {
+          type: recordType,
+          name: fullDomain,
+          content: recordValue,
+          ttl: 3600,
+        };
+
+        const recordApiUrl = `https://porkbun.com/api/json/v3/domains/${apexDomain}/dns/add`;
+
+        try {
+          const response = await fetch(recordApiUrl, {
+            method: 'POST',
+            headers: {
+              'Authorization': `Basic ${btoa(`${apiKey}:${apiSecret}`)}`,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestBody)
+          });
+          const data = await response.json();
+          if (data && data.success) {
+            statusMessage.textContent = 'DNS record added successfully';
+            recordValueInput.value = '';
+            subdomainInput.value = '';
+            fullDomainElement.textContent = 'N/A'; // Reset full domain preview
+          } else {
+            statusMessage.textContent = 'Error adding DNS record';
+          }
+        } catch (error) {
+          console.error('Error adding DNS record:', error);
+          statusMessage.textContent = 'Error adding DNS record';
+        }
       }
-    } catch (error) {
-      console.error('Error fetching domains:', error);
-      statusMessage.textContent = 'Error fetching domains';
-    }
-  }
 
-  // Function to add a DNS record
-  async function addDnsRecord() {
-    const domain = domainDropdown.value;
-    const recordType = recordTypeDropdown.value;
-    const recordValue = recordValueInput.value;
-    const subdomain = subdomainInput.value;
-
-    // Ensure the subdomain is provided
-    if (!subdomain) {
-      statusMessage.textContent = 'Subdomain is required';
-      return;
-    }
-
-    // Prevent wildcard for apex domain
-    if (domain === subdomain && recordType === 'A' && recordValue === '*') {
-      statusMessage.textContent = 'Cannot create a wildcard record for the apex domain.';
-      return;
-    }
-
-    if (!domain || !recordValue) {
-      statusMessage.textContent = 'Domain and Record Value are required';
-      return;
-    }
-
-    // Prevent wildcard creation for the apex domain
-    if (subdomain === '*' && domain === domainDropdown.value) {
-      statusMessage.textContent = 'Wildcard records cannot be added for the apex domain.';
-      return;
-    }
-
-    const fullDomain = `${subdomain}.${domain}`;
-
-    const requestBody = {
-      type: recordType,
-      name: fullDomain,
-      content: recordValue,
-      ttl: 3600,
-    };
-
-    const recordApiUrl = `https://porkbun.com/api/json/v3/domains/${domain}/dns/add`;
-
-    try {
-      const response = await fetch(recordApiUrl, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Basic ${btoa(`${apiKey}:${apiSecret}`)}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(requestBody)
+      // Submit handler
+      submitBtn.addEventListener('click', function() {
+        addDnsRecord();
       });
-      const data = await response.json();
-      if (data && data.success) {
-        statusMessage.textContent = 'DNS record added successfully';
-        recordValueInput.value = '';
-        subdomainInput.value = '';
-      } else {
-        statusMessage.textContent = 'Error adding DNS record';
-      }
-    } catch (error) {
-      console.error('Error adding DNS record:', error);
-      statusMessage.textContent = 'Error adding DNS record';
-    }
-  }
+    });
+  </script>
 
-  // Initial domain fetch on page load
-  fetchDomains();
-
-  // Submit handler
-  submitBtn.addEventListener('click', function() {
-    addDnsRecord();
-  });
-});
-</script>
 </body>
 </html>
