@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subdomain Registration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 8px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .form-group button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .form-group button:hover {
+            background-color: #45a049;
+        }
+
+        #result {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .error {
+            color: red;
+        }
+
+        .success {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Register Subdomain</h2>
+        <div class="form-group">
+            <label for="domain">Apex Domain</label>
+            <input type="text" id="domain" placeholder="Enter apex domain (e.g., example.com)">
+        </div>
+        <div class="form-group">
+            <label for="subdomain">Subdomain</label>
+            <input type="text" id="subdomain" placeholder="Enter subdomain (optional)">
+        </div>
+        <div class="form-group">
+            <label for="record_type">Record Type</label>
+            <select id="record_type">
+                <option value="A">A</option>
+                <option value="CNAME">CNAME</option>
+                <option value="TXT">TXT</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <button id="generate_random">Generate Random Subdomain</button>
+        </div>
+        <div class="form-group">
+            <button id="register_button">Register Subdomain</button>
+        </div>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        // Function to generate a random subdomain
+        function generateRandomSubdomain() {
+            return Math.random().toString(36).substring(2, 10);  // 8 random characters
+        }
+
+        // Function to display the result in the UI
+        function displayResult(message, success = true) {
+            const resultElement = document.getElementById('result');
+            resultElement.classList.remove('success', 'error');
+            resultElement.classList.add(success ? 'success' : 'error');
+            resultElement.innerText = message;
+        }
+
+        // Event listener for generating random subdomain
+        document.getElementById('generate_random').onclick = function() {
+            const randomSubdomain = generateRandomSubdomain();
+            document.getElementById('subdomain').value = randomSubdomain;
+        };
+
+        // Event listener for registering subdomain
+        document.getElementById('register_button').onclick = function() {
+            const domain = document.getElementById('domain').value.trim();
+            const subdomain = document.getElementById('subdomain').value.trim();
+            const recordType = document.getElementById('record_type').value;
+
+            if (!domain) {
+                displayResult('Please enter an apex domain', false);
+                return;
+            }
+
+            if (!subdomain) {
+                displayResult('Please enter a subdomain', false);
+                return;
+            }
+
+            // Replace with the actual API key and secret
+            const API_KEY = ' pk1_754b51b596e0782b0b92a2bddcdbc84f0fa82b6ea8093ce7567908e6a8e2b000';
+            const API_SECRET = 'sk1_323b94243d6195663ada69c3ecb426933c0f4c16c34f718bdac0807a05d2b7fc';
+            const BASE_URL = 'https://porkbun.com/api/json/v3';
+
+            // Make the request to Porkbun API
+            fetch(`${BASE_URL}/dns/create`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    apikey: API_KEY,
+                    secretapikey: API_SECRET,
+                    domain: domain,
+                    subdomain: subdomain,
+                    type: recordType,
+                    content: '127.0.0.1',  // Default content (you can change this based on your needs)
+                    ttl: 3600  // Time-to-live
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'SUCCESS') {
+                    displayResult(`Subdomain ${subdomain}.${domain} registered successfully!`);
+                } else {
+                    displayResult(`Error: ${data.message}`, false);
+                }
+            })
+            .catch(error => {
+                displayResult(`Error: ${error.message}`, false);
+            });
+        };
+    </script>
+
+</body>
+</html>
