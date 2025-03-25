@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type='text/javascript' src='https://cdn.scaledrone.com/scaledrone.min.js'></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js"></script>
+    <title>VCHAT</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root {
+            --discord-primary: #5865f2;
+            --discord-danger: #ed4245;
+            --discord-online: #3ba55c;
+            --discord-bg-dark: #202225;
+            --discord-bg-medium: #2f3136;
+            --discord-bg-light: #36393f;
+            --discord-bg-message: #40444b;
+            --discord-text-normal: #dcddde;
+            --discord-text-muted: #a3a6aa;
+            --discord-text-link: #00aff4;
+            --discord-interactive-hover: #4752c4;
+            --discord-interactive-active: #3c45a5;
+            --discord-channel-text: #8e9297;
+            --discord-channel-active: #fff;
+            --discord-border: rgba(78, 80, 88, 0.48);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: var(--discord-bg-light);
+            color: var(--discord-text-normal);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Server list sidebar */
+        .server-list {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 72px;
+            background-color: var(--discord-bg-dark);
+            padding: 12px 0;
+            overflow-y: auto;
+        }
+
+        .server-icon {
+            width: 48px;
+            height: 48px;
+            background-color: var(--discord-bg-medium);
+            border-radius: 50%;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: border-radius 0.2s;
+            position: relative;
+            color: var(--discord-primary);
+            font-size: 1.5rem;
+        }
+
+        .server-icon:hover {
+            border-radius: 16px;
+            background-color: var(--discord-primary);
+            color: white;
+        }
+
+        .server-icon.active {
+            border-radius: 16px;
+            background-color: var(--discord-primary);
+            color: white;
+        }
+
+        .server-icon.active::before {
+            content: '';
+            position: absolute;
+            left: -16px;
+            width: 8px;
+            height: 40px;
+            border-radius: 0 4px 4px 0;
+            background-color: white;
+        }
+
+        .divider {
+            width: 32px;
+            height: 2px;
+            background-color: var(--discord-border);
+            margin: 8px 0;
+        }
+
+        /* Channel sidebar */
+        .channel-sidebar {
+            width: 240px;
+            background-color: var(--discord-bg-medium);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .server-header {
+            padding: 16px;
+            height: 48px;
+            border-bottom: 1px solid var(--discord-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: 600;
+        }
+
+        .server-header h2 {
+            font-size: 16px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .server-header button {
+            background: none;
+            border: none;
+            color: var(--discord-text-muted);
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .channel-category {
+            margin-top: 24px;
+            padding: 0 8px;
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            text-transform: uppercase;
+            color: var(--discord-text-muted);
+            font-size: 12px;
+            font-weight: 600;
+            padding: 0 8px;
+            margin-bottom: 4px;
+            cursor: pointer;
+        }
+
+        .category-header i {
+            margin-right: 4px;
+            font-size: 10px;
+        }
+
+        .channel-list {
+            list-style-type: none;
+        }
+
+        .channel-item {
+            display: flex;
+            align-items: center;
+            color: var(--discord-channel-text);
+            padding: 6px 8px;
+            margin: 2px 0;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .channel-item:hover {
+            background-color: rgba(79, 84, 92, 0.32);
+            color: var(--discord-text-normal);
+        }
+
+        .channel-item.active {
+            background-color: rgba(79, 84, 92, 0.32);
+            color: var(--discord-channel-active);
+            font-weight: 500;
+        }
+
+        .channel-item i {
+            margin-right: 6px;
+            font-size: 18px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .user-area {
+            margin-top: auto;
+            padding: 8px;
+            height: 52px;
+            background-color: rgba(32, 34, 37, 0.5);
+            display: flex;
+            align-items: center;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            margin-right: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-status {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--discord-online);
+            border: 2px solid var(--discord-bg-medium);
+        }
+
+        .user-info {
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .user-name {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: -2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .user-tag {
+            font-size: 12px;
+            color: var(--discord-text-muted);
+        }
+
+        .user-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .user-controls button {
+            background: none;
+            border: none;
+            color: var(--discord-text-muted);
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        /* Chat area */
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--discord-bg-light);
+        }
+
+        .chat-header {
+            height: 48px;
+            padding: 0 16px;
+            border-bottom: 1px solid var(--discord-border);
+            display: flex;
+            align-items: center;
+        }
+
+        .chat-header h3 {
+            font-size: 16px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+
+        .chat-header h3 i {
+            margin-right: 6px;
+            color: var(--discord-channel-text);
+        }
+
+        .main-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .messages-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .members-container {
+            width: 240px;
+            background-color: var(--discord-bg-medium);
+            padding: 16px 8px;
+            overflow-y: auto;
+        }
+
+        .members-header {
+            color: var(--discord-text-muted);
+            text-transform: uppercase;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            padding: 0 8px;
+        }
+
+        .members-list {
+            list-style-type: none;
+        }
+
+        .member-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-bottom: 2px;
+        }
+
+        .member-item:hover {
+            background-color: rgba(79, 84, 92, 0.32);
+        }
+
+        .member-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            margin-right: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .member-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .member-name {
+            font-weight: 500;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .messages {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message {
+            display: flex;
+            padding: 8px 0;
+            margin-bottom: 8px;
+        }
+
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .message-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .message-content {
+            flex: 1;
+        }
+
+        .message-header {
+            display: flex;
+            align-items: baseline;
+            margin-bottom: 4px;
+        }
+
+        .message-author {
+            font-size: 16px;
+            font-weight: 500;
+            margin-right: 8px;
+        }
+
+        .message-time {
+            font-size: 12px;
+            color: var(--discord-text-muted);
+        }
+
+        .message-text {
+            font-size: 15px;
+            line-height: 1.375;
+            color: var(--discord-text-normal);
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .message-form {
+            padding: 0 16px 24px;
+        }
+
+        .message-input-container {
+            background-color: var(--discord-bg-message);
+            border-radius: 8px;
+            padding: 0 16px;
+        }
+
+        .message-form__input {
+            width: 100%;
+            padding: 12px 0;
+            font-size: 15px;
+            color: var(--discord-text-normal);
+            background: transparent;
+            border: none;
+            outline: none;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        .message-form__input::placeholder {
+            color: var(--discord-text-muted);
+        }
+
+        /* Login screen */
+        .login-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .login-container {
+            background-color: var(--discord-bg-medium);
+            border-radius: 8px;
+            width: 480px;
+            padding: 32px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .login-header h2 {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .login-header p {
+            color: var(--discord-text-muted);
+            font-size: 16px;
+        }
+
+        .login-button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 44px;
+            background-color: white;
+            color: #333;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 500;
+            margin-top: 16px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            border: none;
+            width: 100%;
+        }
+
+        .login-button:hover {
+            background-color: #e6e6e6;
+        }
+
+        .login-button img {
+            height: 24px;
+            margin-right: 8px;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div class="login-screen" id="login-screen">
+        <div class="login-container">
+            <div class="login-header">
+                <h2>Welcome to VCHAT</h2>
+                <p>Log in with Google to join the conversation!</p>
+            </div>
+            <button class="login-button" id="googleSignIn">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/768px-Google_%22G%22_logo.svg.png" alt="Google logo">
+                Sign in with Google
+            </button>
+            <button class="login-button hidden" id="googleSignOut">
+                Sign Out
+            </button>
+            <div id="user-info" class="hidden"></div>
+        </div>
+    </div>
+    
+    <div class="server-list">
+        <div class="server-icon active">
+            <i class="fa-brands fa-discord"></i>
+        </div>
+        <div class="divider"></div>
+        <div class="server-icon">
+            <i class="fa-solid fa-comment"></i>
+        </div>
+        <div class="server-icon">
+            <i class="fa-solid fa-users"></i>
+        </div>
+        <div class="server-icon">
+            <i class="fa-solid fa-gamepad"></i>
+        </div>
+        <div class="server-icon">
+            <i class="fa-solid fa-code"></i>
+        </div>
+    </div>
+
+    <div class="channel-sidebar">
+        <div class="server-header">
+            <h2>Discord Chat Server</h2>
+            <button><i class="fa-solid fa-chevron-down"></i></button>
+        </div>
+
+        <div class="channel-category">
+            <div class="category-header">
+                <i class="fa-solid fa-chevron-down"></i> Text Channels
+            </div>
+            <ul class="channel-list">
+                <li class="channel-item active">
+                    <i class="fa-solid fa-hashtag"></i> general
+                </li>
+                <li class="channel-item">
+                    <i class="fa-solid fa-hashtag"></i> introductions
+                </li>
+                <li class="channel-item">
+                    <i class="fa-solid fa-hashtag"></i> off-topic
+                </li>
+                <li class="channel-item">
+                    <i class="fa-solid fa-hashtag"></i> memes
+                </li>
+            </ul>
+        </div>
+
+        <div class="channel-category">
+            <div class="category-header">
+                <i class="fa-solid fa-chevron-down"></i> Voice Channels
+            </div>
+            <ul class="channel-list">
+                <li class="channel-item">
+                    <i class="fa-solid fa-volume-high"></i> General Voice
+                </li>
+                <li class="channel-item">
+                    <i class="fa-solid fa-volume-high"></i> Chill Lounge
+                </li>
+                <li class="channel-item">
+                    <i class="fa-solid fa-volume-high"></i> Gaming
+                </li>
+            </ul>
+        </div>
+
+        <div class="user-area">
+            <div class="user-avatar">
+                <img id="user-avatar-img" src="https://cdn.discordapp.com/embed/avatars/0.png" alt="User Avatar">
+                <div class="user-status"></div>
+            </div>
+            <div class="user-info">
+                <div class="user-name" id="user-display-name">Username</div>
+                <div class="user-tag">#0000</div>
+            </div>
+            <div class="user-controls">
+                <button><i class="fa-solid fa-microphone"></i></button>
+                <button><i class="fa-solid fa-headphones"></i></button>
+                <button><i class="fa-solid fa-gear"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="chat-container">
+        <div class="chat-header">
+            <h3><i class="fa-solid fa-hashtag"></i> general</h3>
+        </div>
+
+        <div class="main-content">
+            <div class="messages-container">
+                <div class="messages" id="messages"></div>
+
+                <form class="message-form" onsubmit="return false;">
+                    <div class="message-input-container">
+                        <input
+                            class="message-form__input"
+                            placeholder="Message #general"
+                            type="text"
+                            id="message-input"
+                        />
+                    </div>
+                </form>
+            </div>
+
+            <div class="members-container">
+                <div class="members-header">Members — <span id="members-count">0</span></div>
+                <ul class="members-list" id="members-list"></ul>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        // Import Firebase modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDHzW9zVRMkhZakRs5reLimI0NPtLejc4Q",
+            authDomain: "login-7afe1.firebaseapp.com",
+            projectId: "login-7afe1",
+            storageBucket: "login-7afe1.appspot.com",
+            messagingSenderId: "1001689689419",
+            appId: "1:1001689689419:web:8fae6de5d31f027a4e8cce",
+            measurementId: "G-BF1H1JQLX8"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+
+        // DOM Elements
+        const googleSignInBtn = document.getElementById('googleSignIn');
+        const googleSignOutBtn = document.getElementById('googleSignOut');
+        const userInfo = document.getElementById('user-info');
+        const loginScreen = document.getElementById('login-screen');
+        const userDisplayName = document.getElementById('user-display-name');
+        const userAvatarImg = document.getElementById('user-avatar-img');
+
+        // ScaleDrone configuration
+        const CLIENT_ID = 'ScZlA1RVvNPHK9X8';
+        let drone;
+        let userProfile = null;
+
+        // Auth state changed handler
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // User is signed in
+                userProfile = {
+                    name: user.displayName,
+                    photoURL: user.photoURL,
+                    email: user.email
+                };
+
+                // Update UI
+                userInfo.innerHTML = `
+                    <p>Welcome, ${user.displayName}!</p>
+                    <img src="${user.photoURL}" alt="Profile Picture" width="50">
+                    <p>Email: ${user.email}</p>
+                `;
+
+                googleSignInBtn.style.display = 'none';
+                googleSignOutBtn.style.display = 'inline';
+                loginScreen.style.display = 'none';
+
+                userDisplayName.textContent = user.displayName;
+                userAvatarImg.src = user.photoURL || 'https://cdn.discordapp.com/embed/avatars/0.png';
+
+                // Connect to ScaleDrone
+                initializeScaleDrone();
+
+            } else {
+                // User is signed out
+                userInfo.innerHTML = '';
+                googleSignInBtn.style.display = 'inline';
+                googleSignOutBtn.style.display = 'none';
+                loginScreen.style.display = 'flex';
+                userProfile = null;
+            }
+        });
+
+        // Sign in with Google
+        googleSignInBtn.addEventListener('click', () => {
+            signInWithPopup(auth, provider)
+                .catch((error) => {
+                    console.error("Error signing in: ", error);
+                    alert("Error: " + error.message);
+                });
+        });
+
+        // Sign out
+        googleSignOutBtn.addEventListener('click', () => {
+            signOut(auth).then(() => {
+                if (drone) {
+                    drone.close();
+                    drone = null;
+                }
+            }).catch((error) => {
+                console.error("Error signing out: ", error);
+            });
+        });
+
+        // Initialize ScaleDrone
+        function initializeScaleDrone() {
+            if (drone) {
+                drone.close();
+            }
+
+            drone = new ScaleDrone(CLIENT_ID, {
+                data: {
+                    name: userProfile.name,
+                    color: getRandomColor(),
+                    photoURL: userProfile.photoURL
+                },
+            });
+
+            let members = [];
+
+            drone.on('open', error => {
+                if (error) {
+                    return console.error(error);
+                }
+                console.log('Successfully connected to Scaledrone');
+
+                const room = drone.subscribe('observable-room');
+                room.on('open', error => {
+                    if (error) {
+                        return console.error(error);
+                    }
+                    console.log('Successfully joined room');
+                });
+
+                room.on('members', m => {
+                    members = m;
+                    updateMembersDOM();
+                });
+
+                room.on('member_join', member => {
+                    members.push(member);
+                    updateMembersDOM();
+                });
+
+                room.on('member_leave', ({ id }) => {
+                    const index = members.findIndex(member => member.id === id);
+                    members.splice(index, 1);
+                    updateMembersDOM();
+                });
+
+                room.on('data', (text, member) => {
+                    if (member) {
+                        addMessageToListDOM(text, member);
+                    }
+                });
+            });
+
+            drone.on('close', event => {
+                console.log('Connection was closed', event);
+            });
+
+            drone.on('error', error => {
+                console.error(error);
+            });
+        }
+
+        function getRandomColor() {
+            return '#' + Math.floor(Math.random() * 0xFFFFFF).toString(16);
+        }
+
+        // DOM Manipulation
+        const DOM = {
+            membersCount: document.getElementById('members-count'),
+            membersList: document.getElementById('members-list'),
+            messages: document.getElementById('messages'),
+            input: document.getElementById('message-input'),
+            form: document.querySelector('.message-form'),
+        };
+
+        DOM.form.addEventListener('submit', sendMessage);
+        DOM.input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        function sendMessage() {
+            const value = DOM.input.value.trim();
+            if (!value) return;
+
+            DOM.input.value = '';
+
+            drone.publish({
+                room: 'observable-room',
+                message: value,
+            });
+        }
+
+        function createMemberElement(member) {
+            const { name, color, photoURL } = member.clientData;
+            const el = document.createElement('li');
+            el.className = 'member-item';
+
+            // Create avatar
+            const avatar = document.createElement('div');
+            avatar.className = 'member-avatar';
+            const img = document.createElement('img');
+            img.src = photoURL || 'https://cdn.discordapp.com/embed/avatars/0.png';
+            avatar.appendChild(img);
+
+            // Create name
+            const nameEl = document.createElement('div');
+            nameEl.className = 'member-name';
+            nameEl.appendChild(document.createTextNode(name));
+            nameEl.style.color = color;
+
+            el.appendChild(avatar);
+            el.appendChild(nameEl);
+
+            return el;
+        }
+
+        function updateMembersDOM() {
+            DOM.membersCount.innerText = members.length;
+            DOM.membersList.innerHTML = '';
+            members.forEach(member => {
+                DOM.membersList.appendChild(createMemberElement(member));
+            });
+        }
+
+        function formatTimestamp() {
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            return `Today at ${hours}:${minutes}`;
+        }
+
+        function createMessageElement(text, member) {
+            const { name, color, photoURL } = member.clientData;
+
+            const el = document.createElement('div');
+            el.className = 'message';
+
+            // Create avatar
+            const avatar = document.createElement('div');
+            avatar.className = 'message-avatar';
+            const img = document.createElement('img');
+            img.src = photoURL || 'https://cdn.discordapp.com/embed/avatars/0.png';
+            avatar.appendChild(img);
+
+            // Create message content
+            const contentEl = document.createElement('div');
+            contentEl.className = 'message-content';
+
+            // Message header (author + time)
+            const headerEl = document.createElement('div');
+            headerEl.className = 'message-header';
+
+            const authorEl = document.createElement('div');
+            authorEl.className = 'message-author';
+            authorEl.textContent = name;
+            authorEl.style.color = color;
+
+            const timeEl = document.createElement('div');
+            timeEl.className = 'message-time';
+            timeEl.textContent = formatTimestamp();
+
+            headerEl.appendChild(authorEl);
+            headerEl.appendChild(timeEl);
+
+            // Message text
+            const textEl = document.createElement('div');
+            textEl.className = 'message-text';
+            textEl.textContent = text;
+
+            contentEl.appendChild(headerEl);
+            contentEl.appendChild(textEl);
+
+            el.appendChild(avatar);
+            el.appendChild(contentEl);
+
+            return el;
+        }
+
+        function addMessageToListDOM(text, member) {
+            const el = DOM.messages;
+            const wasTop = el.scrollTop >= el.scrollHeight - el.clientHeight - 10;
+
+            el.appendChild(createMessageElement(text, member));
+
+            if (wasTop) {
+                el.scrollTop = el.scrollHeight;
+            }
+        }
+    </script>
+</body>
+</html>
