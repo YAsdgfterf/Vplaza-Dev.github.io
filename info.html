@@ -1,3 +1,5 @@
+<!--Latest Update: rotating settings icon and also different hover effect on music icon!!!-->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -219,7 +221,7 @@
 
         .toolbar-container {
             position: absolute;
-            bottom: -50px; /* Initially hidden */
+            bottom: -50px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 1000;
@@ -230,7 +232,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background-color: rgba(60, 64, 67, 0.85);
+            background-color: rgba(60, 64, 67, 0.833);
             backdrop-filter: blur(15px);
             border-radius: 24px;
             padding: 8px 16px;
@@ -442,6 +444,25 @@
             height: 16px;
             margin-right: 8px;
         }
+
+        .shortcut[data-shortcut="settings"] {
+            transition: transform 2s ease;
+}
+
+        .shortcut[data-shortcut="settings"]:hover {
+            transform: rotate(360deg);
+            background-color: transparent;
+}         
+
+        .shortcut[data-shortcut="music"] {
+            transition: transform 0.6s ease, background-color 1s ease;
+        }
+
+        .shortcut[data-shortcut="music"]:hover {
+            transform: translateY(-5px);
+            background-color: rgba(45, 45, 45, 0.703);
+        }
+
     </style>
 </head>
 <body>
@@ -536,34 +557,34 @@
     </div>
 
     <script>
-        let isSearchActive = false; // Flag to track search activity
+        let isSearchActive = false;
         const toolbarContainer = document.getElementById('toolbar-container');
         const toolbarSearchInput = document.getElementById('toolbar-search-input');
 
         toolbarContainer.addEventListener('mouseenter', () => {
-            toolbarContainer.style.bottom = '20px'; // Raise the toolbar on hover
-            clearTimeout(toolbarContainer.timeout); // Clear timeout if re-hovered
+            toolbarContainer.style.bottom = '20px';
+            clearTimeout(toolbarContainer.timeout);
         });
 
         toolbarContainer.addEventListener('mouseleave', () => {
             toolbarContainer.timeout = setTimeout(() => {
                 if (!isSearchActive) {
-                    toolbarContainer.style.bottom = '-50px'; // Hide the toolbar
+                    toolbarContainer.style.bottom = '-50px';
                 }
             }, 2000);
         });
 
         toolbarSearchInput.addEventListener('focus', () => {
-            isSearchActive = true; // Keep toolbar visible when searching
-            toolbarContainer.style.bottom = '20px'; // Raise the toolbar
+            isSearchActive = true;
+            toolbarContainer.style.bottom = '20px';
         });
 
         toolbarSearchInput.addEventListener('blur', () => {
             if (toolbarSearchInput.value.trim() === '') {
                 isSearchActive = false;
                 toolbarContainer.timeout = setTimeout(() => {
-                    toolbarContainer.style.bottom = '-50px'; // Hide the toolbar if not searched
-                }, 5000); // Delay hiding after losing focus
+                    toolbarContainer.style.bottom = '-50px';
+                }, 5000); 
             }
         });
 
@@ -990,16 +1011,16 @@
 
             if (show) {
                 toolbar.classList.add('search-active');
-                toolbarContainer.style.bottom = '20px'; // Keep it up while searching
+                toolbarContainer.style.bottom = '20px';
                 setTimeout(() => {
-                    isSearchActive = true; // Set flag for search activity
+                    isSearchActive = true;
                 }, 100);
             } else {
                 shortcuts.classList.remove('hidden');
                 toolbar.classList.remove('search-active');
                 searchInput.value = '';
                 isSearchActive = false;
-                toolbarContainer.style.bottom = '-50px'; // Hide the toolbar
+                toolbarContainer.style.bottom = '-50px';
             }
         }
 
