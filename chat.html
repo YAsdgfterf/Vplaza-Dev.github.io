@@ -635,21 +635,19 @@
 
         // Firebase configuration
         const firebaseConfig = {
-            apiKey: "AIzaSyDHzW9zVRMkhZakRs5reLimI0NPtLejc4Q",
-            authDomain: "login-7afe1.firebaseapp.com",
-            projectId: "login-7afe1",
-            storageBucket: "login-7afe1.appspot.com",
-            messagingSenderId: "1001689689419",
-            appId: "1:1001689689419:web:8fae6de5d31f027a4e8cce",
-            measurementId: "G-BF1H1JQLX8"
-        };
+  apiKey: "AIzaSyC7wfMI_f-nvZSZi-_PY6w22mxJD0jZkzk",
+  authDomain: "orbit-games-auth.firebaseapp.com",
+  projectId: "orbit-games-auth",
+  storageBucket: "orbit-games-auth.firebasestorage.app",
+  messagingSenderId: "779763234363",
+  appId: "1:779763234363:web:28d2bfd50bb1e6cc010e1e",
+  measurementId: "G-HF7MPN5HKP"
+};
 
-        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const provider = new GoogleAuthProvider();
 
-        // DOM Elements
         const googleSignInBtn = document.getElementById('googleSignIn');
         const googleSignOutBtn = document.getElementById('googleSignOut');
         const userInfo = document.getElementById('user-info');
@@ -657,7 +655,6 @@
         const userDisplayName = document.getElementById('user-display-name');
         const userAvatarImg = document.getElementById('user-avatar-img');
 
-        // ScaleDrone configuration
         const CLIENT_ID = 'AtcvRAQgKB6cflHl';
         let drone;
         let userProfile = null;
