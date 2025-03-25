@@ -4,8 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Porkbun DNS Management</title>
-  <style>
-      body {
+ <style>body {
   font-family: Arial, sans-serif;
   background-color: #f4f4f9;
   margin: 0;
@@ -62,8 +61,7 @@ button:hover {
   font-weight: bold;
   color: red;
 }
-
-  </style>
+</style>
 </head>
 <body>
   <div class="container">
@@ -86,8 +84,8 @@ button:hover {
       <label for="record-value">Enter Record Value</label>
       <input type="text" id="record-value" placeholder="Enter value for record">
 
-      <label for="subdomain">Subdomain (Optional)</label>
-      <input type="text" id="subdomain" placeholder="Enter subdomain">
+      <label for="subdomain">Subdomain (Required)</label>
+      <input type="text" id="subdomain" placeholder="Enter subdomain" required>
 
       <button id="submit-btn">Submit</button>
 
@@ -95,9 +93,7 @@ button:hover {
     </div>
   </div>
 
-  <script>
-
-      document.addEventListener('DOMContentLoaded', function() {
+  <script>document.addEventListener('DOMContentLoaded', function() {
   const domainDropdown = document.getElementById('domain-dropdown');
   const recordTypeDropdown = document.getElementById('record-type');
   const recordValueInput = document.getElementById('record-value');
@@ -147,12 +143,30 @@ button:hover {
     const recordValue = recordValueInput.value;
     const subdomain = subdomainInput.value;
 
+    // Ensure the subdomain is provided
+    if (!subdomain) {
+      statusMessage.textContent = 'Subdomain is required';
+      return;
+    }
+
+    // Prevent wildcard for apex domain
+    if (domain === subdomain && recordType === 'A' && recordValue === '*') {
+      statusMessage.textContent = 'Cannot create a wildcard record for the apex domain.';
+      return;
+    }
+
     if (!domain || !recordValue) {
       statusMessage.textContent = 'Domain and Record Value are required';
       return;
     }
 
-    const fullDomain = subdomain ? `${subdomain}.${domain}` : domain;
+    // Prevent wildcard creation for the apex domain
+    if (subdomain === '*' && domain === domainDropdown.value) {
+      statusMessage.textContent = 'Wildcard records cannot be added for the apex domain.';
+      return;
+    }
+
+    const fullDomain = `${subdomain}.${domain}`;
 
     const requestBody = {
       type: recordType,
@@ -194,7 +208,6 @@ button:hover {
     addDnsRecord();
   });
 });
-
-  </script>
+</script>
 </body>
 </html>
