@@ -5,7 +5,6 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Music Stream</title>
-	<!-- Bootstrap Icons CDN -->
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 	<style>
 	body {
@@ -17,15 +16,19 @@
 	display: flex;
 	flex-direction: column;
 	height: 100vh;
+	overflow: hidden;
 	}
 	
 	header {
 	padding: 10px;
-	background: #1DB954;
+	background: rgba(29, 185, 84, 0.9); /* Slight transparency */
 	text-align: center;
 	position: sticky;
 	top: 0;
 	z-index: 10;
+	border-radius: 10px;
+	backdrop-filter: blur(10px); /* Glass effect */
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 	}
 	
 	input {
@@ -34,8 +37,9 @@
 	border-radius: 5px;
 	border: none;
 	margin-bottom: 10px;
-	background: #333;
+	background: rgba(51, 51, 51, 0.8);
 	color: white;
+	backdrop-filter: blur(5px); /* Glass effect */
 	}
 	
 	input::placeholder {
@@ -61,19 +65,22 @@
 	position: fixed;
 	bottom: 0;
 	width: 100%;
-	background: #282828;
+	background: rgba(40, 40, 40, 0.8); /* Slight transparency */
 	padding: 10px;
 	display: flex;
 	justify-content: center;
 	height: 15vh;
 	align-items: center;
 	z-index: 5;
+	border-radius: 10px;
+	backdrop-filter: blur(10px); /* Glass effect */
+	box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.3);
 	}
 	
 	#player-controls {
 	display: flex;
 	justify-content: space-between;
-	width: 60%;
+	width: 30%;
 	align-items: center;
 	flex-direction: column;
 	}
@@ -86,11 +93,14 @@
 	height: 65vh;
 	background: black;
 	z-index: 5;
+	border-radius: 10px;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 	}
 	
 	#youtube-player {
 	width: 100%;
 	height: 100%;
+	border-radius: 10px;
 	}
 	
 	button {
@@ -103,17 +113,19 @@
 	}
 	
 	#scrub-bar {
-	width: 30%;
+	width: 60%;
 	height: 5px;
 	background: #444;
 	margin-top: 10px;
 	cursor: pointer;
+	border-radius: 5px;
 	}
 	
 	#scrub-bar-progress {
 	height: 100%;
 	background: #1DB954;
 	width: 0%;
+	border-radius: 5px;
 	}
 	
 	.playlist-item {
@@ -127,11 +139,55 @@
 	display: flex;
 	justify-content: space-between;
 	padding: 5px;
+	border-bottom: 1px solid #444;
 	}
 	
-	/* Green loop icon when looping is active */
-	.loop-active {
-	color: #1DB954;
+	#time-display {
+	font-size: 14px;
+	color: #888;
+	display: flex;
+	justify-content: space-between;
+	width: 100%;
+	margin-top: 5px;
+	}
+	
+#search-results {
+display: grid;
+gap: 15px;
+max-height: 60vh; /* You can adjust the height depending on your design */
+overflow-y: auto; /* Makes the container scrollable if content overflows */
+padding-right: 10px; /* Prevent scrollbar overlap with content */
+}
+
+#search-results .search-result-item {
+
+background: rgba(255, 255, 255, 0.1);
+border-radius: 10px;
+padding: 10px;
+backdrop-filter: blur(10px);
+display: flex;
+justify-content: space-between;
+align-items: center;
+box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+
+}
+
+#search-results .search-result-item:hover {
+background: rgba(255, 255, 255, 0.2);
+cursor: pointer;
+}
+	
+	#placeholder {
+	font-size: 40px;
+	text-align: center;
+	margin-top: 10%;
+	color: #888;
+	}
+	
+	#placeholder-text p {
+	color: #888;
+	font-size: 18px;
+	text-align: center;
 	}
 	</style>
 	<script src="https://www.youtube.com/iframe_api"></script>
@@ -155,6 +211,7 @@
 		</main>
 		<footer>
 			<div id="player-controls">
+				
 				<div>
 					<button id="prev" onclick="playPrevious()"><i class="bi bi-skip-start"></i></button>
 					<button id="play" onclick="togglePlayPause()"><i class="bi bi-play-fill"></i></button>
@@ -163,6 +220,10 @@
 				</div>
 				<div id="scrub-bar" onclick="seekTo(event)">
 					<div id="scrub-bar-progress"></div>
+				</div>
+				<div id="time-display">
+					<span id="current-time">0:00</span>
+					<span id="duration-time">0:00</span>
 				</div>
 			</div>
 		</footer>
@@ -270,9 +331,13 @@
         function onPlayerStateChange(event) {
             if (event.data == YT.PlayerState.PLAYING) {
                 setInterval(updateScrubBar, 500);
-            } else if (event.data == YT.PlayerState.ENDED && isLooping) {
-                player.seekTo(0);
-                player.playVideo();
+            } else if (event.data == YT.PlayerState.ENDED) {
+                if (isLooping) {
+                    player.seekTo(0);
+                    player.playVideo();
+                } else {
+                    playNext();  // Automatically play the next song
+                }
             }
         }
 
@@ -286,6 +351,15 @@
             const duration = player.getDuration();
             const progress = (currentTime / duration) * 100;
             document.getElementById('scrub-bar-progress').style.width = progress + '%';
+
+            // Update the time display
+            const currentMinutes = Math.floor(currentTime / 60);
+            const currentSeconds = Math.floor(currentTime % 60);
+            document.getElementById('current-time').textContent = `${currentMinutes}:${currentSeconds < 10 ? '0' + currentSeconds : currentSeconds}`;
+
+            const durationMinutes = Math.floor(duration / 60);
+            const durationSeconds = Math.floor(duration % 60);
+            document.getElementById('duration-time').textContent = `${durationMinutes}:${durationSeconds < 10 ? '0' + durationSeconds : durationSeconds}`;
         }
 
         function seekTo(event) {
