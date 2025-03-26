@@ -14,438 +14,465 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com"/>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet"/>
 
     <script src="https://cdn.jsdelivr.net/npm/slugify@1.6.6/slugify.min.js"></script>
     <script src="../cachedFetch.js"></script>
     <script src="../utils.js"></script>
-    <style>
-        :root {
-            --netflix-red: #e50914;
-            --netflix-dark: #141414;
-            --netflix-light-dark: #181818;
-            --netflix-darker: #0b0b0b;
-            --netflix-light-text: #e5e5e5;
-            --netflix-gray: #808080;
-        }
+  <style>
+    /* Netflix-inspired styling */
+    :root {
+        --netflix-red: #e50914;
+        --netflix-dark: #141414;
+        --netflix-light-dark: #181818;
+        --netflix-black: #000000;
+        --netflix-light-text: #e5e5e5;
+        --netflix-gray: #808080;
+    }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
 
-        body {
-            color: var(--netflix-light-text);
-            background-color: var(--netflix-dark);
-            margin: 0;
-            padding: 0;
-            font-family: 'Open Sans', sans-serif;
-            overflow-x: hidden;
-        }
+    body {
+        color: var(--netflix-light-text);
+        background-color: var(--netflix-dark);
+        margin: 0;
+        padding: 0;
+        font-family: 'Open Sans', sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
 
-        header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%);
-            padding: 20px 4%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: background-color 0.3s;
-        }
+    header {
+        z-index: 1000;
+        background-color: var(--netflix-dark);
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 4%;
+        display: flex;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        transition: background-color 0.3s;
+    }
 
-        header.scrolled {
-            background-color: var(--netflix-dark);
-        }
+    .logo {
+        display: flex;
+        align-items: center;
+    }
 
-        .logo {
-            display: flex;
-            align-items: center;
-        }
+    .logo h1 {
+        margin: 0;
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--netflix-red);
+        font-family: 'Bebas Neue', sans-serif;
+        letter-spacing: 1px;
+    }
 
-        .logo img.emoji {
-            width: 25px;
-            height: 25px;
-            margin-right: 8px;
-        }
+    .logo img.emoji {
+        width: 25px;
+        height: 25px;
+        margin-right: 8px;
+    }
 
-        .logo h1 {
-            margin: 0;
-            font-size: 22px;
-            font-weight: 700;
-            color: var(--netflix-red);
-        }
+    .spacer {
+        height: 70px;
+    }
 
+    @media (max-width: 600px) {
         .spacer {
-            height: 68px;
+            height: 75px;
         }
+    }
 
-        main {
-            padding: 0 4%;
-        }
+    main {
+        padding: 0 4%;
+    }
 
-        .section-title {
-            font-size: 24px;
-            font-weight: 700;
-            margin: 30px 0 15px;
-            color: var(--netflix-light-text);
-        }
+    #videoGrid {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 10px;
+        margin-bottom: 40px;
+    }
 
-        #videoGrid, #searchResults {
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 8px;
-            margin-bottom: 40px;
+    @media (max-width: 1400px) {
+        #videoGrid {
+            grid-template-columns: repeat(5, 1fr);
         }
+    }
 
-        @media (max-width: 1400px) {
-            #videoGrid, #searchResults {
-                grid-template-columns: repeat(5, 1fr);
-            }
+    @media (max-width: 1100px) {
+        #videoGrid {
+            grid-template-columns: repeat(4, 1fr);
         }
+    }
 
-        @media (max-width: 1100px) {
-            #videoGrid, #searchResults {
-                grid-template-columns: repeat(4, 1fr);
-            }
+    @media (max-width: 800px) {
+        #videoGrid {
+            grid-template-columns: repeat(3, 1fr);
         }
+    }
 
-        @media (max-width: 800px) {
-            #videoGrid, #searchResults {
-                grid-template-columns: repeat(3, 1fr);
-            }
+    @media (max-width: 600px) {
+        #videoGrid {
+            grid-template-columns: repeat(2, 1fr);
         }
+    }
 
-        @media (max-width: 600px) {
-            #videoGrid, #searchResults {
-                grid-template-columns: repeat(2, 1fr);
-            }
+    @media (max-width: 400px) {
+        #videoGrid {
+            grid-template-columns: repeat(1, 1fr);
         }
+    }
 
-        @media (max-width: 400px) {
-            #videoGrid, #searchResults {
-                grid-template-columns: repeat(1, 1fr);
-            }
-        }
+    #searchResults {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 10px;
+        margin-bottom: 20px;
+    }
 
-        .videoItem {
-            position: relative;
-            cursor: pointer;
-            transition: transform 0.3s ease, z-index 0.3s ease;
-            border-radius: 4px;
-            overflow: hidden;
-            margin-bottom: 5px;
+    @media (max-width: 1400px) {
+        #searchResults {
+            grid-template-columns: repeat(5, 1fr);
         }
+    }
 
-        .videoItem:hover {
-            transform: scale(1.1);
-            z-index: 10;
+    @media (max-width: 1100px) {
+        #searchResults {
+            grid-template-columns: repeat(4, 1fr);
         }
+    }
 
-        .videoItem:hover .content-info {
-            opacity: 1;
-            transform: translateY(0);
+    @media (max-width: 800px) {
+        #searchResults {
+            grid-template-columns: repeat(3, 1fr);
         }
+    }
 
-        .thumbnail {
-            position: relative;
-            width: 100%;
-            height: 0;
-            padding-bottom: 150%;
-            overflow: hidden;
+    @media (max-width: 600px) {
+        #searchResults {
+            grid-template-columns: repeat(2, 1fr);
         }
+    }
 
-        .thumbnail img {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: opacity 0.3s;
+    @media (max-width: 400px) {
+        #searchResults {
+            grid-template-columns: repeat(1, 1fr);
         }
+    }
 
-        .content-info {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 60%, rgba(0,0,0,0) 100%);
-            padding: 60px 10px 10px;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.3s, transform 0.3s;
-        }
+    .videoItem {
+        position: relative;
+        cursor: pointer;
+        background-color: var(--netflix-light-dark);
+        border-radius: 4px;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
 
-        .content-info h3 {
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 5px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
+    .videoItem:hover {
+        transform: scale(1.05);
+        z-index: 10;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    }
 
-        .content-info p {
-            font-size: 12px;
-            color: var(--netflix-gray);
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            max-height: 54px;
-        }
+    .thumbnail {
+        position: relative;
+        width: 100%;
+        height: 0;
+        padding-bottom: 150%;
+        overflow: hidden;
+    }
 
-        .networks {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: rgba(0, 0, 0, 0.7);
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: 600;
-            z-index: 2;
-        }
+    .thumbnail img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: all 0.3s;
+    }
 
-        .networks a {
-            color: white;
-            text-decoration: none;
-        }
+    .videoItem:hover .thumbnail img {
+        filter: brightness(0.7);
+    }
 
-        .dateOverlay {
-            position: absolute;
-            bottom: 10px;
-            left: 10px;
-            color: white;
-            background-color: rgba(0, 0, 0, 0.7);
-            padding: 2px 6px;
-            border-radius: 2px;
-            font-size: 12px;
-            z-index: 2;
-        }
+    .networks {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background-color: rgba(0, 0, 0, 0.7);
+        border-radius: 4px;
+        padding: 4px 8px;
+        z-index: 5;
+    }
 
-        .ratingOverlay {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            color: white;
-            background-color: rgba(0, 0, 0, 0.7);
-            padding: 2px 6px;
-            border-radius: 2px;
-            font-size: 12px;
-            z-index: 2;
-        }
+    .networks a {
+        color: #fff;
+        font-size: 12px;
+        font-weight: 600;
+        text-decoration: none;
+    }
 
-        .playIcon {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0.8);
-            width: 40px;
-            height: 40px;
-            background-color: rgba(255, 255, 255, 0.2);
-            border: 2px solid white;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            opacity: 0;
-            transition: opacity 0.3s, transform 0.3s;
-        }
+    .dateOverlay {
+        position: absolute;
+        bottom: 10px;
+        left: 10px;
+        color: #fff;
+        background-color: rgba(0, 0, 0, 0.7);
+        border-radius: 3px;
+        padding: 2px 5px;
+        font-size: 12px;
+        z-index: 5;
+    }
 
-        .videoItem:hover .playIcon {
-            opacity: 1;
-            transform: translate(-50%, -50%) scale(1);
-        }
+    .ratingOverlay {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        color: #fff;
+        background-color: rgba(0, 0, 0, 0.7);
+        border-radius: 3px;
+        padding: 2px 5px;
+        font-size: 12px;
+        z-index: 5;
+    }
 
-        #search-container {
-            display: flex;
-            align-items: center;
-            position: relative;
-        }
+    .content-info {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 60%, rgba(0,0,0,0) 100%);
+        padding: 60px 10px 10px;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.3s, transform 0.3s;
+    }
 
-        #search-input-container {
-            display: flex;
-            align-items: center;
-            position: relative;
-            background-color: rgba(0, 0, 0, 0.75);
-            border: 1px solid var(--netflix-gray);
-            border-radius: 4px;
-            overflow: hidden;
-            transition: width 0.3s ease, border-color 0.3s;
-            width: 240px;
-        }
+    .videoItem:hover .content-info {
+        opacity: 1;
+        transform: translateY(0);
+    }
 
-        #search-input-container:focus-within {
-            border-color: white;
-            width: 280px;
-        }
+    .content-info h3 {
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 5px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 
-        #search-input-container img {
-            width: 16px;
-            height: 16px;
-            margin-left: 10px;
-            filter: brightness(0) invert(1);
-            opacity: 0.7;
-        }
+    .content-info p {
+        font-size: 12px;
+        color: var(--netflix-gray);
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        max-height: 54px;
+    }
 
-        #searchInput {
-            background-color: transparent;
-            border: none;
-            outline: none;
-            color: white;
-            padding: 8px 12px;
-            width: 100%;
-            font-size: 14px;
-        }
+    .playIcon {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0.8);
+        width: 40px;
+        height: 40px;
+        background-color: rgba(255, 255, 255, 0.2);
+        border: 2px solid white;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        opacity: 0;
+        transition: opacity 0.3s, transform 0.3s;
+        z-index: 5;
+    }
 
-        #searchInput::placeholder {
-            color: var(--netflix-gray);
-        }
+    .videoItem:hover .playIcon {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
 
-        .nav-items {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-        }
+    .section-title {
+        font-size: 22px;
+        font-weight: 700;
+        margin: 20px 0 15px;
+        color: var(--netflix-light-text);
+    }
 
-        .separator {
-            height: 20px;
-            border-top: 1px solid #808080;
-            opacity: 0.5;
-            margin: 15px 0;
-        }
+    #search-container {
+        display: flex;
+        gap: 0.2rem;
+        align-items: center;
+    }
 
-        a {
-            color: var(--netflix-light-text);
-            text-decoration: none;
-        }
+    #search-input-container {
+        display: flex;
+        align-items: center;
+        background-color: rgba(0, 0, 0, 0.75);
+        border: 1px solid var(--netflix-gray);
+        border-radius: 4px;
+        overflow: hidden;
+        transition: width 0.3s ease, border-color 0.3s;
+        width: 240px;
+    }
 
-        /* Netflix hover animation effect */
-        .row {
-            position: relative;
-            width: 100%;
-            padding: 0 4%;
-            margin-bottom: 30px;
-        }
+    #search-input-container:focus-within {
+        border-color: white;
+        width: 280px;
+    }
 
-        .row-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 10px;
-        }
+    #search-input-container > img {
+        width: 16px;
+        height: 16px;
+        margin-left: 10px;
+        filter: brightness(0) invert(1);
+        opacity: 0.7;
+    }
 
-        .row-title {
-            font-size: 22px;
-            font-weight: bold;
-            color: var(--netflix-light-text);
-        }
+    #search-input-container > input {
+        background-color: transparent;
+        border: none;
+        outline: none;
+        color: white;
+        padding: 8px 12px;
+        width: 100%;
+        font-size: 14px;
+    }
 
-        .loaded-indicator {
-            font-size: 12px;
-            color: var(--netflix-red);
-            letter-spacing: 0.5px;
-            opacity: 0.75;
-        }
+    #search-input-container > input::placeholder {
+        color: var(--netflix-gray);
+    }
 
-        /* Netflix style loading animation */
-        .netflix-loader {
-            width: 100%;
-            height: 4px;
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 2000;
-            background: var(--netflix-dark);
-            overflow: hidden;
-        }
+    a {
+        color: var(--netflix-light-text);
+        text-decoration: none;
+    }
 
-        .netflix-loader::after {
-            content: '';
-            width: 40%;
-            height: 100%;
-            background: var(--netflix-red);
-            position: absolute;
-            top: 0;
-            left: -40%;
-            animation: netflix-loading 1.5s infinite ease-in-out;
-        }
+    hr {
+        border: none;
+        border-top: 1px solid var(--netflix-gray);
+        opacity: 0.3;
+        margin: 15px 0;
+    }
 
-        @keyframes netflix-loading {
-            0% { left: -40%; }
-            100% { left: 100%; }
-        }
-    </style>
+    /* Netflix style loading animation */
+    .netflix-loader {
+        width: 100%;
+        height: 3px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 2000;
+        background: var(--netflix-dark);
+        overflow: hidden;
+    }
+
+    .netflix-loader::after {
+        content: '';
+        width: 40%;
+        height: 100%;
+        background: var(--netflix-red);
+        position: absolute;
+        top: 0;
+        left: -40%;
+        animation: netflix-loading 1.5s infinite ease-in-out;
+    }
+
+    @keyframes netflix-loading {
+        0% { left: -40%; }
+        100% { left: 100%; }
+    }
+
+    /* Custom scrollbar for Netflix-like feel */
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #000;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #444;
+        border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+
+    /* Match score */
+    .match-score {
+        display: inline-block;
+        color: #46d369;
+        font-weight: 600;
+        font-size: 12px;
+        margin-right: 8px;
+        margin-top: 5px;
+    }
+
+    /* Progress bar for shows you're watching */
+    .progress-bar {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 4px;
+        background-color: var(--netflix-red);
+        z-index: 5;
+    }
+  </style>
 </head>
 <body>
     <div class="netflix-loader" id="netflixLoader"></div>
-    <header id="mainHeader">
+    <header>
         <div class="logo">
-            <a href="/">
-                <h1 style="display: flex; align-items: center;">
-                    <img draggable="false" class="emoji" alt="" src="../previews/branding/favicon-128x128.png">
-                    HEARTIVE
-                </h1>
-            </a>
+            <h1><a href="/"><img draggable="false" class="emoji" alt="" src="../previews/branding/favicon-128x128.png"> Heartive - Series</a></h1>
         </div>
-        <div class="nav-items">
-            <div id="search-container">
-                <div id="search-input-container">
-                    <img src="../previews/icons/magnifying_glass.png" alt=""/>
-                    <input type="text" id="searchInput" placeholder="Titles, people, genres"/>
-                </div>
+        <div id="search-container">
+            <div id="search-input-container">
+                <img src="../previews/icons/magnifying_glass.png" alt=""/>
+                <input type="text" id="searchInput" placeholder="Titles, people, genres"/>
             </div>
         </div>
     </header>
     <div class="spacer"></div>
-
     <main>
+        <h2 class="section-title" id="searchResultsTitle" style="display:none;">Search Results</h2>
         <div id="searchResults"></div>
-
-        <div id="searchResultsSection" style="display: none;">
-            <h2 class="section-title">Search Results</h2>
-            <div id="searchResultsContainer"></div>
-        </div>
-
-        <div id="popularSection">
-            <h2 class="section-title">Popular on Heartive</h2>
-            <div id="videoGrid"></div>
-        </div>
+        <hr id="searchDivider" style="display:none;">
+        <h2 class="section-title">Popular on Heartive</h2>
+        <div id="videoGrid"></div>
     </main>
-
     <script>
         // Show/hide Netflix loader
         const netflixLoader = document.getElementById('netflixLoader');
         window.addEventListener('load', () => {
             setTimeout(() => {
                 netflixLoader.style.display = 'none';
-            }, 500);
-        });
-
-        // Header background on scroll
-        const header = document.getElementById('mainHeader');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 10) {
-                header.classList.add('scrolled');
-            } else {
-                header.classList.remove('scrolled');
-            }
+            }, 800);
         });
 
         // Original functionality preserved
         let searchInput = document.getElementById("searchInput");
         let videoGrid = document.getElementById("videoGrid");
         let searchResults = document.getElementById("searchResults");
-        let searchResultsSection = document.getElementById("searchResultsSection");
-        let searchResultsContainer = document.getElementById("searchResultsContainer");
-
+        let searchResultsTitle = document.getElementById("searchResultsTitle");
+        let searchDivider = document.getElementById("searchDivider");
         var currentPage = 3;
 
         async function get(e) {
@@ -456,6 +483,11 @@
 
         function getImage(e) {
             return null == e ? "../previews/no-poster.png" : "https://image.tmdb.org/t/p/" + getTmdbImageQuality() + e;
+        }
+
+        // Random match generator (between 70-99)
+        function getMatchScore() {
+            return Math.floor(Math.random() * 29) + 70;
         }
 
         function create(e, t) {
@@ -477,12 +509,20 @@
             playIcon.innerHTML = "<i class='fas fa-play'></i>";
             n.appendChild(playIcon);
 
+            // Add random "watching progress" to 10% of shows
+            if (Math.random() < 0.1) {
+                const progress = document.createElement("div");
+                progress.classList.add("progress-bar");
+                progress.style.width = `${Math.floor(Math.random() * 90) + 10}%`;
+                n.appendChild(progress);
+            }
+
             let i = document.createElement("div");
             i.classList.add("dateOverlay");
             i.innerText = e.first_air_date.split("-")[0];
             n.appendChild(i);
             i.addEventListener("click", e => {
-                e.stopPropagation()
+                e.stopPropagation();
             });
 
             if (e.vote_average) {
@@ -491,7 +531,7 @@
                 r.innerHTML = oranj('<i class="fas fa-star"></i>') + " " + e.vote_average.toFixed(1);
                 n.appendChild(r);
                 r.addEventListener("click", e => {
-                    e.stopPropagation()
+                    e.stopPropagation();
                 });
             }
 
@@ -502,6 +542,12 @@
             const title = document.createElement("h3");
             title.innerText = e.name;
             contentInfo.appendChild(title);
+
+            // Add match score
+            const matchScore = document.createElement("div");
+            matchScore.classList.add("match-score");
+            matchScore.textContent = `${getMatchScore()}% Match`;
+            contentInfo.appendChild(matchScore);
 
             const overview = document.createElement("p");
             overview.innerText = e.overview;
@@ -534,7 +580,7 @@
             a.setAttribute("id", "tmdb-" + e.id.toString());
 
             // Add to the correct container
-            (t ? searchResultsContainer : videoGrid).appendChild(a);
+            (t ? searchResults : videoGrid).appendChild(a);
         }
 
         async function display() {
@@ -555,12 +601,12 @@
                 const searchTerm = searchInput.value.trim();
 
                 if (searchTerm.length > 0) {
-                    // Show search results section, hide popular section
-                    searchResultsSection.style.display = "block";
-                    popularSection.style.display = "none";
+                    // Show search results section
+                    searchResultsTitle.style.display = "block";
+                    searchDivider.style.display = "block";
 
                     // Clear previous results
-                    searchResultsContainer.innerHTML = "";
+                    searchResults.innerHTML = "";
 
                     // Fetch and display results
                     themoviedb(`search/tv?query=${searchTerm}&include_adult=false&language=` + getTmdbLanguage())
@@ -571,9 +617,10 @@
                             });
                         });
                 } else {
-                    // Hide search results, show popular section
-                    searchResultsSection.style.display = "none";
-                    popularSection.style.display = "block";
+                    // Hide search results
+                    searchResultsTitle.style.display = "none";
+                    searchDivider.style.display = "none";
+                    searchResults.innerHTML = "";
                 }
             }, 500);
         });
@@ -592,9 +639,6 @@
 
         display();
     </script>
-
-    <!-- Cloudflare Pages Analytics -->
-    <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "e70a405a52eb428db253911f5e45d760"}'></script>
-    <!-- Cloudflare Pages Analytics -->
+    <!-- Cloudflare Pages Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "e70a405a52eb428db253911f5e45d760"}'></script><!-- Cloudflare Pages Analytics -->
 </body>
 </html>
