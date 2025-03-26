@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -12,7 +12,6 @@
       --glow-color: #ff8000;
       --shadow-color: rgba(255, 81, 0, 0.8);
       --background: #000000;
-      --text-glow: 0 0 10px var(--shadow-color), 0 0 20px var(--shadow-color);
       --border-glow: 0 0 15px var(--glow-color), 0 0 25px var(--glow-color);
     }
 
@@ -53,17 +52,9 @@
 
     .game-card img {
       width: 100%;
-      height: auto;
+      height: 240px;
+      object-fit: fill;
       display: block;
-    }
-
-    .game-name {
-      font-size: 1.2rem;
-      font-weight: bold;
-      padding: 10px;
-      background-color: rgba(0, 0, 0, 0.8);
-      color: var(--glow-color);
-      text-shadow: var(--text-glow);
     }
   </style>
 </head>
@@ -78,25 +69,21 @@
         <div class="game-card">
           <a href="/games/retro-bowl/">
             <img src="images/retro-bowl.jpg" alt="Retro Bowl">
-            <div class="game-name">Retro Bowl</div>
           </a>
         </div>
         <div class="game-card">
           <a href="/games/1v1lol/">
             <img src="images/1v1lol.jpg" alt="1v1.LOL">
-            <div class="game-name">1v1.LOL</div>
           </a>
         </div>
         <div class="game-card">
           <a href="/games/Slope">
             <img src="images/slope.jpg" alt="Slope">
-            <div class="game-name">Slope</div>
           </a>
         </div>
         <div class="game-card">
           <a href="/games/subwaysurfers/">
             <img src="images/subway-surferss.png" alt="Subway Surfers">
-            <div class="game-name">Subway Surfers</div>
           </a>
         </div>
         <div class="game-card">
