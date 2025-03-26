@@ -1,0 +1,41 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VKF0XQGBEN"></script><script>window.dataLayer=window.dataLayer||[];const gtag=function(){dataLayer.push(arguments)};gtag("js",new Date),gtag("config","G-VKF0XQGBEN");</script><meta name="robots" content="noindex">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Heartive - News</title>
+    <meta name="description" content="Why does this page exist though">
+
+    <link rel="icon" href="../previews/branding/favicon-128x128.png"/>
+    <link rel="apple-touch-icon" sizes="180x180" href="../previews/branding/favicon-180x180.png"/>
+    <link rel="icon" type="image/png" sizes="32x32" href="../previews/branding/favicon-32x32.png"/>
+    <link rel="icon" type="image/png" sizes="16x16" href="../previews/branding/favicon-16x16.png"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet"/>
+
+    <link rel="stylesheet" href="https://unpkg.com/tippy.js@6.3.4/animations/shift-away-subtle.css">
+    <script src="https://unpkg.com/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://unpkg.com/tippy.js@6.3.4/dist/tippy-bundle.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/slugify@1.6.6/slugify.min.js"></script>
+    <script src="../cachedFetch.js"></script>
+    <script src="../utils.js"></script>
+</head>
+  <style>
+    body{color:#fff;background-color:#181818;margin:0;padding:0;font-family:Open Sans,sans-serif}header{background-color:#202020;justify-content:space-between;align-items:center;padding:15px;display:flex}.logo{align-items:center;display:flex}.logo h1{margin:0;font-size:24px}main{padding:20px}#videoGrid{grid-template-columns:repeat(4,1fr);gap:20px;display:grid}@media (width<=600px){#videoGrid{grid-template-columns:repeat(1,1fr)}}@media (width>=601px) and (width<=960px){#videoGrid{grid-template-columns:repeat(2,1fr)}}.videoItem{text-align:center;cursor:pointer;background-color:#202020;border-radius:4px;flex-direction:column;align-items:center;padding:15px;transition:transform .3s;display:flex;box-shadow:0 2px 4px #0000001a}.videoItem:hover{transform:translateY(-5px)}.thumbnail{width:100%;height:0;padding-bottom:56.25%;position:relative;overflow:hidden}.thumbnail img{object-fit:cover;width:100%;height:100%;position:absolute;top:0;left:0}.dateOverlay{color:#fff;background-color:#00000080;border-radius:3px;padding:2px 5px;font-size:12px;position:absolute;bottom:5px;left:5px}.timeOverlay{color:#fff;background-color:#00000080;border-radius:3px;padding:2px 5px;font-size:12px;position:absolute;bottom:5px;right:5px}.checkOverlay{box-sizing:border-box;border-radius:3px;width:24px;height:24px;padding:2px 5px;font-size:12px;position:absolute;bottom:5px;left:5px}h3{margin-top:10px;font-size:16px}p{color:#999;margin-top:5px;font-size:14px}.playIcon{opacity:0;background-color:#0009;border-radius:50%;justify-content:center;align-items:center;width:60px;height:60px;transition:opacity .3s;display:flex;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)}.videoItem:hover .playIcon{opacity:1}a{color:#fff;text-decoration:none}a:hover{color:#fff}.horizontal-modal{flex-wrap:wrap;justify-content:space-between;align-items:center;margin-bottom:10px;display:flex}.vertical-modal{flex-flow:column wrap;justify-content:space-between;align-items:center;margin-bottom:10px;display:flex}.modal{text-align:center;background-color:#202020;flex-direction:column;justify-content:center;align-items:center;width:800px;padding:20px;display:flex;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);box-shadow:0 0 10px #0003}@media (width<=600px){.modal{width:300px}}@media (width>=601px) and (width<=960px){.modal{width:450px}}.vaplayer{width:640px;height:360px}@media (width<=600px){.vaplayer{width:390px}}#close-button{color:#fff;cursor:pointer;background-color:#686868;border:none;border-radius:2px;margin-left:10px;padding:8px 15px;transition:background-color .3s}#close-button:hover{background-color:#5a5a5a}img.emoji{vertical-align:-.1em;width:1em;height:1em;margin:0 .05em 0 .1em}
+  </style>
+<body>
+    <header>
+        <div class="logo">
+            <h1><a href="/"><img draggable="false" class="emoji" alt="" src="../previews/branding/favicon-128x128.png"> Heartive - News</a></h1>
+        </div>
+    </header>
+    <main>
+        <div id="videoGrid"></div>
+    </main>
+    <script>let videoGrid=document.getElementById("videoGrid");newsapi().then(e=>{"ok"==e.status&&((e=e.articles.filter(e=>"[Removed]"!==e.title).filter(e=>null!=e.urlToImage)).sort((e,t)=>new Date(t.publishedAt)-new Date(e.publishedAt)),e.forEach(e=>{var e={source:e.source.name?e.source.name.split(".")[0]:"no source",title:e.title||"no title",poster:e.urlToImage,published:new Date(e.publishedAt).toDateString(),reference:e.url||"https://google.com",content:e.description||""},t=document.createElement("div"),n=(t.classList.add("videoItem"),document.createElement("a"));n.classList.add("thumbnail"),n.target="_blank",n.rel="noopener noreferrer",n.href=e.reference;let r=document.createElement("img");r.loading="lazy",r.src=e.poster,r.addEventListener("error",()=>{r.src="../previews/no-episode.png"}),n.appendChild(r);var d=document.createElement("div"),d=(d.classList.add("playIcon"),d.innerHTML="<i class='fas fa-arrow-up-right-from-square'></i>",n.appendChild(d),document.createElement("div")),d=(d.classList.add("dateOverlay"),d.innerText=e.source,n.appendChild(d),d.addEventListener("click",e=>{e.stopPropagation()}),document.createElement("div")),d=(d.classList.add("timeOverlay"),d.innerText=e.published,n.appendChild(d),d.addEventListener("click",e=>{e.stopPropagation()}),document.createElement("h3")),i=(d.innerText=e.title,document.createElement("p"));i.innerText=e.content,t.appendChild(n),t.appendChild(d),t.appendChild(i),videoGrid.appendChild(t)}))});</script>
+<!-- Cloudflare Pages Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "e70a405a52eb428db253911f5e45d760"}'></script><!-- Cloudflare Pages Analytics --></body>
+</html>
