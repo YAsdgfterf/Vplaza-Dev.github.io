@@ -1,3 +1,4 @@
+You said:
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -36,6 +37,7 @@
             border: none;
             cursor: pointer;
         }
+        /* Fullscreen button styles */
         .fullscreen-btn {
             padding: 10px 20px;
             margin-top: 20px;
@@ -59,23 +61,165 @@
     </div>
 
     <button onclick="openInNewTab()">Open in Fullscreen</button>
+
+    <!-- Fullscreen button -->
     <button class="fullscreen-btn" onclick="goFullscreen()">Go Fullscreen</button>
 
     <script>
         let embedUrl = "";
 
+        // Check if Enter key is pressed
         function checkEnter(event) {
             if (event.key === "Enter") {
-                generateEmbedUrl();
-                openInNewTab();
+                const url = document.getElementById("urlInput").value;
+                const embedType = document.getElementById("embedType").value;
+                if (url) {
+                    embedUrl = https://cloud.beenshub.lol/active/embed.html?url=${encodeURIComponent(url)};
+                    openInNewTab();
+                }
             }
         }
 
-        function generateEmbedUrl() {
-            const url = document.getElementById("urlInput").value || window.location.href;
-            const embedType = document.getElementById("embedType").value;
-            if (url) {
-                embedUrl = `${window.location.origin}?url=${encodeURIComponent(url)}`;
+        // Open in a new tab with fullscreen embed
+        function openInNewTab() {
+            if (embedUrl) {
+                const newTab = window.open("", "_blank");
+                newTab.document.write(
+                    <html>
+                    <head><title>Fullscreen Embed</title></head>
+                    <body style="margin:0; overflow:hidden;">
+                        <iframe src="${embedUrl}" width="100%" height="100%" style="border:none;"></iframe>
+                    </body>
+                    </html>
+                );
+                newTab.document.close();
+            } else {
+                alert("Please enter a valid URL.");
+            }
+        }
+
+        // Automatically set the iframe to the current page's URL
+        window.onload = function() {
+            const currentUrl = window.location.href;
+            document.getElementById("urlInput").value = currentUrl;
+        };
+
+        // Go Fullscreen function for the whole page
+        function goFullscreen() {
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen();
+            } else if (document.documentElement.mozRequestFullScreen) { // Firefox
+                document.documentElement.mozRequestFullScreen();
+            } else if (document.documentElement.webkitRequestFullscreen) { // Chrome, Safari and Opera
+                document.documentElement.webkitRequestFullscreen();
+            } else if (document.documentElement.msRequestFullscreen) { // IE/Edge
+                document.documentElement.msRequestFullscreen();
+            }
+        }
+    </script>
+</body>
+</html>
+
+
+make it so it finds the website the user is on, and uses it instead of cloud.beenshub.lol, also make it so u dont need a subpage like /page
+
+
+ChatGPT said:
+Here's your updated code. It now dynamically detects the current website and uses it directly for embedding, removing the need for a predefined subpage like /page.
+
+Embedder Update
+Now, the script dynamically detects the current website and uses it for embedding without needing a subpage like /page. Let me know if you need any modifications! 🚀
+
+
+
+
+
+
+You said:
+the Open in Fullscreen button doesnt work until u press enter on the top bar
+and pages dont work like /page
+
+
+ChatGPT said:
+Edited
+
+Answer in chat instead
+I fixed the fullscreen button so it works immediately without needing to press Enter first, and I adjusted the URL handling so that it properly supports paths like /page. Let me know if you need any more tweaks! 🚀
+
+
+
+
+
+
+Is this conversation helpful so far?
+
+
+
+
+
+
+
+
+Reason
+
+
+ChatGPT can make mistakes. Check important info.
+?
+
+
+Embedder Update
+
+
+
+
+
+
+Preview
+
+T
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+<!DOCTYPE html>
+                embedUrl = `${window.location.href.split('?')[0]}?url=${encodeURIComponent(url)}`;
             }
         }
 
@@ -98,6 +242,7 @@
 
         window.onload = function() {
             document.getElementById("urlInput").value = window.location.href;
+            generateEmbedUrl();
         };
 
         function goFullscreen() {
@@ -114,3 +259,5 @@
     </script>
 </body>
 </html>
+
+
