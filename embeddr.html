@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Embedddddddr</title>
+    <style>
+        body {
+            background-color: black;
+            color: red;
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+        .neon-text {
+            text-shadow: 0 0 5px #ff0000, 0 0 10px #ff0000, 0 0 20px #ff0000;
+            font-size: 2em;
+            margin-top: 20px;
+        }
+        input {
+            padding: 10px;
+            border: 2px solid red;
+            background: black;
+            color: red;
+            width: 80%;
+            max-width: 400px;
+            margin-top: 20px;
+        }
+        .option-container {
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px;
+            margin-top: 20px;
+            background: red;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .fullscreen-btn {
+            padding: 10px 20px;
+            margin-top: 20px;
+            background-color: red;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="neon-text">Embedddddddr</h1>
+    <input type="text" id="urlInput" placeholder="Enter a URL" onkeydown="checkEnter(event)">
+    
+    <div class="option-container">
+        <label for="embedType">Choose Embed Type: </label>
+        <select id="embedType">
+            <option value="iframe">Iframe</option>
+            <option value="embed">Embed</option>
+        </select>
+    </div>
+
+    <button onclick="openInNewTab()">Open in Fullscreen</button>
+    <button class="fullscreen-btn" onclick="goFullscreen()">Go Fullscreen</button>
+
+    <script>
+        let embedUrl = "";
+
+        function checkEnter(event) {
+            if (event.key === "Enter") {
+                generateEmbedUrl();
+                openInNewTab();
+            }
+        }
+
+        function generateEmbedUrl() {
+            const url = document.getElementById("urlInput").value || window.location.href;
+            const embedType = document.getElementById("embedType").value;
+            if (url) {
+                embedUrl = `${window.location.origin}?url=${encodeURIComponent(url)}`;
+            }
+        }
+
+        function openInNewTab() {
+            if (embedUrl) {
+                const newTab = window.open("", "_blank");
+                newTab.document.write(`
+                    <html>
+                    <head><title>Fullscreen Embed</title></head>
+                    <body style="margin:0; overflow:hidden;">
+                        <iframe src="${embedUrl}" width="100%" height="100%" style="border:none;"></iframe>
+                    </body>
+                    </html>
+                `);
+                newTab.document.close();
+            } else {
+                alert("Please enter a valid URL.");
+            }
+        }
+
+        window.onload = function() {
+            document.getElementById("urlInput").value = window.location.href;
+        };
+
+        function goFullscreen() {
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen();
+            } else if (document.documentElement.mozRequestFullScreen) {
+                document.documentElement.mozRequestFullScreen();
+            } else if (document.documentElement.webkitRequestFullscreen) {
+                document.documentElement.webkitRequestFullscreen();
+            } else if (document.documentElement.msRequestFullscreen) {
+                document.documentElement.msRequestFullscreen();
+            }
+        }
+    </script>
+</body>
+</html>
