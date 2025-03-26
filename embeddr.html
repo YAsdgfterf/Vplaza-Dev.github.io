@@ -72,10 +72,9 @@
         }
 
         function generateEmbedUrl() {
-            const url = document.getElementById("urlInput").value || window.location.href;
-            const embedType = document.getElementById("embedType").value;
+            const url = document.getElementById("urlInput").value;
             if (url) {
-                embedUrl = `${window.location.href.split('?')[0]}?url=${encodeURIComponent(url)}`;
+                embedUrl = url;
             }
         }
 
@@ -97,8 +96,7 @@
         }
 
         window.onload = function() {
-            document.getElementById("urlInput").value = window.location.href;
-            generateEmbedUrl();
+            document.getElementById("urlInput").value = "";
         };
 
         function goFullscreen() {
