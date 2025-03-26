@@ -1,0 +1,46 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VKF0XQGBEN"></script><script>window.dataLayer=window.dataLayer||[];const gtag=function(){dataLayer.push(arguments)};gtag("js",new Date),gtag("config","G-VKF0XQGBEN");</script><meta name="robots" content="noindex">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Heartive - Series</title>
+    <meta name="description" content="Trending shows (with an epic search bar!!)">
+
+    <link rel="icon" href="../previews/branding/favicon-128x128.png"/>
+    <link rel="apple-touch-icon" sizes="180x180" href="../previews/branding/favicon-180x180.png"/>
+    <link rel="icon" type="image/png" sizes="32x32" href="../previews/branding/favicon-32x32.png"/>
+    <link rel="icon" type="image/png" sizes="16x16" href="../previews/branding/favicon-16x16.png"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet"/>
+
+    <script src="https://cdn.jsdelivr.net/npm/slugify@1.6.6/slugify.min.js"></script>
+    <script src="../cachedFetch.js"></script>
+    <script src="../utils.js"></script>
+</head>
+  <style>
+    body{color:#fff;background-color:#181818;margin:0;padding:0;font-family:Open Sans,sans-serif}header{z-index:1000;background-color:#202020;justify-content:space-between;align-items:center;padding:15px;display:flex}.spacer{height:0}@media (width<=600px){header{position:fixed}.spacer{height:125px}}.logo{align-items:center;display:flex}.logo h1{margin:0;font-size:24px}main{padding:20px}#videoGrid{grid-template-columns:repeat(4,1fr);gap:20px;display:grid}@media (width<=600px){#videoGrid{grid-template-columns:repeat(1,1fr)}}@media (width>=601px) and (width<=960px){#videoGrid{grid-template-columns:repeat(2,1fr)}}#searchResults{grid-template-columns:repeat(4,1fr);gap:20px;display:grid}@media (width<=600px){#searchResults{grid-template-columns:repeat(1,1fr)}}@media (width>=601px) and (width<=960px){#searchResults{grid-template-columns:repeat(2,1fr)}}.videoItem{text-align:center;cursor:pointer;background-color:#202020;border-radius:4px;flex-direction:column;align-items:center;padding:15px;transition:transform .3s;display:flex;box-shadow:0 2px 4px #0000001a}.videoItem:hover{transform:translateY(-5px)}.thumbnail{width:100%;max-width:100%;height:0;padding-bottom:150%;position:relative;overflow:hidden}.thumbnail img{object-fit:cover;width:100%;height:100%;position:absolute;top:0;left:0}.networks{background-color:#00000080;border-radius:5px;align-items:center;padding:5px 10px;display:flex;position:absolute;top:5px;right:5px}.networks a{color:#fff;font-size:14px;font-weight:700}.dateOverlay{color:#fff;background-color:#00000080;border-radius:3px;padding:2px 5px;font-size:12px;position:absolute;bottom:5px;left:5px}.ratingOverlay{color:#fff;background-color:#00000080;border-radius:3px;padding:2px 5px;font-size:12px;position:absolute;top:5px;left:5px}h3{margin-top:10px;font-size:16px}p{color:#999;margin-top:5px;font-size:14px}.playIcon{opacity:0;background-color:#0009;border-radius:50%;justify-content:center;align-items:center;width:60px;height:60px;transition:opacity .3s;display:flex;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)}.videoItem:hover .playIcon{opacity:1}a{color:#fff;text-decoration:none}a:hover{color:#fff}#more{color:#fff;text-align:center;cursor:pointer;background-color:#202020;border-radius:4px;flex-direction:column;align-items:center;width:100%;padding:15px;font-weight:700;transition:transform .3s;display:flex;box-shadow:0 2px 4px #0000001a}img.emoji{vertical-align:-.1em;width:1em;height:1em;margin:0 .05em 0 .1em}#search-container{gap:.2rem;margin-top:.2rem;display:flex}#search-input-container>input{color:#fffc;background-color:#373737;border:none;font-size:1rem}#search-container>button{cursor:pointer;border-radius:.2rem;width:3.5rem}#search-container>#image-button{border-bottom-right-radius:.5rem}#search-input-container{background-color:#373737;border-radius:.2rem .2rem .2rem .5rem;flex-grow:1;align-items:center;gap:.75rem;padding-left:1rem;display:flex}#search-input-container>img{height:1.5rem}#search-input-container>input{background-color:#0000;width:100%;height:1.25rem;padding:1rem 1rem 1rem 0}
+  </style>
+<body>
+    <header>
+        <div class="logo">
+            <h1><a href="/"><img draggable="false" class="emoji" alt="" src="../previews/branding/favicon-128x128.png"> Heartive - Series</a></h1>
+        </div>
+        <div id="search-container">
+            <div id="search-input-container">
+                <img src="../previews/icons/magnifying_glass.png" alt=""/>
+                <input type="text" id="searchInput" placeholder="Search"/>
+            </div>
+        </div>
+    </header>
+    <div class="spacer"></div>
+    <main>
+        <div id="searchResults"></div>
+        <hr><div id="videoGrid"></div>
+    </main>
+    <script>let searchInput=document.getElementById("searchInput"),videoGrid=document.getElementById("videoGrid"),searchResults=document.getElementById("searchResults");var currentPage=3;async function get(e){return themoviedb(`trending/tv/week?language=${getTmdbLanguage()}&page=`+e).then(e=>e.json()).then(e=>e.results)}function getImage(e){return null==e?"../previews/no-poster.png":"https://image.tmdb.org/t/p/"+getTmdbImageQuality()+e}function create(e,t){var a=document.createElement("div");a.classList.add("videoItem");let n=document.createElement("a");n.classList.add("thumbnail"),n.setAttribute("href",`../seasons/#/${tvSlugify(e.name,e.original_name)}/`+e.id);var r=document.createElement("img"),r=(r.loading="lazy",r.src=getImage(e.poster_path),n.appendChild(r),document.createElement("div"));r.classList.add("playIcon"),r.innerHTML="<i class='fas fa-arrow-right-to-bracket'></i>",n.appendChild(r);let i=document.createElement("div");i.classList.add("dateOverlay"),i.innerText=e.first_air_date.split("-")[0],n.appendChild(i),i.addEventListener("click",e=>{e.stopPropagation()}),e.vote_average&&((r=document.createElement("div")).classList.add("ratingOverlay"),r.innerHTML=oranj('<i class="fas fa-star"></i>')+" "+e.vote_average.toFixed(1),n.appendChild(r),r.addEventListener("click",e=>{e.stopPropagation()})),themoviedb(`tv/${e.id}?language=`+getTmdbLanguage()).then(e=>e.json()).then(e=>{var t,a;"Ended"===e?.status&&(t=e.first_air_date.split("-")[0])!==(a=e.last_air_date.split("-")[0])&&(i.innerText=t+"-"+a),e.networks&&0<e.networks.length&&e.homepage&&((t=document.createElement("div")).classList.add("networks"),n.appendChild(t),(a=document.createElement("a")).href=e.homepage,a.target="_blank",a.rel="noopener noreferrer",a.textContent=e.networks[e.networks.length-1].name,t.appendChild(a))});var r=document.createElement("h3"),d=(r.innerText=e.name,document.createElement("p"));d.innerText=e.overview,a.appendChild(n),a.appendChild(r),a.appendChild(d),a.setAttribute("id","tmdb-"+e.id.toString()),(t?searchResults:videoGrid).appendChild(a)}async function display(){let e=[];for(var t=1;t<=currentPage;t++){var a=await get(t);e=e.concat(a)}e.filter(e=>!inFuture(e.first_air_date)).forEach(e=>{create(e)})}let searchTimeout;searchInput.addEventListener("input",async()=>{clearTimeout(searchTimeout),searchTimeout=setTimeout(()=>{themoviedb(`search/tv?query=${searchInput.value.trim()}&include_adult=false&language=`+getTmdbLanguage()).then(e=>e.json()).then(async e=>{searchResults.innerHTML="",e.results.filter(e=>!inFuture(e.first_air_date)).forEach(e=>{create(e,!0)})})},500)}),window.addEventListener("scroll",async()=>{if(window.innerHeight+window.scrollY>=document.body.offsetHeight-200)for(var e=(currentPage+=3)-2;e<=currentPage;e++)(await get(e)).filter(e=>!inFuture(e.first_air_date)&&!document.getElementById("tmdb-"+e.id.toString())).forEach(e=>{create(e,!1)})}),display();</script>
+<!-- Cloudflare Pages Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "e70a405a52eb428db253911f5e45d760"}'></script><!-- Cloudflare Pages Analytics --></body>
+</html>
