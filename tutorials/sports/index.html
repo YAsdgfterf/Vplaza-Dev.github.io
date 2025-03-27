@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>IPTV Client</title>
+	<!-- Video.js CSS -->
+	<link href="https://vjs.zencdn.net/7.10.2/video-js.css" rel="stylesheet">
+	<!-- Video.js and HLS.js script -->
+	<script src="https://vjs.zencdn.net/7.10.2/video.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/videojs-contrib-hls@5.15.1/dist/videojs-contrib-hls.js"></script>
+	<style>
+		/* Basic styling */
+		body {
+			font-family: Arial, sans-serif;
+			background-color: #f4f4f4;
+			margin: 0;
+			padding: 20px;
+		}
+
+		#channel-list {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: space-between;
+		}
+
+		.channel-button {
+			background-color: #4CAF50;
+			border: none;
+			color: white;
+			padding: 15px;
+			text-align: center;
+			margin: 10px;
+			width: 200px;
+			height: 200px;
+			border-radius: 10px;
+			position: relative;
+			cursor: pointer;
+			transition: background-color 0.3s;
+			overflow: hidden;
+		}
+
+		.channel-button img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			border-radius: 10px;
+		}
+
+		.channel-button:hover {
+			background-color: #45a049;
+		}
+
+		#search {
+			margin-bottom: 20px;
+			padding: 10px;
+			width: 100%;
+			max-width: 300px;
+			font-size: 16px;
+		}
+
+		#stream-window {
+			position: fixed;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background-color: rgba(0, 0, 0, 0.8);
+			display: none;
+			justify-content: center;
+			align-items: center;
+		}
+
+		#stream-player {
+			width: 80%;
+			height: 80%;
+			background-color: black;
+			position: relative;
+		}
+
+		#stream-player video {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+
+		#close-stream {
+			position: absolute;
+			top: 10px;
+			right: 10px;
+			background-color: #ff4d4d;
+			color: white;
+			padding: 10px;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+		}
+
+		#close-stream:hover {
+			background-color: #e60000;
+		}
+	</style>
+</head>
+
+<body>
+
+	<h1>IPTV Client</h1>
+
+	<input type="text" id="search" placeholder="Search for a channel...">
+
+	<div id="channel-list"></div>
+
+	<div id="stream-window">
+		<div id="stream-player">
+			<button id="close-stream">Close</button>
+			<video id="video-player" class="video-js vjs-default-skin" controls></video> <!-- Video.js Player -->
+		</div>
+	</div>
+
+	<script>
+		document.addEventListener("DOMContentLoaded", () => {
+        const channelList = document.getElementById("channel-list");
+        const searchInput = document.getElementById("search");
+        const streamWindow = document.getElementById("stream-window");
+        const closeStreamButton = document.getElementById("close-stream");
+        let channels = [];
+
+        // Initialize Video.js player
+        let player = videojs('video-player', {
+            controls: true,
+            autoplay: false,
+            preload: 'auto',
+        });
+
+        // Function to fetch and parse the M3U file
+        const fetchM3UData = async () => {
+            const m3uUrl = 'sport-playlist.m3u'; // Change this to your M3U file URL
+            const response = await fetch(m3uUrl);
+            const m3uData = await response.text();
+            parseM3U(m3uData);
+        };
+
+        // Function to parse M3U data
+        const parseM3U = (data) => { 
+            const lines = data.split('\n');
+            let currentChannel = {};
+
+            lines.forEach(line => {
+                if (line.startsWith('#EXTINF:')) {
+                    // Extract metadata from the EXTINF line
+                    const metadata = line.match(/tvg-id="(.*?)"\s+tvg-logo="(.*?)"\s+group-title="(.*?)",/);
+                    if (metadata) {
+                        currentChannel = {
+                            title: line.split(',')[1].trim(),
+                            id: metadata[1],
+                            logo: metadata[2],
+                            groupTitle: metadata[3]
+                        };
+                    }
+                } else if (line.startsWith('http')) {
+                    // Extract the stream URL
+                    currentChannel.url = line.trim();
+                    channels.push(currentChannel);
+                    displayChannel(currentChannel);
+                }
+            });
+        };
+
+        // Function to display a channel as a button
+        const displayChannel = (channel) => {
+            const button = document.createElement('button');
+            button.classList.add('channel-button');
+
+            // Create an image for the channel logo
+            const img = document.createElement('img');
+            img.src = channel.logo || 'https://via.placeholder.com/150?text=No+Logo'; // Placeholder if no logo is available
+            button.appendChild(img);
+
+            // Add channel title on top of the logo
+            const title = document.createElement('div');
+            title.textContent = channel.title;
+            title.style.position = 'absolute';
+            title.style.bottom = '10px';
+            title.style.left = '10px';
+            title.style.color = 'white';
+            title.style.fontWeight = 'bold';
+            title.style.textShadow = '2px 2px 4px rgba(0, 0, 0, 0.5)';
+            button.appendChild(title);
+
+            // Add group-title (category) as well
+            const groupTitle = document.createElement('div');
+            groupTitle.textContent = channel.groupTitle;
+            groupTitle.style.position = 'absolute';
+            groupTitle.style.top = '10px';
+            groupTitle.style.left = '10px';
+            groupTitle.style.color = 'white';
+            groupTitle.style.fontWeight = 'bold';
+            groupTitle.style.textShadow = '2px 2px 4px rgba(0, 0, 0, 0.5)';
+            button.appendChild(groupTitle);
+
+            button.onclick = () => openStream(channel.url);
+
+            channelList.appendChild(button);
+        };
+
+        // Function to open the stream in a new window using Video.js
+        const openStream = (url) => {
+            streamWindow.style.display = 'flex';
+            player.src({ type: 'application/x-mpegURL', src: url }); // Use Video.js to set the stream URL
+            player.play(); // Play the stream
+        };
+
+        // Function to close the stream window
+        closeStreamButton.onclick = () => {
+            streamWindow.style.display = 'none';
+            player.pause(); // Pause the stream
+        };
+
+        // Search functionality
+        searchInput.addEventListener('input', (event) => {
+            const query = event.target.value.toLowerCase();
+            const filteredChannels = channels.filter(channel =>
+                channel.title.toLowerCase().includes(query)
+            );
+            channelList.innerHTML = '';  // Clear previous list
+            filteredChannels.forEach(channel => displayChannel(channel));
+        });
+
+        fetchM3UData();
+    });
+	</script>
+
+</body>
+
+</html>
