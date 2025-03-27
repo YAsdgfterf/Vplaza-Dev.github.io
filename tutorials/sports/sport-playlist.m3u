@@ -89,7 +89,7 @@ http://iptv12k.com:35461/654321/123456/14440
 # http://iptv12k.com:35461/654321/123456/14439
 
 
-#EXTINF:-1 tvg-logo="https://1000logos.net/wp-content/uploads/2021/02/ESPN-logo.jpg" group-title="SPORTS",[TW] ESPN 
+#EXTINF:-1 tvg-id="ESPN.us" tvg-logo="https://1000logos.net/wp-content/uploads/2021/02/ESPN-logo.jpg" group-title="SPORTS",[TW] ESPN 
 http://iptv12k.com:35461/654321/123456/14434
 
 
