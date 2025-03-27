@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -6,11 +5,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>IPTV Client</title>
-  <!-- Video.js CSS -->
-  <link href="https://vjs.zencdn.net/7.10.2/video-js.css" rel="stylesheet">
-  <!-- Video.js and HLS.js script -->
-  <script src="https://vjs.zencdn.net/7.10.2/video.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/videojs-contrib-hls@5.15.1/dist/videojs-contrib-hls.js"></script>
   <style>
     /* Basic styling */
     body {
@@ -115,7 +109,7 @@
   <div id="stream-window">
     <div id="stream-player">
       <button id="close-stream">Close</button>
-      <video id="video-player" class="video-js vjs-default-skin" controls></video>
+      <video id="video-player" controls></video>
     </div>
   </div>
 
@@ -126,13 +120,6 @@
       const streamWindow = document.getElementById("stream-window");
       const closeStreamButton = document.getElementById("close-stream");
       let channels = [];
-
-      // Initialize Video.js player
-      let player = videojs('video-player', {
-        controls: true,
-        autoplay: false,
-        preload: 'auto',
-      });
 
       // Fetch and parse the M3U file
       const fetchM3UData = async () => {
@@ -196,14 +183,26 @@
       // Open the stream in the player
       const openStream = (url) => {
         streamWindow.style.display = 'flex';
-        player.src({ type: 'application/x-mpegURL', src: url });
-        player.play();
+        const videoPlayer = document.getElementById('video-player');
+        
+        // Check if the browser supports HLS natively
+        if (videoPlayer.canPlayType('application/vnd.apple.mpegurl') || videoPlayer.canPlayType('application/x-mpegURL')) {
+          // If HLS is supported natively, use the URL directly
+          videoPlayer.src = url;
+        } else {
+          // If HLS is not supported natively, fall back to a different method (using HLS.js, but not included here).
+          alert('Your browser does not support HLS natively. Please use a different browser or consider enabling support.');
+          return;
+        }
+
+        videoPlayer.play();
       };
 
       // Close the stream window
       closeStreamButton.onclick = () => {
         streamWindow.style.display = 'none';
-        player.pause();
+        const videoPlayer = document.getElementById('video-player');
+        videoPlayer.pause();
       };
 
       // Search functionality
