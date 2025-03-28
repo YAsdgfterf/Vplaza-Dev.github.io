@@ -1,255 +1,225 @@
 <!DOCTYPE html>
-<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Games - V Plaza</title>
-  <link rel="stylesheet" href="style.css">
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&display=swap');
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VPLAZA - DEV</title>
+    <style>
+        body {
+            background-color: black;
+            color: orange;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            overflow-y: scroll;
+            margin: 0;
+            padding: 0;
+        }
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: orange;
+            border-radius: 10px;
+        }
+        h1 {
+            font-size: 5rem;
+            font-weight: bold;
+            text-shadow: 0 0 20px orange, 0 0 40px orange;
+            margin: 20px auto;
+            background-color: rgba(255, 208, 0, 0.103);
+            border-radius: 20px;
+            border: 3px solid yellow;
+            max-width: 800px;
+            padding: 60px;
+            text-align: center;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            max-width: 1000px;
+            margin: auto;
+            padding: 40px;
+        }
+        .game {
+            width: 200px;
+            height: 200px;
+            border: 6px solid orange;
+            border-radius: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.7s;
+            background: rgb(255, 187, 0);
+            box-shadow: 0 0 20px orange;
+            overflow: hidden;
+            position: relative;
+        }
+        .game img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 16px;
+            transition: transform 0.5s ease-in-out;
+        }
+        .game:hover {
+            transform: scale(1.1) rotate(-3deg);
+            box-shadow: 0 0 60px orange, 0 0 40px rgb(255, 0, 0);
+            border-radius: 20px;
+        }
+        .game:hover img {
+            transform: scale(1.2) rotate(-5deg);
+        }
+        .game::after {
+            content: attr(data-name);
+            position: absolute;
+            bottom: -100%;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            color: orange;
+            text-align: center;
+            padding: 5px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            transition: bottom 0.4s ease-in-out;
+        }
+        .game:hover::after {
+            bottom: 0;
+        }
 
-    :root {
-      --glow-color: #ff8000;
-      --shadow-color: rgba(255, 81, 0, 0.8);
-      --background: #000000;
-      --border-glow: 0 0 15px var(--glow-color), 0 0 25px var(--glow-color);
-    }
+        .minecraft img.hover {
+            display: none;
+        }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+        .minecraft:hover img.hover {
+            display: block;
+        }
 
-    body {
-      font-family: 'Orbitron', sans-serif;
-      background-color: var(--background);
-      color: white;
-      text-align: center;
-    }
+        .minecraft:hover img.normal {
+            display: none;
+        }
 
-    .game-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 20px;
-      padding: 20px;
-      justify-content: center;
-    }
 
-    .game-card {
-      background-color: rgba(0, 0, 0, 0.8);
-      border: 2px solid var(--glow-color);
-      box-shadow: var(--border-glow);
-      border-radius: 10px;
-      overflow: hidden;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      width: 200px;
-      height: 200px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .game-card:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 20px var(--glow-color), 0 0 40px var(--glow-color);
-    }
-
-    .game-card img {
-      width: 100%;
-      height: 100%;
-      object-fit: fill;
-      display: block;
-    }
-  </style>
+        @media (max-width: 600px) {
+            .grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+            .game {
+                width: 150px;
+                height: 150px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <header>
-    <h1>V Plaza Games</h1>
-  </header>
-
-  <main>
-    <section id="games" class="section">
-      <div class="game-grid">
-        <div class="game-card">
-          <a href="/games/retro-bowl/">
-            <img src="images/retro-bowl.jpg" alt="Retro Bowl">
-          </a>
+    <h1>VPLAZA - DEV</h1>
+    <div class="grid">
+        <div class="game" data-name="Retro Bowl" onclick="openGame('games/retro-bowl')">
+            <img src="images/retro-bowl.jpg" alt="retrobowl">
         </div>
-        <div class="game-card">
-          <a href="/games/1v1lol/">
-            <img src="images/1v1lol.jpg" alt="1v1.LOL">
-          </a>
+        <div class="game" data-name="1v1LOL" onclick="openGame('games/1v1lol')">
+            <img src="images/1v1lol.jpg" alt="1v1">
         </div>
-        <div class="game-card">
-          <a href="/games/Slope">
-            <img src="images/slope.jpg" alt="Slope">
-          </a>
+        <div class="game" data-name="Slope" onclick="openGame('games/slope')">
+            <img src="images/slope.jpg" alt="slope">
         </div>
-        <div class="game-card">
-          <a href="/games/subwaysurfers/">
-            <img src="images/subway-surferss.png" alt="Subway Surfers">
-          </a>
+        <div class="game" data-name="Subway Surfers" onclick="openGame('games/subway-surfers')">
+            <img src="images/subway-surferss.png" alt="subway">
         </div>
-        <div class="game-card">
-          <a href="/games/basketball-stars/">
-            <img src="images/basketball-stars.jpg" alt="Basketball Stars">
-          </a>
+        <div class="game" data-name="Basket Ball Stars" onclick="openGame('games/basketball-stars')">
+            <img src="images/basketball-stars.jpg" alt="BBS">
         </div>
-        <div class="game-card">
-          <a href="/games/drive-mad/">
-            <img src="images/drive-mad.jpg" alt="Drive Mad">
-          </a>
+        <div class="game" data-name="Drive Mad" onclick="openGame('games/drive-mad')">
+            <img src="images/drive-mad.jpg" alt="DM">
         </div>
-        <div class="game-card">
-          <a href="/games/death-run-3d/">
-            <img src="images/death-run-3d.jpg" alt="Death Run 3D">
-          </a>
+        <div class="game" data-name="Deathrun 3D" onclick="openGame('games/death-run-3d')">
+            <img src="images/death-run-3d.jpg" alt="dr3d">
         </div>
-        <div class="game-card">
-          <a href="/games/Basket-Random/">
-            <img src="images/basket-random.jpg" alt="Basket Random">
-          </a>
+        <div class="game" data-name="Basket Random" onclick="openGame('games/basket-random')">
+            <img src="images/basket-random.jpg" alt="Snake">
         </div>
-        <div class="game-card">
-          <a href="/games/motox3m2/">
-            <img src="images/motox3m.jpg" alt="Moto X3M">
-          </a>
+        <div class="game" data-name="MotoX3M" onclick="openGame('games/motox3m2')">
+            <img src="images/motox3m.jpg" alt="mx3m2">
         </div>
-        <div class="game-card">
-          <a href="/games/bitlife/">
-            <img src="images/bitlife.jpg" alt="Bit Life">
-          </a>
+        <div class="game" data-name="Bitlife" onclick="openGame('games/bitlife')">
+            <img src="images/bitlife.jpg" alt="bl">
         </div>
-        <div class="game-card">
-          <a href="/games/GetawayShootout/">
-            <img src="images/getaway-shootout.jpg" alt="Getaway Shootout">
-          </a>
+        <div class="game" data-name="Getaway Shootout" onclick="openGame('games/GetawayShootout')">
+            <img src="images/getaway-shootout.jpg" alt="GS">
         </div>
-        <div class="game-card">
-          <a href="/games/justfall-lol/">
-            <img src="images/justfall-lol.jpg" alt="Just Fall">
-          </a>
+        <div class="game" data-name="Just Fall LOL" onclick="openGame('games/justfall-lol')">
+            <img src="images/justfall-lol.jpg" alt="jsfall">
         </div>
-        <div class="game-card">
-          <a href="/games/rooftop-snipers">
-            <img src="images/rooftop-snipers.jpg" alt="Rooftop Snipers">
-          </a>
+        <div class="game" data-name="Rooftop Snipers" onclick="openGame('games/rooftop-snipers')">
+            <img src="images/rooftop-snipers.jpg" alt="jsfall">
         </div>
-        <div class="game-card">
-          <a href="/games/CookieClicker/">
-            <img src="images/cookie-clicker.jpg" alt="Cookie Clicker">
-          </a>
+        <div class="game" data-name="Cookie Clicker" onclick="openGame('games/cookieclicker')">
+            <img src="images/cookie-clicker.jpg" alt="jsfall">
         </div>
-        <div class="game-card">
-          <a href="/games/2048">
+        <div class="game" data-name="2048" onclick="openGame('games/2048')">
             <img src="images/2048.jpg" alt="2048">
-          </a>
         </div>
-        <div class="game-card">
-          <a href="/games/Snow-Rider3D-main/" target="_blank">
-            <img src="images/snow-rider3d.jpg" alt="Snow Rider 3D">
-          </a>
+        <div class="game" data-name="Snowrider3d" onclick="openGame('games/snow-rider3d-main')">
+            <img src="images/snow-rider3d.jpg" alt="2048">
         </div>
-        <div class="game-card">
-          <a href="/games/Eagler/">
-            <img src="images/minecraft.jpg" alt="Minecraft">
-          </a>
+        <div class="game minecraft" data-name="Minecraft" onclick="openGame('games/eagler')">
+            <img src="images/minecraft.jpg" alt="minecraft" class="normal">
+            <img src="images/explodeminecraft.gif" alt="explodeminecraft" class="hover">
         </div>
-        <div class="game-card">
-          <a href="/games/learn-to-fly-2/">
-            <img src="images/learn-to-fly-2.jpg" alt="Learn To Fly 2">
-          </a>
+        <div class="game" data-name="Learn to Fly" onclick="openGame('games/learn-to-fly-2')">
+            <img src="images/learn-to-fly-2.jpg" alt="learn-to-fly-2">
         </div>
-        <div class="game-card">
-          <a href="/games/idle-mining-empire/">
-            <img src="images/idle-mining-empire.jpg" alt="Idle Mining Empire">
-          </a>
+        <div class="game" data-name="Idle Mining Empire" onclick="openGame('games/idle-mining-empire')">
+            <img src="images/idle-mining-empire.jpg" alt="idle-mining-empire">
         </div>
-        <div class="game-card">
-          <a href="/games/among-us/">
-            <img src="images/among-us.jpg" alt="Among Us">
-          </a>
+        <div class="game" data-name="Among Us" onclick="openGame('games/among-us')">
+            <img src="images/among-us.jpg" alt="among-us">
         </div>
-        <div class="game-card">
-          <a href="/games/paper-io-2/">
-            <img src="images/paper-io-2.jpg" alt="Paper.io 2">
-          </a>
+        <div class="game" data-name="Paper io 2" onclick="openGame('games/paper-io-2')">
+            <img src="images/paper-io-2.jpg" alt="paper-io-2">
         </div>
-        <div class="game-card">
-          <a href="/games/flappybird/">
-            <img src="images/flappy-bird.jpg" alt="Flappy Bird">
-          </a>
+        <div class="game" data-name="Flappy Bird" onclick="openGame('games/flappybird')">
+            <img src="images/flappy-bird.jpg" alt="flappy-bird">
         </div>
-        <div class="game-card">
-          <a href="/games/krunker/">
-            <img src="images/krunker.jpg" alt="Krunker Io">
-          </a>
+        <div class="game" data-name="Krunker" onclick="openGame('games/krunker')">
+            <img src="images/krunker.jpg" alt="krunker">
         </div>
-        <!-- New games added -->
-        <div class="game-card">
-          <a href="/games/geometry-dash-knockoff/">
-            <img src="images/geometry-dash.jpg" alt="Geometry Dash">
-          </a>
+        <div class="game" data-name="Geometry Dash (Knockoff)" onclick="openGame('games/geometry-dash-knockoff')">
+            <img src="images/geometry-dash.jpg" alt="geometry-dash-knockoff">
         </div>
-        <div class="game-card">
-          <a href="/games/baldis-basics/">
-            <img src="images/baldis-basics.jpg" alt="Baldi's Basics">
-          </a>
+        <div class="game" data-name="Baldis Basics" onclick="openGame('games/baldis-basics')">
+            <img src="images/baldis-basics.jpg" alt="baldis-basics">
         </div>
-        <div class="game-card">
-          <a href="/games/superhot/">
-            <img src="images/superhot.jpg" alt="Super Hot">
-          </a>
+        <div class="game" data-name="Super Hot" onclick="openGame('games/superhot')">
+            <img src="images/superhot.jpg" alt="superhot">
         </div>
-        <div class="game-card">
-          <a href="/games/temple-run-2/">
-            <img src="images/temple-run-2.jpg" alt="Temple Run 2">
-          </a>
+        <div class="game" data-name="Temple Run 2" onclick="openGame('games/temple-run-2')">
+            <img src="images/temple-run-2.jpg" alt="temple-run-2">
         </div>
-        <div class="game-card">
-          <a href="/games/happy-wheels/">
-            <img src="images/happy-wheels.jpg" alt="Happy Wheels">        
-          </a>
+        <div class="game" data-name="Happy Wheels" onclick="openGame('games/happy-wheels')">
+            <img src="images/happy-wheels.jpg" alt="happy-wheels">
         </div>
-        <div class="game-card">
-          <a href="/games/crossyroad/">
-            <img src="images/crossy-road.jpg" alt="Crossy Road">
-          </a>
+        <div class="game" data-name="Crossy Road" onclick="openGame('games/crossyroad')">
+            <img src="images/crossy-road.jpg" alt="crossy-road">
         </div>
-        <div class="game-card">
-          <a href="/games/stickmanhook/">
-            <img src="images/stickmanhook.jpg" alt="Stickman Hook">
-          </a>
+        <div class="game" data-name="Stickman Hook" onclick="openGame('games/stickmanhook')">
+            <img src="images/stickmanhook.jpg" alt="stickman">
         </div>
-        <div class="game-card">
-          <a href="/games/Tag">
-            <img src="images/tag.jpg" alt="Tag">
-          </a>
+        <div class="game" data-name="Tag" onclick="openGame('games/Tag')">
+            <img src="images/tag.jpg" alt="tag">
         </div>
-        <div class="game-card">
-          <a href="/games/Poly-track">
-            <img src="images/polytrack.jpg" alt="Polytrack">
-          </a>
+        <div class="game" data-name="Poly Track" onclick="openGame('games/poly-track')">
+            <img src="images/polytrack.jpg" alt="pt">
         </div>
-        <div class="game-card">
-          <a href="/games/tetris/">
-            <img src="images/tetris.jpg" alt="Tetris">
-          </a>
+        <div class="game" data-name="Tetris" onclick="openGame('games/tetris')">
+            <img src="images/tetris.jpg" alt="tetris">
         </div>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <p>&copy; 2025 V plaza. All rights reserved.</p>
-  </footer>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      // Existing code...
-    });
-  </script>
+    </div>
+    <script>
+        function openGame(url) {
+            window.location.href = url;
+        }
+    </script>
 </body>
 </html>
