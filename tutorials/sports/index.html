@@ -1,223 +1,140 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IPTV Client</title>
-  <style>
-    /* Basic styling */
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
-      margin: 0;
-      padding: 20px;
-    }
+<title>IPTV Guide</title>
+<link href="https://vjs.zencdn.net/7.17.0/video-js.css" rel="stylesheet">
+<style>
+body {
+  font-family: sans-serif;
+  display: flex;
+  margin: 0;
+  height: 100vh;
+  overflow: hidden;
+}
 
-    #channel-list {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-    }
+#guide {
+  width: 200px;
+  background-color: #333;
+  color: white;
+  overflow-y: auto;
+}
 
-    .channel-button {
-      background-color: #4CAF50;
-      border: none;
-      color: white;
-      padding: 15px;
-      text-align: center;
-      margin: 10px;
-      width: 200px;
-      height: 200px;
-      border-radius: 10px;
-      position: relative;
-      cursor: pointer;
-      overflow: hidden;
-      transition: background-color 0.3s;
-    }
+#guide ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
 
-    .channel-button img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 10px;
-    }
+#guide li {
+  padding: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #555;
+}
 
-    .channel-button:hover {
-      background-color: #45a049;
-    }
+#guide li:hover {
+  background-color: #555;
+}
 
-    #search {
-      margin-bottom: 20px;
-      padding: 10px;
-      width: 100%;
-      max-width: 300px;
-      font-size: 16px;
-    }
+#player {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
 
-    #stream-window {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: rgba(0, 0, 0, 0.8);
-      display: none;
-      justify-content: center;
-      align-items: center;
-    }
+.video-js {
+  width: 100%;
+  height: 100%;
+}
 
-    #stream-player {
-      width: 80%;
-      height: 80%;
-      background-color: black;
-      position: relative;
-    }
-
-    #stream-player video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    #close-stream {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background-color: #ff4d4d;
-      color: white;
-      padding: 10px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    #close-stream:hover {
-      background-color: #e60000;
-    }
-  </style>
+#error-message {
+  display: none;
+  background-color: #fdd;
+  padding: 10px;
+  border: 1px solid red;
+  margin: 10px;
+}
+</style>
 </head>
-
 <body>
+<div id="guide">
+  <ul></ul>
+</div>
+<div id="player">
+  <div id="error-message"></div>
+  <video id="my-video" class="video-js vjs-default-skin" controls preload="auto" data-setup="{}"></video>
+</div>
 
-  <h1>IPTV Client</h1>
+<script src="https://vjs.zencdn.net/7.17.0/video.js"></script>
+<script>
+const guideList = document.querySelector('#guide ul');
+const videoPlayer = videojs('my-video');
+const errorMessage = document.getElementById('error-message');
 
-  <input type="text" id="search" placeholder="Search for a channel...">
+async function loadM3U(url) {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const contentType = response.headers.get('content-type');
 
-  <div id="channel-list"></div>
+    if (contentType && contentType.includes('application/octet-stream')) {
+      // It's a download, so we need to fetch as blob and then read as text.
+      const blob = await response.blob();
+      const text = await blob.text();
+      parseM3U(text);
+    } else {
+      // It's likely direct text, so we can read it directly.
+      const data = await response.text();
+      parseM3U(data);
+    }
 
-  <div id="stream-window">
-    <div id="stream-player">
-      <button id="close-stream">Close</button>
-      <video id="video-player" controls></video>
-    </div>
-  </div>
+  } catch (error) {
+    console.error('Error loading M3U:', error);
+    errorMessage.textContent = 'Error loading M3U: ' + error.message;
+    errorMessage.style.display = 'block';
+  }
+}
 
-  <script>
-    document.addEventListener("DOMContentLoaded", async () => {
-      const channelList = document.getElementById("channel-list");
-      const searchInput = document.getElementById("search");
-      const streamWindow = document.getElementById("stream-window");
-      const closeStreamButton = document.getElementById("close-stream");
-      let channels = [];
+function parseM3U(data) {
+  const lines = data.split('\n');
+  const channels = [];
+  let currentChannel = null;
 
-      // Fetch and parse the M3U file
-      const fetchM3UData = async () => {
-        const m3uUrl = 'sport-playlist.m3u'; // Ensure your M3U file is available at this path
-        const response = await fetch(m3uUrl);
-        const m3uData = await response.text();
-        parseM3U(m3uData);
-      };
+  lines.forEach(line => {
+    if (line.startsWith('#EXTINF:')) {
+      const nameMatch = line.match(/tvg-name="([^"]+)"|,(.+)/);
+      if (nameMatch) {
+        const name = nameMatch[1] || nameMatch[2];
+        currentChannel = { name: name.trim() };
+      }
+    } else if (line.startsWith('http')) {
+      if (currentChannel) {
+        currentChannel.url = line.trim();
+        channels.push(currentChannel);
+        currentChannel = null;
+      }
+    }
+  });
 
-      // Parse the M3U data
-      const parseM3U = (data) => {
-        const lines = data.split('\n');
-        let currentChannel = {};
+  displayChannels(channels);
+}
 
-        lines.forEach(line => {
-          if (line.startsWith('#EXTINF:')) {
-            // Extract the channel title from after the comma
-            const commaIndex = line.indexOf(',');
-            if (commaIndex !== -1) {
-              const title = line.substring(commaIndex + 1).trim();
-              currentChannel = {
-                title: title,
-                // Use a placeholder logo since your playlist does not include one
-                logo: 'https://via.placeholder.com/200?text=No+Logo'
-              };
-            }
-          } else if (line.startsWith('http')) {
-            // Add the stream URL and push the channel to our array
-            currentChannel.url = line.trim();
-            channels.push(currentChannel);
-            displayChannel(currentChannel);
-          }
-        });
-      };
-
-      // Display a channel as a button
-      const displayChannel = (channel) => {
-        const button = document.createElement('button');
-        button.classList.add('channel-button');
-
-        const img = document.createElement('img');
-        img.src = channel.logo;
-        button.appendChild(img);
-
-        // Display channel title on top of the logo
-        const titleDiv = document.createElement('div');
-        titleDiv.textContent = channel.title;
-        titleDiv.style.position = 'absolute';
-        titleDiv.style.bottom = '10px';
-        titleDiv.style.left = '10px';
-        titleDiv.style.color = 'white';
-        titleDiv.style.fontWeight = 'bold';
-        titleDiv.style.textShadow = '2px 2px 4px rgba(0, 0, 0, 0.5)';
-        button.appendChild(titleDiv);
-
-        button.onclick = () => openStream(channel.url);
-
-        channelList.appendChild(button);
-      };
-
-      // Open the stream in the player
-      const openStream = (url) => {
-        streamWindow.style.display = 'flex';
-        const videoPlayer = document.getElementById('video-player');
-        
-        // Check if the browser supports HLS natively
-        if (videoPlayer.canPlayType('application/vnd.apple.mpegurl') || videoPlayer.canPlayType('application/x-mpegURL')) {
-          // If HLS is supported natively, use the URL directly
-          videoPlayer.src = url;
-        } else {
-          // If HLS is not supported natively, fall back to a different method (using HLS.js, but not included here).
-          alert('Your browser does not support HLS natively. Please use a different browser or consider enabling support.');
-          return;
-        }
-
-        videoPlayer.play();
-      };
-
-      // Close the stream window
-      closeStreamButton.onclick = () => {
-        streamWindow.style.display = 'none';
-        const videoPlayer = document.getElementById('video-player');
-        videoPlayer.pause();
-      };
-
-      // Search functionality
-      searchInput.addEventListener('input', (event) => {
-        const query = event.target.value.toLowerCase();
-        channelList.innerHTML = '';
-        channels.filter(channel =>
-          channel.title.toLowerCase().includes(query)
-        ).forEach(displayChannel);
-      });
-
-      await fetchM3UData();
+function displayChannels(channels) {
+  guideList.innerHTML = '';
+  channels.forEach(channel => {
+    const li = document.createElement('li');
+    li.textContent = channel.name;
+    li.addEventListener('click', () => {
+      videoPlayer.src({ type: 'application/x-mpegURL', src: channel.url });
+      videoPlayer.play();
     });
-  </script>
+    guideList.appendChild(li);
+  });
+}
 
+// Replace with your M3U URL
+loadM3U('sport-playlist.m3u');
+</script>
 </body>
-
 </html>
