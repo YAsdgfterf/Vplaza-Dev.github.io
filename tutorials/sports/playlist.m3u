@@ -158,7 +158,7 @@ https://tvpass.org/live/EEast/hd
 #EXTINF:-1 tvg-id="espn" tvg-name="ESPN SD" group-title="Live",ESPN SD
 https://tvpass.org/live/ESPN/sd
 #EXTINF:-1 tvg-id="espn" tvg-name="ESPN HD" group-title="Live",ESPN HD
-https://tvpass.org/live/ESPN/hd
+../live/m3u8/espn.m3u8
 #EXTINF:-1 tvg-id="espn-deportes" tvg-name="ESPN Deportes SD" group-title="Live",ESPN Deportes SD
 https://tvpass.org/live/espn-deportes/sd
 #EXTINF:-1 tvg-id="espn-deportes" tvg-name="ESPN Deportes HD" group-title="Live",ESPN Deportes HD
