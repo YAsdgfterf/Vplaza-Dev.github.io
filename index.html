@@ -272,78 +272,43 @@
     document.getElementById('changelog-btn').addEventListener('click', function() {
       const newWindow = window.open('about:blank', '_blank');
       newWindow.document.write(`
-        <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VPLAZA - Update checker</title>
-    <style>
-        body {
-    font-family: 'Arial', sans-serif;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    background-color: #000000;
-    color: rgb(255, 0, 0);
-    font-size: 50px;
-    text-shadow: 10px 10px 10px #420000;
-}
-        button {
-            font-family:monospace;
-            padding: 20px 400px;
-            background-color: #ff0000;
-            border: none;
-            border-radius: 40px;
-            cursor: pointer;
-            font-size: 40px;
-            box-shadow: 10px 10px 10px #ff0101;
-        }
-        button:hover {
-            background-color: #850000;
-            box-shadow: 10px 10px 10px #850000;
-        }
-    </style>
-</head>
-<body>
-    <h1>VPLAZA - Update checker</h1>
-    <button id="notifyBtn">Check for Updates</button>
+        <html>
+          <head>
+            <title>Changelog</title>
+            <style>
+              @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
 
-    <script>
-        if ('serviceWorker' in navigator && 'Notification' in window) {
-            navigator.serviceWorker.register('service-worker.js')
-                .then(function(registration) {
-                    console.log('Service Worker registered with scope:', registration.scope);
-                });
+              body {
+                font-family: 'Orbitron', sans-serif;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                background-color: black;
+                color: #ff3333;
+                margin: 0;
+                overflow: hidden;
+              }
 
-            document.getElementById('notifyBtn').addEventListener('click', function() {
-                if (Notification.permission === 'default') {
-                    Notification.requestPermission().then(permission => {
-                        if (permission === 'granted') {
-                            sendNotification('New: Created AI with LLaMA and Groq. 2: Changed g.html design! 3: Adding code editor!');
-                        }
-                    });
-                } else if (Notification.permission === 'granted') {
-                    sendNotification('New: Created AI with LLaMA and Groq. 2: Changed g.html design! 3: Adding code editor!');
-                }
-            });
-        }
+              h1 {
+                font-size: 5rem;
+                text-shadow: 0 0 10px rgba(255, 51, 51, 0.8), 0 0 20px rgba(255, 51, 51, 0.8);
+                letter-spacing: 3px;
+                position: relative;
+                animation: textPulse 2s infinite alternate;
+              }
 
-        function sendNotification(title, body) {
-            if (navigator.serviceWorker) {
-                navigator.serviceWorker.ready.then(function(registration) {
-                    registration.showNotification(title, {
-                        body: body,
-                        icon: 'icon.png',
-                    });
-                });
-            }
-        }
-    </script>
-</body>
-</html>
+              @keyframes textPulse {
+                0% { text-shadow: 0 0 10px rgba(255, 51, 51, 0.8), 0 0 20px rgba(255, 51, 51, 0.8); }
+                100% { text-shadow: 0 0 15px rgba(255, 51, 51, 0.8), 0 0 30px rgba(255, 51, 51, 0.8), 0 0 45px rgba(255, 51, 51, 0.8); }
+              }
+            </style>
+          </head>
+          <body>
+            <h1>coming soon...</h1>
+            <p>- The vplaza team</p>
+          </body>
+        </html>
       `);
     });
 
