@@ -1,132 +1,513 @@
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-XWMFDM1WRX"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-XWMFDM1WRX');
-</script>
 <!DOCTYPE html>
 <html>
+
 <head>
-<title>IPTV Guide</title>
-<link href="https://vjs.zencdn.net/7.17.0/video-js.css" rel="stylesheet">
-<style>
-body {
-  font-family: sans-serif;
-  display: flex;
-  margin: 0;
-  height: 100vh;
-  overflow: hidden;
-}
+	<title>IPTV Guide</title>
+	<style>
+		body {
+			font-family: sans-serif;
+			display: flex;
+			margin: 0;
+			height: 100vh;
+			overflow: hidden;
+		}
 
-#guide {
-  width: 200px;
-  background-color: #333;
-  color: white;
-  overflow-y: auto;
-}
+		#guide {
+			width: 250px;
+			background-color: #333;
+			color: white;
+			overflow-y: auto;
+			display: flex;
+			flex-direction: column;
+		}
 
-#guide ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
+		#search-bar {
+			padding: 10px;
+			background-color: #444;
+			position: sticky;
+			top: 0;
+			z-index: 10;
+		}
 
-#guide li {
-  padding: 10px;
-  cursor: pointer;
-  border-bottom: 1px solid #555;
-}
+		#search-bar input {
+			width: calc(100% - 22px);
+			padding: 8px;
+			background-color: #555;
+			border: none;
+			color: white;
+		}
 
-#guide li:hover {
-  background-color: #555;
-}
+		#guide ul {
+			list-style: none;
+			padding: 0;
+			margin: 0;
+			overflow-y: auto;
+		}
 
-#player {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
+		#guide li {
+			padding: 10px;
+			cursor: pointer;
+			border-bottom: 1px solid #555;
+		}
 
-.video-js {
-  width: 100%;
-  height: 100%;
-}
+		#guide li:hover {
+			background-color: #555;
+		}
 
-#error-message {
-  display: none;
-  background-color: #fdd;
-  padding: 10px;
-  border: 1px solid red;
-  margin: 10px;
-}
-</style>
+		#player {
+			flex: 1;
+			display: flex;
+			flex-direction: column;
+		}
+
+		#embedded-player {
+			width: 100%;
+			height: 100%;
+			border: none;
+		}
+
+		#error-message {
+			display: none;
+			background-color: #fdd;
+			padding: 10px;
+			border: 1px solid red;
+			margin: 10px;
+		}
+	</style>
 </head>
+
 <body>
-<div id="guide">
-  <ul></ul>
-</div>
-<div id="player">
-  <div id="error-message"></div>
-  <video id="my-video" class="video-js vjs-default-skin" controls preload="auto" data-setup="{}"></video>
-</div>
+	<div id="guide">
+		<div id="search-bar">
+			<input type="text" id="channel-search" placeholder="Search channels...">
+  </div>
+			<ul></ul>
+		</div>
+		<div id="player">
+			<div id="error-message"></div>
+			<iframe allow='encrypted-media' width='640' height='360' scrolling='no' frameborder='0' allowfullscreen id="embedded-player" allowfullscreen></iframe>
+		</div>
 
-<script src="https://vjs.zencdn.net/7.17.0/video.js"></script>
-<script>
-const guideList = document.querySelector('#guide ul');
-const videoPlayer = videojs('my-video');
+		<script>
+			const guideList = document.querySelector('#guide ul');
+const embeddedPlayer = document.getElementById('embedded-player');
 const errorMessage = document.getElementById('error-message');
+const searchInput = document.getElementById('channel-search');
+let allChannels = [];
 
-async function loadM3U(url) {
-  try {
-    const response = await fetch(url);
-    if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const contentType = response.headers.get('content-type');
+// Hardcoded channel list (URLs only)
+const channelUrls = [
+  "SkySportsMainEvent[UK]",
+  "SkySportsNews[UK]",
+  "SkySportsAction[UK]",
+  "SkySportsArena[UK]",
+  "SkySportsF1[UK]",
+  "SkySportsFootball[UK]",
+  "SkySportsPremierLeague[UK]",
+  "SkySportsGolf[UK]",
+  "SkySportsTennis[UK]",
+  "SkySportsMix[UK]",
+  "SkySportsRacing[UK]",
+  "TNTSports1[UK]",
+  "TNTSports2[UK]",
+  "TNTSports3[UK]",
+  "TNTSports4[UK]",
+  "TNTSports5[UK]",
+  "TNTSports6[UK]",
+  "PremierSports1[UK]",
+  "PremierSports2[UK]",
+  "BBCScotland[UK]",
+  "ITV1[UK]",
+  "ITV2[UK]",
+  "ITV3[UK]",
+  "ITV4[UK]",
+  "BTN[USA]",
+  "Canal11[Portugal]",
+  "DigiSport1[Romania]",
+  "DigiSport2[Romania]",
+  "DigiSport3[Romania]",
+  "DigiSport4[Romania]",
+  "ESPN[USA]",
+  "ESPN2[USA]",
+  "ESPNDeportes[USA]",
+  "ESPNU[USA]",
+  "ElevenSports1[Portugal]",
+  "ElevenSports2[Portugal]",
+  "ElevenSports3[Portugal]",
+  "ElevenSports4[Portugal]",
+  "ElevenSports5[Portugal]",
+  "ElevenSports6[Portugal]",
+  "FOXSports1[USA]",
+  "FOXSports2[USA]",
+  "FoxSports506[Australia]",
+  "GOLFChannel[USA]",
+  "NBATV[USA]",
+  "NFLNetwork[USA]",
+  "NFLRedzone[USA]",
+  "NHLNetwork[USA]",
+  "NovaSports1[Greece]",
+  "NovaSports2[Greece]",
+  "NovaSports3[Greece]",
+  "NovaSports4[Greece]",
+  "NovaSports5[Greece]",
+  "NovaSports6[Greece]",
+  "NovaSportsStart[Greece]",
+  "OrangeSport1[Romania]",
+  "OrangeSport2[Romania]",
+  "OrangeSport3[Romania]",
+  "OrangeSport4[Romania]",
+  "PrimaSport1[Romania]",
+  "PrimaSport2[Romania]",
+  "PrimaSport3[Romania]",
+  "PrimaSport4[Romania]",
+  "ProArena[Romania]",
+  "SECNetwork[USA]",
+  "SkyBundesliga[Germany]",
+  "SkyBundesliga1[Germany]",
+  "SkyBundesliga2[Germany]",
+  "SkyBundesliga3[Germany]",
+  "SkyBundesliga4[Germany]",
+  "SkyBundesliga5[Germany]",
+  "SkyBundesliga6[Germany]",
+  "SkyBundesliga7[Germany]",
+  "SkyBundesliga8[Germany]",
+  "SkyBundesliga9[Germany]",
+  "SkySport1[Germany]",
+  "SkySport10[Germany]",
+  "SkySport2[Germany]",
+  "SkySport3[Germany]",
+  "SkySport4[Germany]",
+  "SkySport5[Germany]",
+  "SkySport6[Germany]",
+  "SkySport7[Germany]",
+  "SkySport8[Germany]",
+  "SkySport9[Germany]",
+  "SkySportTennis[Germany]",
+  "SkySportTopEvent[Germany]",
+  "SportTV1[Portugal]",
+  "SportTV2[Portugal]",
+  "SportTV3[Portugal]",
+  "SportTV5[Portugal]",
+  "SportTV4[Portugal]",
+  "SportTV6[Portugal]",
+  "Sportklub[Serbia]",
+  "Sportklub1[Serbia]",
+  "Sportklub2[Serbia]",
+  "Sportklub3[Serbia]",
+  "Sportklub4[Serbia]",
+  "SuperSportAction[SouthAfrica]",
+  "SuperSportCricket[SouthAfrica]",
+  "SuperSportFootball[SouthAfrica]",
+  "SuperSportGolf[SouthAfrica]",
+  "SuperSportGrandstand[SouthAfrica]",
+  "SuperSportLaLiga[SouthAfrica]",
+  "SuperSportMotorsport[SouthAfrica]",
+  "SuperSportPSL[SouthAfrica]",
+  "SuperSportPremierLeague[SouthAfrica]",
+  "SuperSportRugby[SouthAfrica]",
+  "SuperSportTennis[SouthAfrica]",
+  "SuperSportVariety1[SouthAfrica]",
+  "SuperSportVariety2[SouthAfrica]",
+  "SuperSportVariety3[SouthAfrica]",
+  "SuperSportVariety4[SouthAfrica]",
+  "TSN1[Canada]",
+  "TSN2[Canada]",
+  "TSN3[Canada]",
+  "TSN4[Canada]",
+  "TSN5[Canada]",
+  "TennisChannel[USA]",
+  "TennisChannelPlus1[USA]",
+  "TennisChannelPlus10[USA]",
+  "TennisChannelPlus11[USA]",
+  "TennisChannelPlus12[USA]",
+  "TennisChannelPlus13[USA]",
+  "TennisChannelPlus14[USA]",
+  "TennisChannelPlus2[USA]",
+  "TennisChannelPlus3[USA]",
+  "TennisChannelPlus4[USA]",
+  "TennisChannelPlus5[USA]",
+  "TennisChannelPlus6[USA]",
+  "TennisChannelPlus7[USA]",
+  "TennisChannelPlus8[USA]",
+  "TennisChannelPlus9[USA]",
+  "USANetwork[USA]",
+  "DAZN1Deutschland[Germany]",
+  "DAZN2Deutschland[Germany]",
+  "Antena1[Romania]",
+  "YES[USA]",
+  "SportklubFight[Serbia]",
+  "MLBNetwork[USA]",
+  "BallySportsDetroit[USA]",
+  "BallySportsFlorida[USA]",
+  "BallySportsSun[USA]",
+  "BallySportsSanDiego[USA]",
+  "BallySportsMidwest[USA]",
+  "BallySportsNorth[USA]",
+  "BallySportsEast[USA]",
+  "BallySportsWest[USA]",
+  "BallySportsOhio[USA]",
+  "BallySportsOklahoma[USA]",
+  "SportsnetOne[Canada]",
+  "SportsnetPacific[Canada]",
+  "SportsnetOntario[Canada]",
+  "SportsnetEast[Canada]",
+  "SportsnetWest[Canada]",
+  "SportsnetWorld[Canada]",
+  "Sportsnet360[Canada]",
+  "AeNetworks[USA]",
+  "AbcTv[USA]",
+  "AMC[USA]",
+  "AnimalPlanet[USA]",
+  "BBCAmerica[USA]",
+  "BET[USA]",
+  "DisneyChannel[USA]",
+  "FoxNews[USA]",
+  "CBSSN[USA]",
+  "BravoTV[USA]",
+  "CNN[USA]",
+  "InvestigationDiscovery[USA]",
+  "Lifetime[USA]",
+  "History[USA]",
+  "EEntertainement[USA]",
+  "DisneyJR[USA]",
+  "ComedyCentral[USA]",
+  "DestinationAmerica[USA]",
+  "DiscoveryChannel[USA]",
+  "Boomerang[USA]",
+  "FoodNetwork[USA]",
+  "Freeform[USA]",
+  "CNBC[USA]",
+  "CW[USA]",
+  "HLN[USA]",
+  "LifetimeMoviesNetwork[USA]",
+  "ESPNNews[USA]",
+  "Fox[USA]",
+  "Cinemax[USA]",
+  "MSNBC[USA]",
+  "NationalGeographic[USA]",
+  "Syfy[USA]",
+  "Wnyw[USA]",
+  "CBS[USA]",
+  "Univision[USA]",
+  "TvLand[USA]",
+  "TLC[USA]",
+  "HGTV[USA]",
+  "NBC[USA]",
+  "HBO[USA]",
+  "Showtime[USA]",
+  "Nicktoons[USA]",
+  "ABCNews[USA]",
+  "NickelodeonTV[USA]",
+  "HallmarkMoviesMysteriesTV[USA]",
+  "Hallmark[USA]",
+  "ProTV[Romania]",
+  "NBCSportsBayArea[USA]",
+  "YesSport1[Israel]",
+  "YesSport2[Israel]",
+  "YesSport3[Israel]",
+  "YesSport4[Israel]",
+  "YesSport5[Israel]",
+  "BBCOne[UK]",
+  "BBCTwo[UK]",
+  "BBCThree[UK]",
+  "BBCFour[UK]",
+  "Fox501[Australia]",
+  "Fox502[Australia]",
+  "Fox503[Australia]",
+  "Fox504[Australia]",
+  "Fox505[Australia]",
+  "Fox506[Australia]",
+  "Fox507[Australia]",
+  "BallySportsSanDiego[USA]",
+  "ServusTV[Germany]",
+  "TBS[USA]",
+  "MovistarDeportes[Spain]",
+  "EllasVamos[Spain]",
+  "DAZN1[Spain]",
+  "DAZN2[Spain]",
+  "TYCSports[Argentina]",
+  "Caracol[Colombia]",
+  "WINSports[Colombia]",
+  "Ecuavisa[Ecuador]",
+  "ESPN[Argentina]",
+  "ESPN2[Argentina]",
+  "ESPN3[Argentina]",
+  "ESPNPremium[Argentina]",
+  "DirecTV[Ecuador]",
+  "GolTV[Ecuador]",
+  "AxsTv[USA]",
+  "GOL[Peru]",
+  "TNT[USA]",
+  "TUDN[Mexico]",
+  "WillowXtra[USA]",
+  "ESPNDeportes[Mexico]",
+  "Premiere1[Brasil]",
+  "Premiere2[Brasil]",
+  "Premiere3[Brasil]",
+  "CartoonNetwork[Italy]",
+  "CartoonNetworkItaly[Italy]",
+  "Boomerang[Italy]",
+  "History[Italy]",
+  "WweNetwork[USA]",
+  "TUDN[USA]",
+  "NBCOlympics1[USA]",
+  "NBCOlympics2[USA]",
+  "ESPN[Argentina]",
+  "WapaTv[USA]",
+  "DirecTVSports[Argentina]",
+  "DirecTVSports2[Argentina]",
+  "FOXSports1[Argentina]",
+  "FOXSports2[Argentina]",
+  "RTSHSport[Albania]",
+  "RTSH1[Albania]",
+  "RTSH2[Albania]",
+  "SkySport1[NewZealand]",
+  "SkySport2[NewZealand]",
+  "SkySport3[NewZealand]",
+  "SkySport4[NewZealand]",
+  "SkySport5[NewZealand]",
+  "SkySport6[NewZealand]",
+  "SkySport7[NewZealand]",
+  "SkySport8[NewZealand]",
+  "SkySport9[NewZealand]",
+  "CBSSportsNetwork[USA]",
+  "FOXSports1[Mexico]",
+  "FOXSports2[Mexico]",
+  "FOXSports3[Mexico]",
+  "LaLigaTV[UK]",
+  "BeINSport1[France]",
+  "BeINSport2[France]",
+  "BeINSport3[France]",
+  "BeINSport4[France]",
+  "DAZN1UK[UK]",
+  "PrimaTV[Romania]",
+  "BBCScotland[UK]",
+  "NBCSPhiladelphia[USA]",
+  "CBSNY[USA]",
+  "SkySportSelect[NewZealand]",
+  "RacingTV[UK]",
+  "RTEOne[Ireland]",
+  "RTETwo[Ireland]",
+  "NBCSCalifornia[USA]",
+  "NBCSBoston[USA]",
+  "BeinSports1[Arab]",
+  "BeinSports2[Arab]",
+  "KHLPrime[Russia]",
+  "KHLTV[Russia]",
+  "OptusSport1[Australia]",
+  "OptusSport2[Australia]",
+  "OptusSport3[Australia]",
+  "OptusSport4[Australia]",
+  "OptusSport5[Australia]",
+  "OptusSport6[Australia]",
+  "AstroCricket[Malaysia]",
+  "PeacockEPLTV[USA]",
+  "PeacockEPL1[USA]",
+  "PeacockEPL2[USA]",
+  "PeacockEPL3[USA]",
+  "PeacockEPL4[USA]",
+  "PeacockEPL5[USA]",
+  "BBCNEWS24[UK]",
+  "RMCSport1[France]",
+  "Premiersport1[Ireland]",
+  "Combate[Brazil]",
+  "ESPN1[Netherlands]",
+  "ESPN2[Netherlands]",
+  "ESPN3[Netherlands]",
+  "Blaze[UK]",
+  "SupersportNews[SouthAfrica]",
+  "UFCFightPass[UK]",
+  "FloRacing[USA]",
+  "ACCNetwork[USA]",
+  "ArenaPremium1[Serbia]",
+  "ArenaPremium2[Serbia]",
+  "ArenaPremium3[Serbia]",
+  "CosmoteSport1[Greece]",
+  "CosmoteSport2[Greece]",
+  "CosmoteSport3[Greece]",
+  "CosmoteSport4[Greece]",
+  "CosmoteSport5[Greece]",
+  "CosmoteSport6[Greece]",
+  "CosmoteSport7[Greece]",
+  "CosmoteSport8[Greece]",
+  "CosmoteSport9[Greece]",
+  "ArenaSport1[Serbia]",
+  "ArenaSport2[Serbia]",
+  "ArenaSport3[Serbia]",
+  "ArenaSport4[Serbia]",
+  "ArenaSport5[Serbia]",
+  "ArenaSport6[Serbia]",
+  "ArenaSport7[Serbia]",
+  "ArenaSport8[Serbia]",
+  "BeinSportsMena1[UK]",
+  "VTM2[Belgium]",
+  "CanalSport[France]",
+  "CanalSport2[France]",
+  "CanalSport360[France]",
+  "BeinSports3[France]",
+  "Film4[UK]",
+  "NFL09[US]",
+  "MAVTV[USA]",
+  "SportsnetOntario[Canada]",
+  "CNNnews[USA]",
+  "DiemaSport2[Bulgaria]",
+  "SupersportsBlitz[SouthAfrica]",
+  "WillowTV[USA]",
+  "BeINSport4max[France]",
+  "WillovTV[USA]",
+  "TV3[Denmark]",
+  "PDCTV[USA]",
+  "SkyDiscoveryHD[UK]",
+  "FoxSports1Backup[USA]",
+  "SkySportsCricket[UK]",
+  "ViaplaySports1[UK]",
+  "ViaplaySports2[UK]",
+  "OutdoorChannel[USA]",
+  "MASN[USA]",
+  "FXX[USA]",
+  "PATV[Pakistan]",
+  "GameShowNetwork[USA]",
+  "MLBNetwork[USA]",
+  "WillowXtra2[USA]",
+  "StarSports1[India]",
+  "StarSports2[India]",
+  "StarSports3[India]",
+  "lecotTNTSports[Argentina]",
+  "MovistarLigadeCampeones1[Spain]",
+  "Eurosport1[Spain]",
+  "Eurosport2[Spain]",
+  "Eurosport1[Germany]",
+  "Eurosport2[Germany]",
+  "DAZNF1[Spain]",
+  "DAZN1[Spain]",
+  "DAZN2[Spain]",
+  "DAZN1[Portugal]",
+  "DAZNLaliga[Spain]",
+  "DaznLaLiga2[Spain]",
+  "Laligahypermotion[Spain]",
+  "SkySportsF1[Germany]",
+  "DiemaSport[Bulgaria]",
+  "NBATV[Portugal]",
+  "SkySportsCalcio[Italy]",
+  "SkySportsUno[Italy]",
+  "BeinSportsMENA3[Argentina]",
+  "FoxSoccerPlus[US]",
+  "S4C[UK]",
+  "RallyTV[UK]"
+];
 
-    if (contentType && contentType.includes('application/octet-stream')) {
-      // It's a download, so we need to fetch as blob and then read as text.
-      const blob = await response.blob();
-      const text = await blob.text();
-      parseM3U(text);
-    } else {
-      // It's likely direct text, so we can read it directly.
-      const data = await response.text();
-      parseM3U(data);
-    }
-
-  } catch (error) {
-    console.error('Error loading M3U:', error);
-    errorMessage.textContent = 'Error loading M3U: ' + error.message;
-    errorMessage.style.display = 'block';
-  }
+function generateChannelName(url) {
+  return url;
 }
 
-function parseM3U(data) {
-  const lines = data.split('\n');
+function parseChannels(urlData) {
   const channels = [];
-  let currentChannel = null;
-
-  lines.forEach(line => {
-    if (line.startsWith('#EXTINF:')) {
-      const nameMatch = line.match(/tvg-name="([^"]+)"|,(.+)/);
-      if (nameMatch) {
-        const name = nameMatch[1] || nameMatch[2];
-        currentChannel = { name: name.trim() };
-      }
-    } else if (line.startsWith('http')) {
-      if (currentChannel) {
-        currentChannel.url = line.trim();
-        channels.push(currentChannel);
-        currentChannel = null;
-      }
-    }
+  urlData.forEach(url => {
+    const channelName = generateChannelName(url);
+    const link = `https://topembed.pw/channel/${channelName}`;
+    channels.push({ name: channelName, url: link });
   });
-
-  displayChannels(channels);
+  return channels;
 }
 
 function displayChannels(channels) {
@@ -135,15 +516,39 @@ function displayChannels(channels) {
     const li = document.createElement('li');
     li.textContent = channel.name;
     li.addEventListener('click', () => {
-      videoPlayer.src({ type: 'application/x-mpegURL', src: channel.url });
-      videoPlayer.play();
+      let streamUrl = channel.url;
+      if (streamUrl.startsWith('http://')) {
+          streamUrl = streamUrl.replace('http://', 'https://');
+      }
+      embedStream(streamUrl);
     });
     guideList.appendChild(li);
   });
 }
 
-// Replace with your M3U URL
-loadM3U('sport-playlist.m3u');
-</script>
+function embedStream(streamUrl) {
+  embeddedPlayer.src = streamUrl;
+
+  embeddedPlayer.onerror = function() {
+    console.error('Embedded player error:', embeddedPlayer.error);
+    errorMessage.textContent = 'Embedded player error: ' + embeddedPlayer.error;
+    errorMessage.style.display = 'block';
+  };
+}
+
+searchInput.addEventListener('input', () => {
+  const searchTerm = searchInput.value.toLowerCase();
+  const filteredChannels = allChannels.filter(channel =>
+    channel.name.toLowerCase().includes(searchTerm)
+  );
+  displayChannels(filteredChannels);
+});
+
+// Load the hardcoded channels
+allChannels = parseChannels(channelUrls);
+displayChannels(allChannels);
+
+		</script>
 </body>
+
 </html>
