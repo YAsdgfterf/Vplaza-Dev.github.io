@@ -1,4 +1,3 @@
-<!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-XWMFDM1WRX"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -10,87 +9,208 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VKF0XQGBEN"></script><script>window.dataLayer=window.dataLayer||[];const gtag=function(){dataLayer.push(arguments)};gtag("js",new Date),gtag("config","G-VKF0XQGBEN");</script><meta name="robots" content="noindex">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>V-Watch | Movies</title>
-    <meta name="description" content="For shows and movies idk man i was bored">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VKF0XQGBEN"></script><script>window.dataLayer=window.dataLayer||[];const gtag=function(){dataLayer.push(arguments)};gtag("js",new Date),gtag("config","G-VKF0XQGBEN");</script><meta name="robots" content="noindex">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>V-Watch | Movies</title>
+  <meta name="description" content="For shows and movies idk man i was bored">
 
-    <link rel="icon" href="/images/vplaza.webp"/>
-    <link rel="apple-touch-icon" sizes="180x180" href="/images/vplaza.webp"/>
-    
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com"/>
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet"/>
-    <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="/images/vplaza.webp"/>
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/vplaza.webp"/>
+  
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <link rel="manifest" href="manifest.json">
 
-    <link rel="stylesheet" href="https://unpkg.com/tippy.js@6.3.4/animations/shift-away-subtle.css">
-    <script src="https://unpkg.com/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://unpkg.com/tippy.js@6.3.4/dist/tippy-bundle.umd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/slugify@1.6.6/slugify.min.js"></script>
-    <script src="cachedFetch.js"></script>
-    <script src="utils.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/tippy.js@6.3.4/animations/shift-away-subtle.css">
+  <script src="https://unpkg.com/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+  <script src="https://unpkg.com/tippy.js@6.3.4/dist/tippy-bundle.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slugify@1.6.6/slugify.min.js"></script>
+  <script src="cachedFetch.js"></script>
+  <script src="utils.js"></script>
+
+  <style>
+    body {
+      font-family: 'IBM Plex Mono', monospace;
+      background-color: #121212;
+      color: #e0e0e0;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      padding: 1rem;
+      text-align: center;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .logo h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo img.emoji {
+      margin-right: 0.5rem;
+      height: 2rem;
+    }
+
+    main {
+      flex: 1;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    #videoGrid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      width: 100%;
+      max-width: 1200px;
+      margin-top: 1rem;
+    }
+
+    .videoItem {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease;
+    }
+
+    .videoItem:hover {
+      transform: translateY(-5px);
+    }
+
+    .thumbnail {
+      display: block;
+      position: relative;
+    }
+
+    .thumbnail img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .playIcon {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 2rem;
+      color: #fff;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 1rem;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .videoItem h3 {
+      margin: 1rem;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .videoItem h3 img.emoji {
+      margin-right: 0.5rem;
+      height: 1.5rem;
+    }
+
+    .videoItem p {
+      margin: 0 1rem 1rem;
+      font-size: 0.9rem;
+      color: #bdbdbd;
+    }
+
+    footer {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      padding: 1rem;
+      text-align: center;
+      box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+      margin-top: 2rem;
+    }
+
+    footer a, footer p{
+        color: #bdbdbd;
+        text-decoration: none;
+        margin: .3rem;
+    }
+
+  </style>
 </head>
 <body>
-    <header>
-        <div class="logo">
-            <h1><img draggable="false" class="emoji" alt="" src="/images/vplaza.webp"> V-Watch </h1>
-        </div>
-    </header>
-    <main>
-        <p>a static html based movie site :D i recommend using an ad blocker like uBlock Origin or AdGuard</p>
-        <div id="videoGrid">
-            <div class="videoItem">
-                <a class="thumbnail" href="series">
-                    <img src="previews/homepage/breaking_bad.jpg">
-                    <div class="playIcon"><i class="fas fa-tv"></i></div>
-                </a>
-                <h3><img draggable="false" class="emoji" alt="" src="previews/icons/retro-tv.png"> Series</h3>
-                <p>hmm yes epic</p>
-            </div>
-            <div class="videoItem">
-                <a class="thumbnail" href="movies">
-                    <img src="previews/homepage/interstellar.jpg">
-                    <div class="playIcon"><i class="fas fa-ticket"></i></div>
-                </a>
-                <h3><img draggable="false" class="emoji" alt="" src="previews/icons/cinema-play.png"> Movies</h3>
-                <p>movies!!!</p>
-            </div>
-            <div class="videoItem">
-                <a class="thumbnail" href="live">
-                    <img src="previews/homepage/the_amazing_world_of_gumball.jpg">
-                    <div class="playIcon"><i class="fas fa-satellite-dish"></i></div>
-                </a>
-                <h3><img draggable="false" class="emoji" alt="" src="previews/icons/live-tv.png"> Live</h3>
-                <p>"xbox live!!!!"</p>
-            </div>
-             <div class="videoItem">
-                <a class="thumbnail" href="sports">
-                    <img src="previews/homepage/basketball.jpeg">
-                    <div class="playIcon"><i class="fa-regular fa-basketball"></i></div>
-                </a>
-                <h3><img draggable="false" class="emoji" alt="" src="previews/icons/retro-tv.png"> Sports</h3>
-                <p>hmm yes epic</p>
-            </div>
-            <div class="videoItem">
-                <a class="thumbnail" href="news">
-                    <img src="previews/homepage/news.jpg">
-                    <div class="playIcon"><i class="fas fa-newspaper"></i></div>
-                </a>
-                <h3><img draggable="false" class="emoji" alt="" src="previews/icons/news-24.png"> News</h3>
-                <p>why is this an option</p>
-            </div>
-            </div>
-        </div>
-        <footer>
-            <h3 style="font-size: 14px;">all content is provided by non-affiliated third parties.</h3>
-            <a href="https://discord.gg/tDKYeh9eQn">partnered server</a>
-            <p>dmca ★ heartive@vjuum.com</p>
-        </footer>
-    </main>
-    <script src="script.js"></script>
-    <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "e70a405a52eb428db253911f5e45d760"}'></script>
+  <header>
+    <div class="logo">
+      <h1><img draggable="false" class="emoji" alt="" src="/images/vplaza.webp"> V-Watch </h1>
+    </div>
+  </header>
+  <main>
+    <p>a static html based movie site :D i recommend using an ad blocker like uBlock Origin or AdGuard</p>
+    <div id="videoGrid">
+      <div class="videoItem">
+        <a class="thumbnail" href="series">
+          <img src="previews/homepage/breaking_bad.jpg">
+          <div class="playIcon"><i class="fas fa-tv"></i></div>
+        </a>
+        <h3><img draggable="false" class="emoji" alt="" src="previews/icons/retro-tv.png"> Series</h3>
+        <p>hmm yes epic</p>
+      </div>
+      <div class="videoItem">
+        <a class="thumbnail" href="movies">
+          <img src="previews/homepage/interstellar.jpg">
+          <div class="playIcon"><i class="fas fa-ticket"></i></div>
+        </a>
+        <h3><img draggable="false" class="emoji" alt="" src="previews/icons/cinema-play.png"> Movies</h3>
+        <p>movies!!!</p>
+      </div>
+      <div class="videoItem">
+        <a class="thumbnail" href="live">
+          <img src="previews/homepage/the_amazing_world_of_gumball.jpg">
+          <div class="playIcon"><i class="fas fa-satellite-dish"></i></div>
+        </a>
+        <h3><img draggable="false" class="emoji" alt="" src="previews/icons/live-tv.png"> Live</h3>
+        <p>"xbox live!!!!"</p>
+      </div>
+       <div class="videoItem">
+        <a class="thumbnail" href="sports">
+          <img src="previews/homepage/basketball.jpeg">
+          <div class="playIcon"><i class="fa-regular fa-basketball"></i></div>
+        </a>
+        <h3><img draggable="false" class="emoji" alt="" src="previews/icons/retro-tv.png"> Sports</h3>
+        <p>hmm yes epic</p>
+      </div>
+      <div class="videoItem">
+        <a class="thumbnail" href="news">
+          <img src="previews/homepage/news.jpg">
+          <div class="playIcon"><i class="fas fa-newspaper"></i></div>
+        </a>
+        <h3><img draggable="false" class="emoji" alt="" src="previews/icons/news-24.png"> News</h3>
+        <p>why is this an option</p>
+      </div>
+    </div>
+  </main>
+  <footer>
+    <h3 style="font-size: 14px;">all content is provided by non-affiliated third parties.</h3>
+    <a href="https://discord.gg/tDKYeh9eQn">partnered server</a>
+    <p>dmca ★ heartive@vjuum.com</p>
+  </footer>
+  <script src="script.js"></script>
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "e70a405a52eb428db253911f5e45d760"}'></script>
 </body>
 </html>
