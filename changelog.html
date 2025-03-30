@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <title>VPLAZA</title>
+    <style>
+        body {
+            font-family: poppins;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #000000;
+            color: rgb(255, 94, 0);
+            font-size: 50px;
+            text-shadow: 0 10px 20px #ff5100, 0 50px 90px #ff6600;
+        }
+        button {
+            padding: 25px 90px;
+            background-color: #ff6600;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: box-shadow 0.3s ease-in-out;
+            box-shadow: 0 0 0 0 #ff0000;
+            font-family: poppins;
+            font-size: 20px;
+        }
+        button:hover {
+            background-color: #ff5100;
+            box-shadow: 0 10px 20px #ff5100, 0 50px 90px #ff6600;
+        }
+    </style>
+</head>
+<body>
+    <h1>VPLAZA</h1>
+    <button id="notifyBtn">Check for new updates</button>
+
+    <script>
+        if ('serviceWorker' in navigator && 'Notification' in window) {
+            navigator.serviceWorker.register('service-worker.js')
+                .then(function(registration) {
+                    console.log('Service Worker registered with scope:', registration.scope);
+                });
+
+            document.getElementById('notifyBtn').addEventListener('click', function() {
+                if (Notification.permission === 'default') {
+                    Notification.requestPermission().then(permission => {
+                        if (permission === 'granted') {
+                            sendNotification('UPDATES - CHANGELOG', [
+                               'Fixed minor and major tab issues.',
+                        
+                        
+                                'Game page css improvments.',
+                        
+                        
+                                'Changed bare server! Fork Vplaza on Github and change your bare server to one that works for you!' 
+                            ], 'https://vplaza.org');
+                        }
+                    });
+                } else if (Notification.permission === 'granted') {
+                    sendNotification('UPDATES - CHANGELOG', [
+                        'Fixed minor and major tab issues.',
+                        
+                        
+                        'Game page css improvments.',
+                        
+                        
+                        'Changed bare server! Fork Vplaza on Github and change your bare server to one that works for you!'
+                    ], 'https://vplaza.org');
+                }
+            });
+
+            navigator.serviceWorker.addEventListener('notificationclick', function(event) {
+                event.notification.close();
+                event.waitUntil(
+                    clients.openWindow('https://vplaza.org').then(function(client) {
+                        client.focus();
+                    })
+                );
+            });
+        }
+
+        function sendNotification(title, body, url) {
+            if (navigator.serviceWorker) {
+                navigator.serviceWorker.ready.then(function(registration) {
+                    registration.showNotification(title, {
+                        body: body.join('\n'),
+                        icon: 'icon.png',
+                        data: url
+                    });
+                });
+            }
+        }
+    </script>
+</body>
+</html>
