@@ -504,7 +504,7 @@ function parseChannels(urlData) {
   const channels = [];
   urlData.forEach(url => {
     const channelName = generateChannelName(url);
-    const link = `https://topembed.pw/channel/${channelName}`;
+    const link = `/active/embed?url=https://topembed.pw/channel/${channelName}`;
     channels.push({ name: channelName, url: link });
   });
   return channels;
