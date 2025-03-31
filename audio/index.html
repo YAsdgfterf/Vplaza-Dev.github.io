@@ -1,12 +1,3 @@
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-XWMFDM1WRX"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-XWMFDM1WRX');
-</script>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -16,188 +7,219 @@
 	<title>Music Stream</title>
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 	<style>
-	body {
-	font-family: Arial, sans-serif;
-	margin: 0;
-	padding: 0;
-	background: #121212;
-	color: white;
-	display: flex;
-	flex-direction: column;
-	height: 100vh;
-	overflow: hidden;
-	}
-	
-	header {
-	padding: 10px;
-	background: rgba(29, 185, 84, 0.9); /* Slight transparency */
-	text-align: center;
-	position: sticky;
-	top: 0;
-	z-index: 10;
-	border-radius: 10px;
-	backdrop-filter: blur(10px); /* Glass effect */
-	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-	}
-	
-	input {
-	width: 80%;
-	padding: 10px;
-	border-radius: 5px;
-	border: none;
-	margin-bottom: 10px;
-	background: rgba(51, 51, 51, 0.8);
-	color: white;
-	backdrop-filter: blur(5px); /* Glass effect */
-	}
-	
-	input::placeholder {
-	color: #888;
-	}
-	
-	main {
-	flex-grow: 1;
-	padding: 20px;
-	overflow-y: auto;
-	}
-	
-	#trending,
-	#search-results {
-	padding: 20px;
-	}
-	
-	.hidden {
-	display: none;
-	}
-	
-	footer {
-	position: fixed;
-	bottom: 0;
-	width: 100%;
-	background: rgba(40, 40, 40, 0.8); /* Slight transparency */
-	padding: 10px;
-	display: flex;
-	justify-content: center;
-	height: 15vh;
-	align-items: center;
-	z-index: 5;
-	border-radius: 10px;
-	backdrop-filter: blur(10px); /* Glass effect */
-	box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.3);
-	}
-	
-	#player-controls {
-	display: flex;
-	justify-content: space-between;
-	width: 30%;
-	align-items: center;
-	flex-direction: column;
-	}
-	
-	#video-container {
-	position: fixed;
-	top: 15vh;
-	left: 0;
-	width: 100%;
-	height: 65vh;
-	background: black;
-	z-index: 5;
-	border-radius: 10px;
-	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-	}
-	
-	#youtube-player {
-	width: 100%;
-	height: 100%;
-	border-radius: 10px;
-	}
-	
-	button {
-	background: none;
-	border: none;
-	color: white;
-	font-size: 20px;
-	cursor: pointer;
-	margin: 0 10px;
-	}
-	
-	#scrub-bar {
-	width: 60%;
-	height: 5px;
-	background: #444;
-	margin-top: 10px;
-	cursor: pointer;
-	border-radius: 5px;
-	}
-	
-	#scrub-bar-progress {
-	height: 100%;
-	background: #1DB954;
-	width: 0%;
-	border-radius: 5px;
-	}
-	
-	.playlist-item {
-	display: flex;
-	justify-content: space-between;
-	padding: 5px;
-	border-bottom: 1px solid gray;
-	}
-	
-	.search-result-item {
-	display: flex;
-	justify-content: space-between;
-	padding: 5px;
-	border-bottom: 1px solid #444;
-	}
-	
-	#time-display {
-	font-size: 14px;
-	color: #888;
-	display: flex;
-	justify-content: space-between;
-	width: 100%;
-	margin-top: 5px;
-	}
-	
-#search-results {
-display: grid;
-gap: 15px;
-max-height: 60vh; /* You can adjust the height depending on your design */
-overflow-y: auto; /* Makes the container scrollable if content overflows */
-padding-right: 10px; /* Prevent scrollbar overlap with content */
-}
+		body {
+			font-family: 'IBM Plex Mono', monospace;
+			/* Use IBM Plex Mono */
+			margin: 0;
+			padding: 0;
+			background: linear-gradient(135deg, #121212, #0a0a0a);
+			/* Dark gradient background */
+			color: white;
+			display: flex;
+			flex-direction: column;
+			height: 100vh;
+			overflow: hidden;
+		}
 
-#search-results .search-result-item {
+		@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&display=swap');
 
-background: rgba(255, 255, 255, 0.1);
-border-radius: 10px;
-padding: 10px;
-backdrop-filter: blur(10px);
-display: flex;
-justify-content: space-between;
-align-items: center;
-box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+		header {
+			padding: 15px;
+			background: rgba(255, 105, 180, 0.2);
+			/* Magenta glass effect */
+			text-align: center;
+			position: sticky;
+			top: 0;
+			z-index: 10;
+			border-radius: 10px;
+			backdrop-filter: blur(15px);
+			/* Increased blur */
+			box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+			/* Stronger shadow */
+			border: 1px solid rgba(255, 105, 180, 0.3);
+			/* Add border */
+		}
 
-}
+		input {
+			width: 80%;
+			padding: 12px;
+			/* Increased padding */
+			border-radius: 8px;
+			border: 1px solid rgba(255, 165, 0, 0.3);
+			/* Orange border */
+			margin-bottom: 15px;
+			background: rgba(51, 51, 51, 0.3);
+			/* Slightly transparent background */
+			color: white;
+			backdrop-filter: blur(10px);
+			box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+			transition: border-color 0.3s ease;
+			/* Smooth border transition */
+		}
 
-#search-results .search-result-item:hover {
-background: rgba(255, 255, 255, 0.2);
-cursor: pointer;
-}
-	
-	#placeholder {
-	font-size: 40px;
-	text-align: center;
-	margin-top: 10%;
-	color: #888;
-	}
-	
-	#placeholder-text p {
-	color: #888;
-	font-size: 18px;
-	text-align: center;
-	}
+		input:focus {
+			border-color: rgba(255, 165, 0, 0.7);
+			/* Brighter orange focus */
+			outline: none;
+			/* Remove default focus outline */
+		}
+
+		input::placeholder {
+			color: #aaa;
+		}
+
+		main {
+			flex-grow: 1;
+			padding: 25px;
+			overflow-y: auto;
+		}
+
+		#trending,
+		#search-results {
+			padding: 25px;
+		}
+
+		.hidden {
+			display: none;
+		}
+
+		footer {
+			position: fixed;
+			bottom: 0;
+			width: 100%;
+			background: rgba(128, 0, 128, 0.2);
+			/* Purple glass effect */
+			padding: 15px;
+			display: flex;
+			justify-content: center;
+			height: 15vh;
+			align-items: center;
+			z-index: 5;
+			border-radius: 10px;
+			backdrop-filter: blur(15px);
+			box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.5);
+			border-top: 1px solid rgba(128, 0, 128, 0.3);
+		}
+
+		#player-controls {
+			display: flex;
+			justify-content: space-between;
+			width: 40%;
+			/* Increased width */
+			align-items: center;
+			flex-direction: column;
+		}
+
+		#video-container {
+			position: fixed;
+			top: 15vh;
+			left: 0;
+			width: 100%;
+			height: 65vh;
+			background: black;
+			z-index: 5;
+			border-radius: 10px;
+			box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+			border: 1px solid rgba(255, 105, 180, 0.3);
+		}
+
+		#youtube-player {
+			width: 100%;
+			height: 100%;
+			border-radius: 10px;
+		}
+
+		button {
+			background: none;
+			border: none;
+			color: white;
+			font-size: 22px;
+			/* Increased font size */
+			cursor: pointer;
+			margin: 0 15px;
+			/* Increased margin */
+			transition: color 0.3s ease;
+			text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+			/* Text glow */
+		}
+
+		button:hover {
+			color: rgba(255, 165, 0, 0.8);
+			/* Orange hover effect */
+		}
+
+		#scrub-bar {
+			width: 80%;
+			/* Increased width */
+			height: 8px;
+			/* Increased height */
+			background: #555;
+			margin-top: 12px;
+			cursor: pointer;
+			border-radius: 8px;
+		}
+
+		#scrub-bar-progress {
+			height: 100%;
+			background: linear-gradient(to right, orange, magenta);
+			/* Orange to magenta gradient */
+			width: 0%;
+			border-radius: 8px;
+		}
+
+		.playlist-item,
+		.search-result-item {
+			display: flex;
+			justify-content: space-between;
+			padding: 10px;
+			border-bottom: 1px solid #444;
+			background: rgba(255, 255, 255, 0.1);
+			border-radius: 10px;
+			backdrop-filter: blur(10px);
+			align-items: center;
+			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+			margin-bottom: 8px;
+			transition: background 0.3s ease;
+		}
+
+		.search-result-item:hover {
+			background: rgba(255, 255, 255, 0.2);
+			cursor: pointer;
+		}
+
+		#time-display {
+			font-size: 16px;
+			color: #aaa;
+			display: flex;
+			justify-content: space-between;
+			width: 100%;
+			margin-top: 8px;
+		}
+
+		#search-results {
+			display: grid;
+			gap: 15px;
+			max-height: 60vh;
+			overflow-y: auto;
+			padding-right: 10px;
+		}
+
+		#placeholder {
+			font-size: 60px;
+			text-align: center;
+			margin-top: 10%;
+			color: #888;
+		}
+
+		#placeholder-text p {
+			color: #888;
+			font-size: 20px;
+			text-align: center;
+		}
+
+		#loop.loop-active {
+			color: limegreen;
+		}
 	</style>
 	<script src="https://www.youtube.com/iframe_api"></script>
 </head>
@@ -220,7 +242,6 @@ cursor: pointer;
 		</main>
 		<footer>
 			<div id="player-controls">
-				
 				<div>
 					<button id="prev" onclick="playPrevious()"><i class="bi bi-skip-start"></i></button>
 					<button id="play" onclick="togglePlayPause()"><i class="bi bi-play-fill"></i></button>
@@ -241,21 +262,33 @@ cursor: pointer;
 		</div>
 	</div>
 	<script>
-		const API_KEYS = ['AIzaSyBAnLAEwYssI3Oe3uaYfdEOPpzs-TVqHoM', 'YOUR_SECONDARY_API_KEY'];
+ let API_KEYS = []; // Start with an empty array
         let currentApiKeyIndex = 0;
         let player;
         let isPlayerReady = false;
         let isPlaying = false;
         let isLooping = false;
-        let currentSearchResults = []; // Stores the search results
-        let currentVideoIndex = -1; // Tracks the current video index
+        let currentSearchResults = [];
+        let currentVideoIndex = -1;
+
+        // Function to add API keys (you can call this multiple times)
+        function addApiKey(key) {
+            API_KEYS.push(key);
+        }
 
         function getApiKey() {
+            if (API_KEYS.length === 0) {
+                console.error("No API keys available.");
+                return null; // Or handle this differently
+            }
             return API_KEYS[currentApiKeyIndex];
         }
 
         function searchMusic(query) {
-            const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&q=${query}&key=${getApiKey()}`;
+            const apiKey = getApiKey();
+            if (!apiKey) return; // Exit if no keys
+
+            const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&q=${query}&key=${apiKey}&videoCategoryId=10&maxResults=50`;
             fetch(url)
                 .then(response => response.json())
                 .then(data => {
@@ -263,11 +296,10 @@ cursor: pointer;
                     const placeholder = document.getElementById('placeholder');
                     const placeholderText = document.getElementById('placeholder-text');
 
-                    // Hide placeholder
                     placeholder.classList.add('hidden');
                     placeholderText.classList.add('hidden');
 
-                    currentSearchResults = data.items; // Store the search results
+                    currentSearchResults = data.items;
                     results.innerHTML = '';
                     data.items.forEach((video, index) => {
                         const div = document.createElement('div');
@@ -279,6 +311,7 @@ cursor: pointer;
                 })
                 .catch(() => {
                     currentApiKeyIndex = (currentApiKeyIndex + 1) % API_KEYS.length;
+                    searchMusic(query); // Retry with the next key
                 });
         }
 
@@ -287,7 +320,7 @@ cursor: pointer;
                 height: '100%',
                 width: '100%',
                 videoId: '',
-                playerVars: { autoplay: 0, controls: 0, modestbranding: 1, rel: 0, showinfo: 0 },
+                playerVars: { autoplay: 1, controls: 0, modestbranding: 1, rel: 0, showinfo: 0 },
                 events: {
                     'onReady': () => { isPlayerReady = true; },
                     'onStateChange': onPlayerStateChange,
@@ -360,7 +393,6 @@ cursor: pointer;
             const duration = player.getDuration();
             const progress = (currentTime / duration) * 100;
             document.getElementById('scrub-bar-progress').style.width = progress + '%';
-
             // Update the time display
             const currentMinutes = Math.floor(currentTime / 60);
             const currentSeconds = Math.floor(currentTime % 60);
@@ -405,7 +437,12 @@ cursor: pointer;
                 searchMusic(e.target.value);
             }
         });
-	</script>
+
+        // Example usage: Add your API keys here!
+        addApiKey('AIzaSyBAnLAEwYssI3Oe3uaYfdEOPpzs-TVqHoM');
+        addApiKey('AIzaSyBQAZ7-zXoAFYBBDp9Amddor0WAooSjUaM');
+        addApiKey('AIzaSyCXizLEzfyVQESntn97HwtYA3yhxbjDeso');
+        // Add as many keys as you need!	</script>
 </body>
 
 </html>
