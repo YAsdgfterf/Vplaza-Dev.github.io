@@ -1,0 +1,232 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VPLAZA - DEV</title>
+    <style>
+        body {
+            background-color: black;
+            color: orange;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            overflow-y: scroll;
+            margin: 0;
+            padding: 0;
+        }
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: orange;
+            border-radius: 10px;
+        }
+        h1 {
+            font-size: 5rem;
+            font-weight: bold;
+            text-shadow: 0 0 20px orange, 0 0 40px orange;
+            margin: 20px auto;
+            background-color: rgba(255, 208, 0, 0.103);
+            border-radius: 20px;
+            border: 3px solid yellow;
+            max-width: 800px;
+            padding: 60px;
+            text-align: center;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            max-width: 1000px;
+            margin: auto;
+            padding: 40px;
+        }
+        .game {
+            width: 200px;
+            height: 200px;
+            border: 6px solid orange;
+            border-radius: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.7s;
+            background: rgb(255, 187, 0);
+            box-shadow: 0 0 20px orange;
+            overflow: hidden;
+            position: relative;
+        }
+        .game img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 16px;
+            transition: transform 0.5s ease-in-out;
+        }
+        .game:hover {
+            transform: scale(1.1) rotate(-3deg);
+            box-shadow: 0 0 60px orange, 0 0 40px rgb(255, 0, 0);
+            border-radius: 20px;
+        }
+        .game:hover img {
+            transform: scale(1.2) rotate(-5deg);
+        }
+        .game::after {
+            content: attr(data-name);
+            position: absolute;
+            bottom: -100%;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            color: orange;
+            text-align: center;
+            padding: 5px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            transition: bottom 0.4s ease-in-out;
+        }
+        .game:hover::after {
+            bottom: 0;
+        }
+
+        .minecraft img.hover {
+            display: none;
+        }
+
+        .minecraft:hover img.hover {
+            display: block;
+        }
+
+        .minecraft:hover img.normal {
+            display: none;
+        }
+
+
+        @media (max-width: 600px) {
+            .grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+            .game {
+                width: 150px;
+                height: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>VPLAZA - DEV</h1>
+    <div class="grid">
+        <div class="game" data-name="Retro Bowl" onclick="openGame('games/retro-bowl')">
+            <img src="images/retro-bowl.jpg" alt="retrobowl">
+        </div>
+        <div class="game" data-name="1v1LOL" onclick="openGame('games/1v1lol')">
+            <img src="images/1v1lol.jpg" alt="1v1">
+        </div>
+        <div class="game" data-name="Slope" onclick="openGame('games/slope')">
+            <img src="images/slope.jpg" alt="slope">
+        </div>
+        <div class="game" data-name="Subway Surfers" onclick="openGame('games/subway-surfers')">
+            <img src="images/subway-surferss.png" alt="subway">
+        </div>
+        <div class="game" data-name="Basket Ball Stars" onclick="openGame('games/basketball-stars')">
+            <img src="images/basketball-stars.jpg" alt="BBS">
+        </div>
+        <div class="game" data-name="Drive Mad" onclick="openGame('games/drive-mad')">
+            <img src="images/drive-mad.jpg" alt="DM">
+        </div>
+        <div class="game" data-name="Deathrun 3D" onclick="openGame('games/death-run-3d')">
+            <img src="images/death-run-3d.jpg" alt="dr3d">
+        </div>
+        <div class="game" data-name="Basket Random" onclick="openGame('games/basket-random')">
+            <img src="images/basket-random.jpg" alt="Snake">
+        </div>
+        <div class="game" data-name="MotoX3M" onclick="openGame('games/motox3m2')">
+            <img src="images/motox3m.jpg" alt="mx3m2">
+        </div>
+        <div class="game" data-name="Bitlife" onclick="openGame('games/bitlife')">
+            <img src="images/bitlife.jpg" alt="bl">
+        </div>
+        <div class="game" data-name="Getaway Shootout" onclick="openGame('games/GetawayShootout')">
+            <img src="images/getaway-shootout.jpg" alt="GS">
+        </div>
+        <div class="game" data-name="Just Fall LOL" onclick="openGame('games/justfall-lol')">
+            <img src="images/justfall-lol.jpg" alt="jsfall">
+        </div>
+        <div class="game" data-name="Rooftop Snipers" onclick="openGame('games/rooftop-snipers')">
+            <img src="images/rooftop-snipers.jpg" alt="jsfall">
+        </div>
+        <div class="game" data-name="Cookie Clicker" onclick="openGame('games/cookieclicker')">
+            <img src="images/cookie-clicker.jpg" alt="jsfall">
+        </div>
+        <div class="game" data-name="2048" onclick="openGame('games/2048')">
+            <img src="images/2048.jpg" alt="2048">
+        </div>
+        <div class="game" data-name="Snowrider3d" onclick="openGame('games/snowrider.html')">
+            <img src="images/snow-rider3d.jpg" alt="2048">
+        </div>
+        <div class="game minecraft" data-name="Minecraft" onclick="openGame('games/eagler')">
+            <img src="images/minecraft.jpg" alt="minecraft" class="normal">
+            <img src="images/explodeminecraft.gif" alt="explodeminecraft" class="hover">
+        </div>
+        <div class="game" data-name="Learn to Fly" onclick="openGame('games/learn-to-fly-2')">
+            <img src="images/learn-to-fly-2.jpg" alt="learn-to-fly-2">
+        </div>
+        <div class="game" data-name="Idle Mining Empire" onclick="openGame('games/idle-mining-empire')">
+            <img src="images/idle-mining-empire.jpg" alt="idle-mining-empire">
+        </div>
+        <div class="game" data-name="Among Us" onclick="openGame('games/among-us')">
+            <img src="images/among-us.jpg" alt="among-us">
+        </div>
+        <div class="game" data-name="Paper io 2" onclick="openGame('games/paper-io-2')">
+            <img src="images/paper-io-2.jpg" alt="paper-io-2">
+        </div>
+        <div class="game" data-name="Flappy Bird" onclick="openGame('games/flappybird')">
+            <img src="images/flappy-bird.jpg" alt="flappy-bird">
+        </div>
+        <div class="game" data-name="Krunker" onclick="openGame('games/krunker')">
+            <img src="images/krunker.jpg" alt="krunker">
+        </div>
+        <div class="game" data-name="Geometry Dash (Knockoff)" onclick="openGame('games/geometry-dash-knockoff')">
+            <img src="images/geometry-dash.jpg" alt="geometry-dash-knockoff">
+        </div>
+        <div class="game" data-name="Baldis Basics" onclick="openGame('games/baldis-basics')">
+            <img src="images/baldis-basics.jpg" alt="baldis-basics">
+        </div>
+        <div class="game" data-name="Super Hot" onclick="openGame('games/superhot')">
+            <img src="images/superhot.jpg" alt="superhot">
+        </div>
+        <div class="game" data-name="Temple Run 2" onclick="openGame('games/temple-run-2')">
+            <img src="images/temple-run-2.jpg" alt="temple-run-2">
+        </div>
+        <div class="game" data-name="Happy Wheels" onclick="openGame('games/happy-wheels')">
+            <img src="images/happy-wheels.jpg" alt="happy-wheels">
+        </div>
+        <div class="game" data-name="Crossy Road" onclick="openGame('games/crossyroad')">
+            <img src="images/crossy-road.jpg" alt="crossy-road">
+        </div>
+        <div class="game" data-name="Stickman Hook" onclick="openGame('games/stickmanhook')">
+            <img src="images/stickmanhook.jpg" alt="stickman">
+        </div>
+        <div class="game" data-name="Tag" onclick="openGame('games/Tag')">
+            <img src="images/tag.jpg" alt="tag">
+        </div>
+        <div class="game" data-name="Poly Track" onclick="openGame('games/poly-track')">
+            <img src="images/polytrack.jpg" alt="pt">
+        </div>
+        <div class="game" data-name="Tetris" onclick="openGame('games/tetris')">
+            <img src="images/tetris.jpg" alt="tetris">
+        </div>
+        <div class="game" data-name="Armed Forces" onclick="openGame('games/armed-forces')">
+            <img src="images/armed-forces.png" alt="armed forces">
+        </div>
+        <div class="game" data-name="Counter Strike" onclick="openGame('games/counter-strike')">
+            <img src="images/csgo.png" alt="Counter-Strike">
+        </div>
+    </div>
+    <script>
+        function openGame(url) {
+            window.location.href = url;
+        }
+    </script>
+</body>
+</html>
