@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vplaza</title>
+    <title>Embed Tutorial</title>
     <style>
         body, html {
             margin: 0;
@@ -30,6 +30,8 @@
             
             const iframe = document.createElement("iframe");
             iframe.src = iframeUrl;
+            iframe.sandbox = "allow-scripts allow-same-origin";
+            
             document.body.appendChild(iframe);
         });
     </script>
