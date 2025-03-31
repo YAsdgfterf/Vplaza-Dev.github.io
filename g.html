@@ -230,9 +230,20 @@
             <img src="images/tetris.jpg" alt="tetris">
         </div>
     </div>
+    <div id="game-container">
+        <button class="close-btn" onclick="closeGame()">Close</button>
+        <iframe id="game-frame"></iframe>
+    </div>
+
     <script>
         function openGame(url) {
-            window.location.href = url;
+            document.getElementById('game-frame').src = url;
+            document.getElementById('game-container').style.display = 'block';
+        }
+        
+        function closeGame() {
+            document.getElementById('game-container').style.display = 'none';
+            document.getElementById('game-frame').src = '';
         }
     </script>
 </body>
