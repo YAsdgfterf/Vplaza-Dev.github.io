@@ -1,0 +1,12 @@
+window.addEventListener("DOMContentLoaded", function () {
+    const currentUrl = window.location.origin + "/tutorials";
+    const iframeUrl = `/active/embed.html?url=${encodeURIComponent(currentUrl)}`;
+    
+    const iframe = document.createElement("iframe");
+    iframe.src = iframeUrl;
+    iframe.style.width = "100%";
+    iframe.style.height = "500px";
+    iframe.style.border = "none";
+    
+    document.body.appendChild(iframe);
+});
