@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VPLAZA - DEV</title>
+    <style>
+        :root {
+            --primary-glow: rgba(255, 165, 0, 0.7);
+            --secondary-glow: rgba(255, 255, 0, 0.5);
+            --border-color: #ffcf00;
+            --text-color: #ffb700;
+            --bg-card: rgba(30, 30, 30, 0.7);
+            --bg-hover: rgba(40, 40, 40, 0.9);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #000;
+            color: var(--text-color);
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+            background-image:
+                radial-gradient(circle at 30% 30%, rgba(255, 165, 0, 0.05) 0%, transparent 60%),
+                radial-gradient(circle at 70% 70%, rgba(255, 255, 0, 0.05) 0%, transparent 60%);
+        }
+
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--text-color);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #111;
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 165, 0, 0.2);
+        }
+
+        .title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: linear-gradient(to right, #ff8a00, #ffcc00);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 15px rgba(255, 165, 0, 0.5);
+        }
+
+        .proxied-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(30, 30, 30, 0.6);
+            padding: 8px 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 165, 0, 0.3);
+            font-weight: 600;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+            box-shadow: 0 0 10px rgba(255, 165, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .proxied-container:hover {
+            background: rgba(40, 40, 40, 0.8);
+            border-color: rgba(255, 165, 0, 0.5);
+            box-shadow: 0 0 15px rgba(255, 165, 0, 0.3);
+        }
+
+        /* Custom checkbox */
+        .checkbox-container {
+            position: relative;
+            width: 24px;
+            height: 24px;
+        }
+
+        .checkbox-container input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .checkmark {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 24px;
+            width: 24px;
+            background-color: transparent;
+            border: 2px solid var(--border-color);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .checkbox-container:hover .checkmark {
+            border-color: #ffda44;
+            box-shadow: 0 0 8px rgba(255, 218, 68, 0.5);
+        }
+
+        .checkbox-container input:checked ~ .checkmark {
+            background-color: rgba(255, 218, 68, 0.2);
+            border-color: #ffda44;
+            box-shadow: 0 0 8px rgba(255, 218, 68, 0.5);
+        }
+
+        .checkmark:after {
+            content: "";
+            position: absolute;
+            display: none;
+        }
+
+        .checkbox-container input:checked ~ .checkmark:after {
+            display: block;
+        }
+
+        .checkbox-container .checkmark:after {
+            left: 8px;
+            top: 3px;
+            width: 6px;
+            height: 12px;
+            border: solid #ffda44;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+
+        /* Search bar */
+        .search-container {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50%;
+            max-width: 450px;
+            z-index: 1000;
+            transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .search-container.active {
+            top: 80px;
+            bottom: auto;
+        }
+
+        .search-wrapper {
+            position: relative;
+            width: 100%;
+            height: 40px;
+            overflow: hidden;
+            border-radius: 8px;
+            background: rgba(25, 25, 25, 0.7);
+            border: 1px solid rgba(255, 165, 0, 0.3);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 0 15px rgba(255, 165, 0, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .search-wrapper:hover,
+        .search-wrapper:focus-within {
+            background: rgba(30, 30, 30, 0.9);
+            border-color: rgba(255, 165, 0, 0.5);
+            box-shadow: 0 0 20px rgba(255, 165, 0, 0.25);
+        }
+
+        .search-input {
+            width: 100%;
+            height: 100%;
+            padding: 0 15px;
+            color: var(--text-color);
+            font-size: 0.95rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            background: transparent;
+            border: none;
+            outline: none;
+        }
+
+        .search-input::placeholder {
+            color: rgba(255, 165, 0, 0.5);
+            font-weight: 400;
+        }
+
+        /* Main content */
+        .main-content {
+            margin-top: 80px;
+            padding: 25px 5%;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px 0 100px 0;
+        }
+
+        .game {
+            position: relative;
+            aspect-ratio: 1;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 165, 0, 0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.35s ease;
+        }
+
+        .game:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 165, 0, 0.6);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3),
+                        0 0 15px rgba(255, 165, 0, 0.3);
+        }
+
+        .game::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to top,
+                        rgba(0, 0, 0, 0.8) 0%,
+                        rgba(0, 0, 0, 0.3) 40%,
+                        transparent 100%);
+            opacity: 0.7;
+            transition: opacity 0.35s ease;
+            z-index: 1;
+        }
+
+        .game:hover::before {
+            opacity: 0.4;
+        }
+
+        .game img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .game:hover img {
+            transform: scale(1.1);
+        }
+
+        .game-name {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #fff;
+            text-align: center;
+            z-index: 2;
+            transform: translateY(0);
+            transition: transform 0.35s ease;
+        }
+
+        .game:hover .game-name {
+            transform: translateY(-5px);
+        }
+
+        /* Minecraft special case */
+        .minecraft .hover-img {
+            display: none;
+        }
+
+        .minecraft:hover .normal-img {
+            display: none;
+        }
+
+        .minecraft:hover .hover-img {
+            display: block;
+        }
+
+        /* Filtered games */
+        .game {
+            transition: opacity 0.35s ease, transform 0.35s ease;
+        }
+
+        .game.hidden {
+            opacity: 0;
+            transform: scale(0.8);
+            pointer-events: none;
+            position: absolute;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                padding: 10px;
+                gap: 10px;
+            }
+
+            .title {
+                font-size: 2rem;
+            }
+
+            .search-container {
+                width: 85%;
+            }
+
+            .search-container.active {
+                top: 110px;
+            }
+
+            .main-content {
+                margin-top: 120px;
+                padding: 15px 3%;
+            }
+
+            .grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                gap: 15px;
+            }
+
+            .game-name {
+                font-size: 0.8rem;
+                padding: 8px;
+            }
+        }
+
+        @media (min-width: 1600px) {
+            .grid {
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1 class="title">VPLAZA - DEV</h1>
+
+        <div class="proxied-container">
+            Proxied?
+            <label class="checkbox-container">
+                <input type="checkbox" id="proxied-checkbox">
+                <span class="checkmark"></span>
+            </label>
+        </div>
+    </header>
+
+    <div class="search-container" id="search-container">
+        <div class="search-wrapper">
+            <input type="text" class="search-input" id="search-input" placeholder="search for your favorites">
+        </div>
+    </div>
+
+    <main class="main-content">
+        <div class="grid" id="game-grid">
+          
+            <div class="game" data-name="Tiktok" onclick="openGame('/active/embed.html?url=https://tiktok.com')">
+                <img src="/images/tiktok.png" alt="tiktok">
+                <div class="game-name">Tiktok</div>
+            </div>
+            <div class="game" data-name="Same" onclick="openGame('/active/embed.html?url=https://same.new')">
+                <img src="/images/same.png" alt="same">
+                <div class="game-name">Same</div>
+            </div>
+            <div class="game" data-name="Bing" onclick="openGame('/active/embed.html?url=https://bing.com')">
+                <img src="/images/bing.png" alt="bing">
+                <div class="game-name">Bing - Search</div>
+            </div>
+            <div class="game" data-name="Netflix" onclick="openGame('/active/embed.html?url=https://netflix.com')">
+                <img src="/images/netflix.png" alt="netlflix">
+                <div class="game-name">Netflix</div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // DOM elements
+        const searchInput = document.getElementById('search-input');
+        const searchContainer = document.getElementById('search-container');
+        const gameElements = document.querySelectorAll('.game');
+        const proxiedCheckbox = document.getElementById('proxied-checkbox');
+
+        // Move search bar to top when focused
+        searchInput.addEventListener('focus', function() {
+            searchContainer.classList.add('active');
+        });
+
+        // Move search bar back to bottom when blurred (if empty)
+        searchInput.addEventListener('blur', function() {
+            if (searchInput.value.trim() === '') {
+                searchContainer.classList.remove('active');
+            }
+        });
+
+        // Filter games based on search input
+        searchInput.addEventListener('input', function() {
+            const searchTerm = searchInput.value.toLowerCase();
+
+            gameElements.forEach(game => {
+                const gameName = game.getAttribute('data-name').toLowerCase();
+                if (gameName.includes(searchTerm)) {
+                    game.classList.remove('hidden');
+                } else {
+                    game.classList.add('hidden');
+                }
+            });
+        });
+
+        // Handle game launching with proxied option
+        function openGame(url) {
+            if (proxiedCheckbox.checked) {
+                // Format for proxied URL
+                const currentUrl = window.location.origin;
+                window.location.href = `/active/embed.html?url=${currentUrl}/${url}`;
+            } else {
+                // Standard navigation
+                window.location.href = url;
+            }
+        }
+    </script>
+</body>
+</html>
