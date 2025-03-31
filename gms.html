@@ -5,126 +5,99 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VPLAZA - DEV</title>
     <style>
-        body {
-            background-color: black;
-            color: orange;
-            font-family: Arial, sans-serif;
-            text-align: center;
-            overflow-y: scroll;
+        :root {
+            --primary-glow: rgba(255, 165, 0, 0.7);
+            --secondary-glow: rgba(255, 255, 0, 0.5);
+            --border-color: #ffcf00;
+            --text-color: #ffb700;
+            --bg-card: rgba(30, 30, 30, 0.7);
+            --bg-hover: rgba(40, 40, 40, 0.9);
+        }
+
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
         }
+
+        body {
+            background-color: #000;
+            color: var(--text-color);
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+            background-image:
+                radial-gradient(circle at 30% 30%, rgba(255, 165, 0, 0.05) 0%, transparent 60%),
+                radial-gradient(circle at 70% 70%, rgba(255, 255, 0, 0.05) 0%, transparent 60%);
+        }
+
         ::-webkit-scrollbar {
-            width: 10px;
+            width: 5px;
         }
+
         ::-webkit-scrollbar-thumb {
-            background: orange;
+            background: var(--text-color);
             border-radius: 10px;
         }
-        h1 {
-            font-size: 5rem;
-            font-weight: bold;
-            text-shadow: 0 0 20px orange, 0 0 40px orange;
-            margin: 20px auto;
-            background-color: rgba(255, 208, 0, 0.103);
-            border-radius: 20px;
-            border: 3px solid yellow;
-            max-width: 800px;
-            padding: 60px;
-            text-align: center;
-        }
-        .grid {
-            display: grid;
-            /* Increased games per row with smaller minimum width */
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            gap: 16px;
-            max-width: 1200px; /* Increased max-width */
-            margin: auto;
-            padding: 40px;
-        }
-        .game {
-            width: 160px; /* Slightly smaller game cards */
-            height: 160px;
-            border: 6px solid orange;
-            border-radius: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: 0.7s;
-            background: rgb(255, 187, 0);
-            box-shadow: 0 0 20px orange;
-            overflow: hidden;
-            position: relative;
-        }
-        .game img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 16px;
-            transition: transform 0.5s ease-in-out;
-        }
-        .game:hover {
-            transform: scale(1.1) rotate(-3deg);
-            box-shadow: 0 0 60px orange, 0 0 40px rgb(255, 0, 0);
-            border-radius: 20px;
-        }
-        .game:hover img {
-            transform: scale(1.2) rotate(-5deg);
-        }
-        .game::after {
-            content: attr(data-name);
-            position: absolute;
-            bottom: -100%;
-            width: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            color: orange;
-            text-align: center;
-            padding: 5px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            transition: bottom 0.4s ease-in-out;
-        }
-        .game:hover::after {
-            bottom: 0;
+
+        ::-webkit-scrollbar-track {
+            background: #111;
         }
 
-        .minecraft img.hover {
-            display: none;
-        }
-
-        .minecraft:hover img.hover {
-            display: block;
-        }
-
-        .minecraft:hover img.normal {
-            display: none;
-        }
-
-        /* Proxied option styles */
-        .proxied-container {
+        .header {
             position: fixed;
-            left: 20px;
-            top: 40px;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 165, 0, 0.2);
+        }
+
+        .title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: linear-gradient(to right, #ff8a00, #ffcc00);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 15px rgba(255, 165, 0, 0.5);
+        }
+
+        .proxied-container {
             display: flex;
             align-items: center;
-            background-color: rgba(0, 0, 0, 0.7);
-            padding: 15px 30px;
-            border-radius: 30px;
-            border: 3px solid yellow;
-            z-index: 1000;
-            font-size: 1.5rem;
-            font-weight: bold;
-            text-shadow: 0 0 10px yellow;
+            gap: 10px;
+            background: rgba(30, 30, 30, 0.6);
+            padding: 8px 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 165, 0, 0.3);
+            font-weight: 600;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+            box-shadow: 0 0 10px rgba(255, 165, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .proxied-container:hover {
+            background: rgba(40, 40, 40, 0.8);
+            border-color: rgba(255, 165, 0, 0.5);
+            box-shadow: 0 0 15px rgba(255, 165, 0, 0.3);
         }
 
         /* Custom checkbox */
         .checkbox-container {
-            display: inline-block;
             position: relative;
-            margin-left: 15px;
-            width: 40px;
-            height: 40px;
+            width: 24px;
+            height: 24px;
         }
 
         .checkbox-container input {
@@ -137,18 +110,24 @@
             position: absolute;
             top: 0;
             left: 0;
-            height: 40px;
-            width: 40px;
+            height: 24px;
+            width: 24px;
             background-color: transparent;
-            border: 3px solid yellow;
-            border-radius: 5px;
+            border: 2px solid var(--border-color);
+            border-radius: 4px;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.2s ease;
+        }
+
+        .checkbox-container:hover .checkmark {
+            border-color: #ffda44;
+            box-shadow: 0 0 8px rgba(255, 218, 68, 0.5);
         }
 
         .checkbox-container input:checked ~ .checkmark {
-            background-color: rgba(255, 255, 0, 0.3);
-            box-shadow: 0 0 15px yellow;
+            background-color: rgba(255, 218, 68, 0.2);
+            border-color: #ffda44;
+            box-shadow: 0 0 8px rgba(255, 218, 68, 0.5);
         }
 
         .checkmark:after {
@@ -162,73 +141,171 @@
         }
 
         .checkbox-container .checkmark:after {
-            left: 14px;
-            top: 5px;
-            width: 10px;
-            height: 20px;
-            border: solid yellow;
-            border-width: 0 4px 4px 0;
+            left: 8px;
+            top: 3px;
+            width: 6px;
+            height: 12px;
+            border: solid #ffda44;
+            border-width: 0 2px 2px 0;
             transform: rotate(45deg);
         }
 
-        /* VPLAZA logo container */
-        .logo-container {
-            position: fixed;
-            right: 20px;
-            top: 40px;
-            background-color: rgba(0, 0, 0, 0.7);
-            padding: 15px 30px;
-            border-radius: 30px;
-            border: 3px solid yellow;
-            z-index: 1000;
-            font-size: 2.5rem;
-            font-weight: bold;
-            text-shadow: 0 0 20px orange, 0 0 40px orange;
-            color: orange;
-        }
-
-        /* Search bar styles - Less big and round */
+        /* Search bar */
         .search-container {
             position: fixed;
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            width: 60%; /* Reduced width */
-            max-width: 500px; /* Reduced max-width */
-            padding: 10px; /* Reduced padding */
-            background-color: rgba(0, 0, 0, 0.4);
-            border-radius: 16px; /* Less round */
-            border: 2px solid yellow; /* Thinner border */
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1); /* Smoother animation */
+            width: 50%;
+            max-width: 450px;
             z-index: 1000;
-            box-shadow: 0 0 15px rgba(255, 255, 0, 0.3);
+            transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         .search-container.active {
-            top: 20px;
+            top: 80px;
             bottom: auto;
+        }
+
+        .search-wrapper {
+            position: relative;
+            width: 100%;
+            height: 40px;
+            overflow: hidden;
+            border-radius: 8px;
+            background: rgba(25, 25, 25, 0.7);
+            border: 1px solid rgba(255, 165, 0, 0.3);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 0 15px rgba(255, 165, 0, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .search-wrapper:hover,
+        .search-wrapper:focus-within {
+            background: rgba(30, 30, 30, 0.9);
+            border-color: rgba(255, 165, 0, 0.5);
+            box-shadow: 0 0 20px rgba(255, 165, 0, 0.25);
         }
 
         .search-input {
             width: 100%;
-            padding: 8px 15px; /* Reduced padding */
-            font-size: 1rem; /* Smaller font */
-            color: yellow;
-            background-color: rgba(0, 0, 0, 0.5);
+            height: 100%;
+            padding: 0 15px;
+            color: var(--text-color);
+            font-size: 0.95rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            background: transparent;
             border: none;
-            border-radius: 12px; /* Less round */
             outline: none;
         }
 
         .search-input::placeholder {
-            color: rgba(255, 255, 0, 0.7);
+            color: rgba(255, 165, 0, 0.5);
+            font-weight: 400;
         }
 
-        /* Hidden games with smooth animation */
+        /* Main content */
+        .main-content {
+            margin-top: 80px;
+            padding: 25px 5%;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px 0 100px 0;
+        }
+
         .game {
-            transition: opacity 0.3s ease, transform 0.7s ease;
+            position: relative;
+            aspect-ratio: 1;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 165, 0, 0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.35s ease;
+        }
+
+        .game:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 165, 0, 0.6);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3),
+                        0 0 15px rgba(255, 165, 0, 0.3);
+        }
+
+        .game::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to top,
+                        rgba(0, 0, 0, 0.8) 0%,
+                        rgba(0, 0, 0, 0.3) 40%,
+                        transparent 100%);
+            opacity: 0.7;
+            transition: opacity 0.35s ease;
+            z-index: 1;
+        }
+
+        .game:hover::before {
+            opacity: 0.4;
+        }
+
+        .game img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .game:hover img {
+            transform: scale(1.1);
+        }
+
+        .game-name {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #fff;
+            text-align: center;
+            z-index: 2;
+            transform: translateY(0);
+            transition: transform 0.35s ease;
+        }
+
+        .game:hover .game-name {
+            transform: translateY(-5px);
+        }
+
+        /* Minecraft special case */
+        .minecraft .hover-img {
+            display: none;
+        }
+
+        .minecraft:hover .normal-img {
+            display: none;
+        }
+
+        .minecraft:hover .hover-img {
+            display: block;
+        }
+
+        /* Filtered games */
+        .game {
+            transition: opacity 0.35s ease, transform 0.35s ease;
         }
 
         .game.hidden {
@@ -238,174 +315,234 @@
             position: absolute;
         }
 
-        @media (max-width: 600px) {
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                padding: 10px;
+                gap: 10px;
+            }
+
+            .title {
+                font-size: 2rem;
+            }
+
+            .search-container {
+                width: 85%;
+            }
+
+            .search-container.active {
+                top: 110px;
+            }
+
+            .main-content {
+                margin-top: 120px;
+                padding: 15px 3%;
+            }
+
             .grid {
                 grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-                gap: 12px;
+                gap: 15px;
             }
-            .game {
-                width: 120px;
-                height: 120px;
+
+            .game-name {
+                font-size: 0.8rem;
+                padding: 8px;
             }
-            .proxied-container, .logo-container {
-                position: relative;
-                top: 0;
-                left: 0;
-                right: 0;
-                margin: 10px auto;
-                width: fit-content;
-            }
-            .search-container {
-                width: 90%;
+        }
+
+        @media (min-width: 1600px) {
+            .grid {
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
             }
         }
     </style>
 </head>
 <body>
-    <div class="proxied-container">
-        Proxied?
-        <label class="checkbox-container">
-            <input type="checkbox" id="proxied-checkbox">
-            <span class="checkmark"></span>
-        </label>
-    </div>
+    <header class="header">
+        <h1 class="title">VPLAZA - DEV</h1>
 
-    <div class="logo-container">
-        VPLAZA - DEV
-    </div>
+        <div class="proxied-container">
+            Proxied?
+            <label class="checkbox-container">
+                <input type="checkbox" id="proxied-checkbox">
+                <span class="checkmark"></span>
+            </label>
+        </div>
+    </header>
 
     <div class="search-container" id="search-container">
-        <input type="text" class="search-input" id="search-input" placeholder="search for your favorites">
+        <div class="search-wrapper">
+            <input type="text" class="search-input" id="search-input" placeholder="search for your favorites">
+        </div>
     </div>
 
-    <div class="grid" id="game-grid">
-        <div class="game" data-name="Retro Bowl" onclick="openGame('games/retro-bowl')">
-            <img src="images/retro-bowl.jpg" alt="retrobowl">
+    <main class="main-content">
+        <div class="grid" id="game-grid">
+            <div class="game" data-name="Retro Bowl" onclick="openGame('games/retro-bowl')">
+                <img src="images/retro-bowl.jpg" alt="retrobowl">
+                <div class="game-name">Retro Bowl</div>
+            </div>
+            <div class="game" data-name="1v1LOL" onclick="openGame('games/1v1lol')">
+                <img src="images/1v1lol.jpg" alt="1v1">
+                <div class="game-name">1v1LOL</div>
+            </div>
+            <div class="game" data-name="Slope" onclick="openGame('games/slope')">
+                <img src="images/slope.jpg" alt="slope">
+                <div class="game-name">Slope</div>
+            </div>
+            <div class="game" data-name="Subway Surfers" onclick="openGame('games/subway-surfers')">
+                <img src="images/subway-surferss.png" alt="subway">
+                <div class="game-name">Subway Surfers</div>
+            </div>
+            <div class="game" data-name="Basket Ball Stars" onclick="openGame('games/basketball-stars')">
+                <img src="images/basketball-stars.jpg" alt="BBS">
+                <div class="game-name">Basket Ball Stars</div>
+            </div>
+            <div class="game" data-name="Drive Mad" onclick="openGame('games/drive-mad')">
+                <img src="images/drive-mad.jpg" alt="DM">
+                <div class="game-name">Drive Mad</div>
+            </div>
+            <div class="game" data-name="Deathrun 3D" onclick="openGame('games/death-run-3d')">
+                <img src="images/death-run-3d.jpg" alt="dr3d">
+                <div class="game-name">Deathrun 3D</div>
+            </div>
+            <div class="game" data-name="Basket Random" onclick="openGame('games/basket-random')">
+                <img src="images/basket-random.jpg" alt="Snake">
+                <div class="game-name">Basket Random</div>
+            </div>
+            <div class="game" data-name="MotoX3M" onclick="openGame('games/motox3m2')">
+                <img src="images/motox3m.jpg" alt="mx3m2">
+                <div class="game-name">MotoX3M</div>
+            </div>
+            <div class="game" data-name="Bitlife" onclick="openGame('games/bitlife')">
+                <img src="images/bitlife.jpg" alt="bl">
+                <div class="game-name">Bitlife</div>
+            </div>
+            <div class="game" data-name="Getaway Shootout" onclick="openGame('games/GetawayShootout')">
+                <img src="images/getaway-shootout.jpg" alt="GS">
+                <div class="game-name">Getaway Shootout</div>
+            </div>
+            <div class="game" data-name="Just Fall LOL" onclick="openGame('games/justfall-lol')">
+                <img src="images/justfall-lol.jpg" alt="jsfall">
+                <div class="game-name">Just Fall LOL</div>
+            </div>
+            <div class="game" data-name="Rooftop Snipers" onclick="openGame('games/rooftop-snipers')">
+                <img src="images/rooftop-snipers.jpg" alt="jsfall">
+                <div class="game-name">Rooftop Snipers</div>
+            </div>
+            <div class="game" data-name="Cookie Clicker" onclick="openGame('games/cookieclicker')">
+                <img src="images/cookie-clicker.jpg" alt="jsfall">
+                <div class="game-name">Cookie Clicker</div>
+            </div>
+            <div class="game" data-name="2048" onclick="openGame('games/2048')">
+                <img src="images/2048.jpg" alt="2048">
+                <div class="game-name">2048</div>
+            </div>
+            <div class="game" data-name="Snowrider3d" onclick="openGame('games/snowrider.html')">
+                <img src="images/snow-rider3d.jpg" alt="2048">
+                <div class="game-name">Snowrider3d</div>
+            </div>
+            <div class="game minecraft" data-name="Minecraft" onclick="openGame('games/eagler')">
+                <img src="images/minecraft.jpg" alt="minecraft" class="normal-img">
+                <img src="images/explodeminecraft.gif" alt="explodeminecraft" class="hover-img">
+                <div class="game-name">Minecraft</div>
+            </div>
+            <div class="game" data-name="Learn to Fly" onclick="openGame('games/learn-to-fly-2')">
+                <img src="images/learn-to-fly-2.jpg" alt="learn-to-fly-2">
+                <div class="game-name">Learn to Fly</div>
+            </div>
+            <div class="game" data-name="Idle Mining Empire" onclick="openGame('games/idle-mining-empire')">
+                <img src="images/idle-mining-empire.jpg" alt="idle-mining-empire">
+                <div class="game-name">Idle Mining Empire</div>
+            </div>
+            <div class="game" data-name="Among Us" onclick="openGame('games/among-us')">
+                <img src="images/among-us.jpg" alt="among-us">
+                <div class="game-name">Among Us</div>
+            </div>
+            <div class="game" data-name="Paper io 2" onclick="openGame('games/paper-io-2')">
+                <img src="images/paper-io-2.jpg" alt="paper-io-2">
+                <div class="game-name">Paper io 2</div>
+            </div>
+            <div class="game" data-name="Flappy Bird" onclick="openGame('games/flappybird')">
+                <img src="images/flappy-bird.jpg" alt="flappy-bird">
+                <div class="game-name">Flappy Bird</div>
+            </div>
+            <div class="game" data-name="Krunker" onclick="openGame('games/krunker')">
+                <img src="images/krunker.jpg" alt="krunker">
+                <div class="game-name">Krunker</div>
+            </div>
+            <div class="game" data-name="Geometry Dash (Knockoff)" onclick="openGame('games/geometry-dash-knockoff')">
+                <img src="images/geometry-dash.jpg" alt="geometry-dash-knockoff">
+                <div class="game-name">Geometry Dash</div>
+            </div>
+            <div class="game" data-name="Baldis Basics" onclick="openGame('games/baldis-basics')">
+                <img src="images/baldis-basics.jpg" alt="baldis-basics">
+                <div class="game-name">Baldis Basics</div>
+            </div>
+            <div class="game" data-name="Super Hot" onclick="openGame('games/superhot')">
+                <img src="images/superhot.jpg" alt="superhot">
+                <div class="game-name">Super Hot</div>
+            </div>
+            <div class="game" data-name="Temple Run 2" onclick="openGame('games/temple-run-2')">
+                <img src="images/temple-run-2.jpg" alt="temple-run-2">
+                <div class="game-name">Temple Run 2</div>
+            </div>
+            <div class="game" data-name="Happy Wheels" onclick="openGame('games/happy-wheels')">
+                <img src="images/happy-wheels.jpg" alt="happy-wheels">
+                <div class="game-name">Happy Wheels</div>
+            </div>
+            <div class="game" data-name="Crossy Road" onclick="openGame('games/crossyroad')">
+                <img src="images/crossy-road.jpg" alt="crossy-road">
+                <div class="game-name">Crossy Road</div>
+            </div>
+            <div class="game" data-name="Stickman Hook" onclick="openGame('games/stickmanhook')">
+                <img src="images/stickmanhook.jpg" alt="stickman">
+                <div class="game-name">Stickman Hook</div>
+            </div>
+            <div class="game" data-name="Tag" onclick="openGame('games/Tag')">
+                <img src="images/tag.jpg" alt="tag">
+                <div class="game-name">Tag</div>
+            </div>
+            <div class="game" data-name="Poly Track" onclick="openGame('games/poly-track')">
+                <img src="images/polytrack.jpg" alt="pt">
+                <div class="game-name">Poly Track</div>
+            </div>
+            <div class="game" data-name="Tetris" onclick="openGame('games/tetris')">
+                <img src="images/tetris.jpg" alt="tetris">
+                <div class="game-name">Tetris</div>
+            </div>
+            <div class="game" data-name="Armed Forces" onclick="openGame('games/armed-forces')">
+                <img src="images/armed-forces.png" alt="armed forces">
+                <div class="game-name">Armed Forces</div>
+            </div>
+            <div class="game" data-name="Counter Strike" onclick="openGame('games/counter-strike')">
+                <img src="images/csgo.png" alt="Counter-Strike">
+                <div class="game-name">Counter Strike</div>
+            </div>
         </div>
-        <div class="game" data-name="1v1LOL" onclick="openGame('games/1v1lol')">
-            <img src="images/1v1lol.jpg" alt="1v1">
-        </div>
-        <div class="game" data-name="Slope" onclick="openGame('games/slope')">
-            <img src="images/slope.jpg" alt="slope">
-        </div>
-        <div class="game" data-name="Subway Surfers" onclick="openGame('games/subway-surfers')">
-            <img src="images/subway-surferss.png" alt="subway">
-        </div>
-        <div class="game" data-name="Basket Ball Stars" onclick="openGame('games/basketball-stars')">
-            <img src="images/basketball-stars.jpg" alt="BBS">
-        </div>
-        <div class="game" data-name="Drive Mad" onclick="openGame('games/drive-mad')">
-            <img src="images/drive-mad.jpg" alt="DM">
-        </div>
-        <div class="game" data-name="Deathrun 3D" onclick="openGame('games/death-run-3d')">
-            <img src="images/death-run-3d.jpg" alt="dr3d">
-        </div>
-        <div class="game" data-name="Basket Random" onclick="openGame('games/basket-random')">
-            <img src="images/basket-random.jpg" alt="Snake">
-        </div>
-        <div class="game" data-name="MotoX3M" onclick="openGame('games/motox3m2')">
-            <img src="images/motox3m.jpg" alt="mx3m2">
-        </div>
-        <div class="game" data-name="Bitlife" onclick="openGame('games/bitlife')">
-            <img src="images/bitlife.jpg" alt="bl">
-        </div>
-        <div class="game" data-name="Getaway Shootout" onclick="openGame('games/GetawayShootout')">
-            <img src="images/getaway-shootout.jpg" alt="GS">
-        </div>
-        <div class="game" data-name="Just Fall LOL" onclick="openGame('games/justfall-lol')">
-            <img src="images/justfall-lol.jpg" alt="jsfall">
-        </div>
-        <div class="game" data-name="Rooftop Snipers" onclick="openGame('games/rooftop-snipers')">
-            <img src="images/rooftop-snipers.jpg" alt="jsfall">
-        </div>
-        <div class="game" data-name="Cookie Clicker" onclick="openGame('games/cookieclicker')">
-            <img src="images/cookie-clicker.jpg" alt="jsfall">
-        </div>
-        <div class="game" data-name="2048" onclick="openGame('games/2048')">
-            <img src="images/2048.jpg" alt="2048">
-        </div>
-        <div class="game" data-name="Snowrider3d" onclick="openGame('games/snowrider.html')">
-            <img src="images/snow-rider3d.jpg" alt="2048">
-        </div>
-        <div class="game minecraft" data-name="Minecraft" onclick="openGame('games/eagler')">
-            <img src="images/minecraft.jpg" alt="minecraft" class="normal">
-            <img src="images/explodeminecraft.gif" alt="explodeminecraft" class="hover">
-        </div>
-        <div class="game" data-name="Learn to Fly" onclick="openGame('games/learn-to-fly-2')">
-            <img src="images/learn-to-fly-2.jpg" alt="learn-to-fly-2">
-        </div>
-        <div class="game" data-name="Idle Mining Empire" onclick="openGame('games/idle-mining-empire')">
-            <img src="images/idle-mining-empire.jpg" alt="idle-mining-empire">
-        </div>
-        <div class="game" data-name="Among Us" onclick="openGame('games/among-us')">
-            <img src="images/among-us.jpg" alt="among-us">
-        </div>
-        <div class="game" data-name="Paper io 2" onclick="openGame('games/paper-io-2')">
-            <img src="images/paper-io-2.jpg" alt="paper-io-2">
-        </div>
-        <div class="game" data-name="Flappy Bird" onclick="openGame('games/flappybird')">
-            <img src="images/flappy-bird.jpg" alt="flappy-bird">
-        </div>
-        <div class="game" data-name="Krunker" onclick="openGame('games/krunker')">
-            <img src="images/krunker.jpg" alt="krunker">
-        </div>
-        <div class="game" data-name="Geometry Dash (Knockoff)" onclick="openGame('games/geometry-dash-knockoff')">
-            <img src="images/geometry-dash.jpg" alt="geometry-dash-knockoff">
-        </div>
-        <div class="game" data-name="Baldis Basics" onclick="openGame('games/baldis-basics')">
-            <img src="images/baldis-basics.jpg" alt="baldis-basics">
-        </div>
-        <div class="game" data-name="Super Hot" onclick="openGame('games/superhot')">
-            <img src="images/superhot.jpg" alt="superhot">
-        </div>
-        <div class="game" data-name="Temple Run 2" onclick="openGame('games/temple-run-2')">
-            <img src="images/temple-run-2.jpg" alt="temple-run-2">
-        </div>
-        <div class="game" data-name="Happy Wheels" onclick="openGame('games/happy-wheels')">
-            <img src="images/happy-wheels.jpg" alt="happy-wheels">
-        </div>
-        <div class="game" data-name="Crossy Road" onclick="openGame('games/crossyroad')">
-            <img src="images/crossy-road.jpg" alt="crossy-road">
-        </div>
-        <div class="game" data-name="Stickman Hook" onclick="openGame('games/stickmanhook')">
-            <img src="images/stickmanhook.jpg" alt="stickman">
-        </div>
-        <div class="game" data-name="Tag" onclick="openGame('games/Tag')">
-            <img src="images/tag.jpg" alt="tag">
-        </div>
-        <div class="game" data-name="Poly Track" onclick="openGame('games/poly-track')">
-            <img src="images/polytrack.jpg" alt="pt">
-        </div>
-        <div class="game" data-name="Tetris" onclick="openGame('games/tetris')">
-            <img src="images/tetris.jpg" alt="tetris">
-        </div>
-        <div class="game" data-name="Armed Forces" onclick="openGame('games/armed-forces')">
-            <img src="images/armed-forces.png" alt="armed forces">
-        </div>
-        <div class="game" data-name="Counter Strike" onclick="openGame('games/counter-strike')">
-            <img src="images/csgo.png" alt="Counter-Strike">
-        </div>
-    </div>
+    </main>
+
     <script>
-        // Search functionality
+        // DOM elements
         const searchInput = document.getElementById('search-input');
         const searchContainer = document.getElementById('search-container');
         const gameElements = document.querySelectorAll('.game');
         const proxiedCheckbox = document.getElementById('proxied-checkbox');
 
-        // Move search bar to top when focused with smooth animation
+        // Move search bar to top when focused
         searchInput.addEventListener('focus', function() {
             searchContainer.classList.add('active');
         });
 
-        // Move search bar back to bottom when blurred with smooth animation
+        // Move search bar back to bottom when blurred (if empty)
         searchInput.addEventListener('blur', function() {
             if (searchInput.value.trim() === '') {
                 searchContainer.classList.remove('active');
             }
         });
 
-        // Filter games based on search input with smoother animations
+        // Filter games based on search input
         searchInput.addEventListener('input', function() {
             const searchTerm = searchInput.value.toLowerCase();
 
@@ -419,10 +556,10 @@
             });
         });
 
-        // Modified game opening function to handle proxied mode
+        // Handle game launching with proxied option
         function openGame(url) {
             if (proxiedCheckbox.checked) {
-                // Format for proxied URL as requested
+                // Format for proxied URL
                 const currentUrl = window.location.origin;
                 window.location.href = `/active/embed.html?url=${currentUrl}/${url}`;
             } else {
