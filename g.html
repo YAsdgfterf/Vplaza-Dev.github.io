@@ -88,27 +88,32 @@
             bottom: 0;
         }
 
-        .minecraft img.hover {
+        #gameOverlay {
             display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
         }
-
-        .minecraft:hover img.hover {
-            display: block;
+        #gameFrame {
+            width: 90vw;
+            height: 90vh;
+            border: none;
         }
-
-        .minecraft:hover img.normal {
-            display: none;
-        }
-
-
-        @media (max-width: 600px) {
-            .grid {
-                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            }
-            .game {
-                width: 150px;
-                height: 150px;
-            }
+        #closeButton {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: red;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -226,9 +231,22 @@
             <img src="images/csgo.png" alt="Counter-Strike">
         </div>
     </div>
+
+    
+    <div id="gameOverlay">
+        <button id="closeButton" onclick="closeGame()">X</button>
+        <iframe id="gameFrame"></iframe>
+    </div>
+    
     <script>
         function openGame(url) {
-            window.location.href = url;
+            document.getElementById('gameFrame').src = url;
+            document.getElementById('gameOverlay').style.display = 'flex';
+        }
+        
+        function closeGame() {
+            document.getElementById('gameOverlay').style.display = 'none';
+            document.getElementById('gameFrame').src = '';
         }
     </script>
 </body>
