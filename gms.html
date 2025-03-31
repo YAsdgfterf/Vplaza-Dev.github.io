@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -36,15 +35,16 @@
         }
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            max-width: 1000px;
+            /* Increased games per row with smaller minimum width */
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 16px;
+            max-width: 1200px; /* Increased max-width */
             margin: auto;
             padding: 40px;
         }
         .game {
-            width: 200px;
-            height: 200px;
+            width: 160px; /* Slightly smaller game cards */
+            height: 160px;
             border: 6px solid orange;
             border-radius: 60px;
             display: flex;
@@ -101,21 +101,184 @@
             display: none;
         }
 
+        /* Proxied option styles */
+        .proxied-container {
+            position: fixed;
+            left: 20px;
+            top: 40px;
+            display: flex;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 15px 30px;
+            border-radius: 30px;
+            border: 3px solid yellow;
+            z-index: 1000;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-shadow: 0 0 10px yellow;
+        }
+
+        /* Custom checkbox */
+        .checkbox-container {
+            display: inline-block;
+            position: relative;
+            margin-left: 15px;
+            width: 40px;
+            height: 40px;
+        }
+
+        .checkbox-container input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .checkmark {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 40px;
+            width: 40px;
+            background-color: transparent;
+            border: 3px solid yellow;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .checkbox-container input:checked ~ .checkmark {
+            background-color: rgba(255, 255, 0, 0.3);
+            box-shadow: 0 0 15px yellow;
+        }
+
+        .checkmark:after {
+            content: "";
+            position: absolute;
+            display: none;
+        }
+
+        .checkbox-container input:checked ~ .checkmark:after {
+            display: block;
+        }
+
+        .checkbox-container .checkmark:after {
+            left: 14px;
+            top: 5px;
+            width: 10px;
+            height: 20px;
+            border: solid yellow;
+            border-width: 0 4px 4px 0;
+            transform: rotate(45deg);
+        }
+
+        /* VPLAZA logo container */
+        .logo-container {
+            position: fixed;
+            right: 20px;
+            top: 40px;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 15px 30px;
+            border-radius: 30px;
+            border: 3px solid yellow;
+            z-index: 1000;
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-shadow: 0 0 20px orange, 0 0 40px orange;
+            color: orange;
+        }
+
+        /* Search bar styles - Less big and round */
+        .search-container {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%; /* Reduced width */
+            max-width: 500px; /* Reduced max-width */
+            padding: 10px; /* Reduced padding */
+            background-color: rgba(0, 0, 0, 0.4);
+            border-radius: 16px; /* Less round */
+            border: 2px solid yellow; /* Thinner border */
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1); /* Smoother animation */
+            z-index: 1000;
+            box-shadow: 0 0 15px rgba(255, 255, 0, 0.3);
+        }
+
+        .search-container.active {
+            top: 20px;
+            bottom: auto;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 8px 15px; /* Reduced padding */
+            font-size: 1rem; /* Smaller font */
+            color: yellow;
+            background-color: rgba(0, 0, 0, 0.5);
+            border: none;
+            border-radius: 12px; /* Less round */
+            outline: none;
+        }
+
+        .search-input::placeholder {
+            color: rgba(255, 255, 0, 0.7);
+        }
+
+        /* Hidden games with smooth animation */
+        .game {
+            transition: opacity 0.3s ease, transform 0.7s ease;
+        }
+
+        .game.hidden {
+            opacity: 0;
+            transform: scale(0.8);
+            pointer-events: none;
+            position: absolute;
+        }
 
         @media (max-width: 600px) {
             .grid {
-                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                gap: 12px;
             }
             .game {
-                width: 150px;
-                height: 150px;
+                width: 120px;
+                height: 120px;
+            }
+            .proxied-container, .logo-container {
+                position: relative;
+                top: 0;
+                left: 0;
+                right: 0;
+                margin: 10px auto;
+                width: fit-content;
+            }
+            .search-container {
+                width: 90%;
             }
         }
     </style>
 </head>
 <body>
-    <h1>VPLAZA - DEV</h1>
-    <div class="grid">
+    <div class="proxied-container">
+        Proxied?
+        <label class="checkbox-container">
+            <input type="checkbox" id="proxied-checkbox">
+            <span class="checkmark"></span>
+        </label>
+    </div>
+
+    <div class="logo-container">
+        VPLAZA - DEV
+    </div>
+
+    <div class="search-container" id="search-container">
+        <input type="text" class="search-input" id="search-input" placeholder="search for your favorites">
+    </div>
+
+    <div class="grid" id="game-grid">
         <div class="game" data-name="Retro Bowl" onclick="openGame('games/retro-bowl')">
             <img src="images/retro-bowl.jpg" alt="retrobowl">
         </div>
@@ -224,8 +387,48 @@
         </div>
     </div>
     <script>
+        // Search functionality
+        const searchInput = document.getElementById('search-input');
+        const searchContainer = document.getElementById('search-container');
+        const gameElements = document.querySelectorAll('.game');
+        const proxiedCheckbox = document.getElementById('proxied-checkbox');
+
+        // Move search bar to top when focused with smooth animation
+        searchInput.addEventListener('focus', function() {
+            searchContainer.classList.add('active');
+        });
+
+        // Move search bar back to bottom when blurred with smooth animation
+        searchInput.addEventListener('blur', function() {
+            if (searchInput.value.trim() === '') {
+                searchContainer.classList.remove('active');
+            }
+        });
+
+        // Filter games based on search input with smoother animations
+        searchInput.addEventListener('input', function() {
+            const searchTerm = searchInput.value.toLowerCase();
+
+            gameElements.forEach(game => {
+                const gameName = game.getAttribute('data-name').toLowerCase();
+                if (gameName.includes(searchTerm)) {
+                    game.classList.remove('hidden');
+                } else {
+                    game.classList.add('hidden');
+                }
+            });
+        });
+
+        // Modified game opening function to handle proxied mode
         function openGame(url) {
-            window.location.href = url;
+            if (proxiedCheckbox.checked) {
+                // Format for proxied URL as requested
+                const currentUrl = window.location.origin;
+                window.location.href = `/active/embed.html?url=${currentUrl}/${url}`;
+            } else {
+                // Standard navigation
+                window.location.href = url;
+            }
         }
     </script>
 </body>
