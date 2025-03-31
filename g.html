@@ -1,14 +1,3 @@
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-XWMFDM1WRX"></script>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6466242382194179"
-     crossorigin="anonymous"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-XWMFDM1WRX');
-</script>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -226,24 +215,10 @@
         <div class="game" data-name="Tetris" onclick="openGame('games/tetris')">
             <img src="images/tetris.jpg" alt="tetris">
         </div>
-            <div class="game" data-name="Pokemon energized" onclick="openGame('/games/emeraldenergized.html')">
-            <img src="images/tetris.jpg" alt="tetris">
-        </div>
-       <div>
-         <div id="game-container">
-        <button class="close-btn" onclick="closeGame()">Close</button>
-        <iframe id="game-frame"></iframe>
     </div>
-
     <script>
         function openGame(url) {
-            document.getElementById('game-frame').src = url;
-            document.getElementById('game-container').style.display = 'block';
-        }
-        
-        function closeGame() {
-            document.getElementById('game-container').style.display = 'none';
-            document.getElementById('game-frame').src = '';
+            window.location.href = url;
         }
     </script>
 </body>
