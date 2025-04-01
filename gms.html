@@ -93,7 +93,6 @@
             box-shadow: 0 0 15px rgba(255, 165, 0, 0.3);
         }
 
-        /* Custom checkbox */
         .checkbox-container {
             position: relative;
             width: 24px;
@@ -150,7 +149,6 @@
             transform: rotate(45deg);
         }
 
-        /* Search bar */
         .search-container {
             position: fixed;
             bottom: 20px;
@@ -206,7 +204,6 @@
             font-weight: 400;
         }
 
-        /* Main content */
         .main-content {
             margin-top: 80px;
             padding: 25px 5%;
@@ -290,7 +287,6 @@
             transform: translateY(-5px);
         }
 
-        /* Minecraft special case */
         .minecraft .hover-img {
             display: none;
         }
@@ -303,7 +299,6 @@
             display: block;
         }
 
-        /* Filtered games */
         .game {
             transition: opacity 0.35s ease, transform 0.35s ease;
         }
@@ -315,7 +310,156 @@
             position: absolute;
         }
 
-        /* Responsive */
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(5px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-content {
+            background: rgba(25, 25, 25, 0.95);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 165, 0, 0.3);
+            width: 90%;
+            max-width: 500px;
+            padding: 25px;
+            box-shadow: 0 0 30px rgba(255, 165, 0, 0.2);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-game-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-right: 15px;
+            border: 1px solid rgba(255, 165, 0, 0.3);
+        }
+
+        .modal-game-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .modal-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(to right, #ff8a00, #ffcc00);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            border: none;
+            outline: none;
+        }
+
+        .play-btn {
+            background: linear-gradient(135deg, #ff8a00, #ffcc00);
+            color: #000;
+            box-shadow: 0 5px 15px rgba(255, 165, 0, 0.3);
+        }
+
+        .play-btn:hover {
+            background: linear-gradient(135deg, #ffcc00, #ff8a00);
+            transform: translateY(-2px);
+            box-shadow: 0 7px 20px rgba(255, 165, 0, 0.4);
+        }
+
+        .cancel-btn {
+            background: rgba(40, 40, 40, 0.8);
+            color: #fff;
+            border: 1px solid rgba(255, 165, 0, 0.3);
+        }
+
+        .cancel-btn:hover {
+            background: rgba(60, 60, 60, 0.8);
+            border-color: rgba(255, 165, 0, 0.5);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: rgba(40, 40, 40, 0.8);
+            border: 1px solid rgba(255, 165, 0, 0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .close-modal:hover {
+            background: rgba(60, 60, 60, 0.8);
+            border-color: rgba(255, 165, 0, 0.5);
+        }
+
+        .close-modal:before,
+        .close-modal:after {
+            content: '';
+            position: absolute;
+            width: 15px;
+            height: 2px;
+            background: var(--text-color);
+        }
+
+        .close-modal:before {
+            transform: rotate(45deg);
+        }
+
+        .close-modal:after {
+            transform: rotate(-45deg);
+        }
+
         @media (max-width: 768px) {
             .header {
                 flex-direction: column;
@@ -349,6 +493,24 @@
                 font-size: 0.8rem;
                 padding: 8px;
             }
+
+            .modal-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .modal-game-icon {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+
+            .modal-title {
+                font-size: 1.5rem;
+            }
+
+            .modal-actions {
+                flex-direction: column;
+            }
         }
 
         @media (min-width: 1600px) {
@@ -377,146 +539,162 @@
         </div>
     </div>
 
+    <div class="modal-overlay" id="game-modal">
+        <div class="modal-content">
+            <div class="close-modal" id="close-modal"></div>
+            <div class="modal-header">
+                <div class="modal-game-icon">
+                    <img id="modal-game-img" src="" alt="Game">
+                </div>
+                <h2 class="modal-title" id="modal-game-title">Game Title</h2>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn play-btn" id="play-game-btn">PLAY NOW</button>
+                <button class="modal-btn cancel-btn" id="cancel-game-btn">CANCEL</button>
+            </div>
+        </div>
+    </div>
+
     <main class="main-content">
         <div class="grid" id="game-grid">
-            <div class="game" data-name="Retro Bowl" onclick="openGame('games/retro-bowl')">
+            <div class="game" data-name="Retro Bowl" data-url="games/retro-bowl">
                 <img src="images/retro-bowl.jpg" alt="retrobowl">
                 <div class="game-name">Retro Bowl</div>
             </div>
-            <div class="game" data-name="1v1LOL" onclick="openGame('games/1v1lol')">
+            <div class="game" data-name="1v1LOL" data-url="games/1v1lol">
                 <img src="images/1v1lol.jpg" alt="1v1">
                 <div class="game-name">1v1LOL</div>
             </div>
-            <div class="game" data-name="Slope" onclick="openGame('games/slope')">
+            <div class="game" data-name="Slope" data-url="games/slope">
                 <img src="images/slope.jpg" alt="slope">
                 <div class="game-name">Slope</div>
             </div>
-            <div class="game" data-name="Subway Surfers" onclick="openGame('games/subway-surfers')">
+            <div class="game" data-name="Subway Surfers" data-url="games/subway-surfers">
                 <img src="images/subway-surferss.png" alt="subway">
                 <div class="game-name">Subway Surfers</div>
             </div>
-            <div class="game" data-name="Basket Ball Stars" onclick="openGame('games/basketball-stars')">
+            <div class="game" data-name="Basket Ball Stars" data-url="games/basketball-stars">
                 <img src="images/basketball-stars.jpg" alt="BBS">
                 <div class="game-name">Basket Ball Stars</div>
             </div>
-            <div class="game" data-name="Drive Mad" onclick="openGame('games/drive-mad')">
+            <div class="game" data-name="Drive Mad" data-url="games/drive-mad">
                 <img src="images/drive-mad.jpg" alt="DM">
                 <div class="game-name">Drive Mad</div>
             </div>
-            <div class="game" data-name="Deathrun 3D" onclick="openGame('games/death-run-3d')">
+            <div class="game" data-name="Deathrun 3D" data-url="games/death-run-3d">
                 <img src="images/death-run-3d.jpg" alt="dr3d">
                 <div class="game-name">Deathrun 3D</div>
             </div>
-            <div class="game" data-name="Basket Random" onclick="openGame('games/basket-random')">
+            <div class="game" data-name="Basket Random" data-url="games/basket-random">
                 <img src="images/basket-random.jpg" alt="Snake">
                 <div class="game-name">Basket Random</div>
             </div>
-            <div class="game" data-name="MotoX3M" onclick="openGame('games/motox3m2')">
+            <div class="game" data-name="MotoX3M" data-url="games/motox3m2">
                 <img src="images/motox3m.jpg" alt="mx3m2">
                 <div class="game-name">MotoX3M</div>
             </div>
-            <div class="game" data-name="Bitlife" onclick="openGame('games/bitlife')">
+            <div class="game" data-name="Bitlife" data-url="games/bitlife">
                 <img src="images/bitlife.jpg" alt="bl">
                 <div class="game-name">Bitlife</div>
             </div>
-            <div class="game" data-name="Getaway Shootout" onclick="openGame('games/GetawayShootout')">
+            <div class="game" data-name="Getaway Shootout" data-url="games/GetawayShootout">
                 <img src="images/getaway-shootout.jpg" alt="GS">
                 <div class="game-name">Getaway Shootout</div>
             </div>
-            <div class="game" data-name="Just Fall LOL" onclick="openGame('games/justfall-lol')">
+            <div class="game" data-name="Just Fall LOL" data-url="games/justfall-lol">
                 <img src="images/justfall-lol.jpg" alt="jsfall">
                 <div class="game-name">Just Fall LOL</div>
             </div>
-            <div class="game" data-name="Rooftop Snipers" onclick="openGame('games/rooftop-snipers')">
+            <div class="game" data-name="Rooftop Snipers" data-url="games/rooftop-snipers">
                 <img src="images/rooftop-snipers.jpg" alt="jsfall">
                 <div class="game-name">Rooftop Snipers</div>
             </div>
-            <div class="game" data-name="Cookie Clicker" onclick="openGame('games/cookieclicker')">
+            <div class="game" data-name="Cookie Clicker" data-url="games/cookieclicker">
                 <img src="images/cookie-clicker.jpg" alt="jsfall">
                 <div class="game-name">Cookie Clicker</div>
             </div>
-            <div class="game" data-name="2048" onclick="openGame('games/2048')">
+            <div class="game" data-name="2048" data-url="games/2048">
                 <img src="images/2048.jpg" alt="2048">
                 <div class="game-name">2048</div>
             </div>
-            <div class="game" data-name="Snowrider3d" onclick="openGame('games/snowrider.html')">
+            <div class="game" data-name="Snowrider3d" data-url="games/snowrider.html">
                 <img src="images/snow-rider3d.jpg" alt="2048">
                 <div class="game-name">Snowrider3d</div>
             </div>
-            <div class="game minecraft" data-name="Minecraft" onclick="openGame('games/eagler')">
+            <div class="game minecraft" data-name="Minecraft" data-url="games/eagler">
                 <img src="images/minecraft.jpg" alt="minecraft" class="normal-img">
                 <img src="images/explodeminecraft.gif" alt="explodeminecraft" class="hover-img">
                 <div class="game-name">Minecraft</div>
             </div>
-            <div class="game" data-name="Learn to Fly" onclick="openGame('games/learn-to-fly-2')">
+            <div class="game" data-name="Learn to Fly" data-url="games/learn-to-fly-2">
                 <img src="images/learn-to-fly-2.jpg" alt="learn-to-fly-2">
                 <div class="game-name">Learn to Fly</div>
             </div>
-            <div class="game" data-name="Idle Mining Empire" onclick="openGame('games/idle-mining-empire')">
+            <div class="game" data-name="Idle Mining Empire" data-url="games/idle-mining-empire">
                 <img src="images/idle-mining-empire.jpg" alt="idle-mining-empire">
                 <div class="game-name">Idle Mining Empire</div>
             </div>
-            <div class="game" data-name="Among Us" onclick="openGame('games/among-us')">
+            <div class="game" data-name="Among Us" data-url="games/among-us">
                 <img src="images/among-us.jpg" alt="among-us">
                 <div class="game-name">Among Us</div>
             </div>
-            <div class="game" data-name="Paper io 2" onclick="openGame('games/paper-io-2')">
+            <div class="game" data-name="Paper io 2" data-url="games/paper-io-2">
                 <img src="images/paper-io-2.jpg" alt="paper-io-2">
                 <div class="game-name">Paper io 2</div>
             </div>
-            <div class="game" data-name="Flappy Bird" onclick="openGame('games/flappybird')">
+            <div class="game" data-name="Flappy Bird" data-url="games/flappybird">
                 <img src="images/flappy-bird.jpg" alt="flappy-bird">
                 <div class="game-name">Flappy Bird</div>
             </div>
-            <div class="game" data-name="Krunker" onclick="openGame('games/krunker')">
+            <div class="game" data-name="Krunker" data-url="games/krunker">
                 <img src="images/krunker.jpg" alt="krunker">
                 <div class="game-name">Krunker</div>
             </div>
-            <div class="game" data-name="Geometry Dash (Knockoff)" onclick="openGame('games/geometry-dash-knockoff')">
+            <div class="game" data-name="Geometry Dash (Knockoff)" data-url="games/geometry-dash-knockoff">
                 <img src="images/geometry-dash.jpg" alt="geometry-dash-knockoff">
                 <div class="game-name">Geometry Dash</div>
             </div>
-            <div class="game" data-name="Baldis Basics" onclick="openGame('games/baldis-basics')">
+            <div class="game" data-name="Baldis Basics" data-url="games/baldis-basics">
                 <img src="images/baldis-basics.jpg" alt="baldis-basics">
                 <div class="game-name">Baldis Basics</div>
             </div>
-            <div class="game" data-name="Super Hot" onclick="openGame('games/superhot')">
+            <div class="game" data-name="Super Hot" data-url="games/superhot">
                 <img src="images/superhot.jpg" alt="superhot">
                 <div class="game-name">Super Hot</div>
             </div>
-            <div class="game" data-name="Temple Run 2" onclick="openGame('games/temple-run-2')">
+            <div class="game" data-name="Temple Run 2" data-url="games/temple-run-2">
                 <img src="images/temple-run-2.jpg" alt="temple-run-2">
                 <div class="game-name">Temple Run 2</div>
             </div>
-            <div class="game" data-name="Happy Wheels" onclick="openGame('games/happy-wheels')">
+            <div class="game" data-name="Happy Wheels" data-url="games/happy-wheels">
                 <img src="images/happy-wheels.jpg" alt="happy-wheels">
                 <div class="game-name">Happy Wheels</div>
             </div>
-            <div class="game" data-name="Crossy Road" onclick="openGame('games/crossyroad')">
+            <div class="game" data-name="Crossy Road" data-url="games/crossyroad">
                 <img src="images/crossy-road.jpg" alt="crossy-road">
                 <div class="game-name">Crossy Road</div>
             </div>
-            <div class="game" data-name="Stickman Hook" onclick="openGame('games/stickmanhook')">
+            <div class="game" data-name="Stickman Hook" data-url="games/stickmanhook">
                 <img src="images/stickmanhook.jpg" alt="stickman">
                 <div class="game-name">Stickman Hook</div>
             </div>
-            <div class="game" data-name="Tag" onclick="openGame('games/Tag')">
+            <div class="game" data-name="Tag" data-url="games/Tag">
                 <img src="images/tag.jpg" alt="tag">
                 <div class="game-name">Tag</div>
             </div>
-            <div class="game" data-name="Poly Track" onclick="openGame('games/poly-track')">
+            <div class="game" data-name="Poly Track" data-url="games/poly-track">
                 <img src="images/polytrack.jpg" alt="pt">
                 <div class="game-name">Poly Track</div>
             </div>
-            <div class="game" data-name="Tetris" onclick="openGame('games/tetris')">
+            <div class="game" data-name="Tetris" data-url="games/tetris">
                 <img src="images/tetris.jpg" alt="tetris">
                 <div class="game-name">Tetris</div>
             </div>
-            <div class="game" data-name="Armed Forces" onclick="openGame('games/armed-forces')">
+            <div class="game" data-name="Armed Forces" data-url="games/armed-forces">
                 <img src="images/armed-forces.png" alt="armed forces">
                 <div class="game-name">Armed Forces</div>
             </div>
-            <div class="game" data-name="Counter Strike" onclick="openGame('games/counter-strike')">
+            <div class="game" data-name="Counter Strike" data-url="games/counter-strike">
                 <img src="images/csgo.png" alt="Counter-Strike">
                 <div class="game-name">Counter Strike</div>
             </div>
@@ -524,25 +702,29 @@
     </main>
 
     <script>
-        // DOM elements
         const searchInput = document.getElementById('search-input');
         const searchContainer = document.getElementById('search-container');
         const gameElements = document.querySelectorAll('.game');
         const proxiedCheckbox = document.getElementById('proxied-checkbox');
+        const gameModal = document.getElementById('game-modal');
+        const modalGameTitle = document.getElementById('modal-game-title');
+        const modalGameImg = document.getElementById('modal-game-img');
+        const closeModalBtn = document.getElementById('close-modal');
+        const playGameBtn = document.getElementById('play-game-btn');
+        const cancelGameBtn = document.getElementById('cancel-game-btn');
 
-        // Move search bar to top when focused
+        let selectedGameUrl = '';
+
         searchInput.addEventListener('focus', function() {
             searchContainer.classList.add('active');
         });
 
-        // Move search bar back to bottom when blurred (if empty)
         searchInput.addEventListener('blur', function() {
             if (searchInput.value.trim() === '') {
                 searchContainer.classList.remove('active');
             }
         });
 
-        // Filter games based on search input
         searchInput.addEventListener('input', function() {
             const searchTerm = searchInput.value.toLowerCase();
 
@@ -556,14 +738,36 @@
             });
         });
 
-        // Handle game launching with proxied option
+        gameElements.forEach(game => {
+            game.addEventListener('click', function(e) {
+                e.preventDefault();
+
+                const gameName = this.getAttribute('data-name');
+                const gameUrl = this.getAttribute('data-url');
+                const gameImg = this.querySelector('img').src;
+                selectedGameUrl = gameUrl;
+
+                modalGameTitle.textContent = gameName;
+                modalGameImg.src = gameImg;
+                gameModal.classList.add('active');
+            });
+        });
+        function closeModal() {
+            gameModal.classList.remove('active');
+        }
+
+        closeModalBtn.addEventListener('click', closeModal);
+        cancelGameBtn.addEventListener('click', closeModal);
+
+        playGameBtn.addEventListener('click', function() {
+            openGame(selectedGameUrl);
+        });
+
         function openGame(url) {
             if (proxiedCheckbox.checked) {
-                // Format for proxied URL
                 const currentUrl = window.location.origin;
                 window.location.href = `/active/embed.html?url=${currentUrl}/${url}`;
             } else {
-                // Standard navigation
                 window.location.href = url;
             }
         }
