@@ -698,7 +698,7 @@
                 <img src="images/csgo.png" alt="Counter-Strike">
                 <div class="game-name">Counter Strike</div>
             </div>
-            <div class="game" data-name="Tomb of the Mask" onclick="openGame('games/tombofthemask.html')">
+            <div class="game" data-name="Tomb of the Mask" data-url="games/tombofthemask.html">
                 <img src="images/totm.png" alt="tomb-of-the-mask">
                 <div class="game-name">Tomb Of The Mask</div>
             </div>
@@ -756,6 +756,7 @@
                 gameModal.classList.add('active');
             });
         });
+
         function closeModal() {
             gameModal.classList.remove('active');
         }
