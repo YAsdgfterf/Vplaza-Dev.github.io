@@ -77,7 +77,7 @@
 				background: linear-gradient(to right, #ff8a00, #ffcc00);
 				-webkit-background-clip: text;
 				background-clip: text;
-				color: arent;
+				color: transparent;
 				text-shadow: 0 0 15px rgba(255, 165, 0, 0.5);
 				}
 				
@@ -320,26 +320,27 @@
 				}
 				
 				/* Modal Styles */
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: #000; /* Changed to solid black from rgba */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 2000;
-    opacity: 0; /* Control this with the active class */
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-}
-
-.modal-overlay.active {
-    opacity: 1; /* Set this to control visibility */
-    pointer-events: all;
-}
+				.modal-overlay {
+				position: fixed;
+				top: 0;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				background: rgba(0, 0, 0, 0.85);
+				backdrop-filter: blur(5px);
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				z-index: 2000;
+				opacity: 0;
+				pointer-events: none;
+				transition: opacity 0.3s ease;
+				}
+				
+				.modal-overlay.active {
+				opacity: 1;
+				pointer-events: all;
+				}
 				
 				.modal-content {
 				background: rgba(25, 25, 25, 0.95);
@@ -598,16 +599,18 @@
 				}
 		/* Styles for the iframe modal */
 		#iframe-modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: #000; /* Ensure the modal has a solid black background */
-    z-index: 3000;
-    flex-direction: column;
-}
+			display: none;
+			position: fixed;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background: rgba(0, 0, 0, 0.85);
+			z-index: 3000;
+			flex-direction: column;
+			/* Allow for header at the top */
+		}
+
 		.iframe-modal-header {
 				background: linear-gradient(to right, magenta, orange);
 			padding: 10px;
@@ -737,7 +740,7 @@
 	<img src="images/slope.jpg" alt="slope">
 	<div class="game-name">Slope</div>
 </div>
-<div class="game" data-name="Subway Surfers" data-url="games/subwaysurfers">
+<div class="game" data-name="Subway Surfers" data-url="games/subway-surfers">
 	<img src="images/subway-surferss.png" alt="subway">
 	<div class="game-name">Subway Surfers</div>
 </div>
