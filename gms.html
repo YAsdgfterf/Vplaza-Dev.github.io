@@ -326,18 +326,18 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: #000; /* Changed to solid black */
+    background: #000; /* Changed to solid black from rgba */
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 2000;
-    opacity: 0;
+    opacity: 0; /* Control this with the active class */
     pointer-events: none;
     transition: opacity 0.3s ease;
 }
 
 .modal-overlay.active {
-    opacity: 1;
+    opacity: 1; /* Set this to control visibility */
     pointer-events: all;
 }
 				
@@ -598,18 +598,16 @@
 				}
 		/* Styles for the iframe modal */
 		#iframe-modal {
-			display: none;
-			position: fixed;
-			top: 0;
-			left: 0;
-			right: 0;
-			bottom: 0;
-			background: rgba(0, 0, 0, 0.85);
-			z-index: 3000;
-			flex-direction: column;
-			/* Allow for header at the top */
-		}
-
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #000; /* Ensure the modal has a solid black background */
+    z-index: 3000;
+    flex-direction: column;
+}
 		.iframe-modal-header {
 				background: linear-gradient(to right, magenta, orange);
 			padding: 10px;
